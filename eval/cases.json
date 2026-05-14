@@ -1,0 +1,315 @@
+[
+  {
+    "id": "L1-slide-add-001",
+    "level": 1,
+    "category": "slide-add",
+    "prompt": "add a new slide with title 'Conclusion' and bullets 'Recap, Next Steps, Q&A'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Quarterly Review\" | BODY=\"Q4 2026\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"Agenda\" | BODY=\"1. Numbers\\n2. Wins\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSlide", "Conclusion"],
+    "forbiddenPatterns": ["presentation.slides.add(", "slides.add("]
+  },
+  {
+    "id": "L1-slide-add-002",
+    "level": 1,
+    "category": "slide-add",
+    "prompt": "add a title-only opening slide that says 'Welcome to ACME'",
+    "workbook": "Slide 1 (id=256): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSlide", "title", "Welcome"],
+    "forbiddenPatterns": ["presentation.slides.add("]
+  },
+  {
+    "id": "L1-slide-add-003",
+    "level": 1,
+    "category": "slide-add",
+    "prompt": "add a section divider slide titled 'Part 2: Roadmap'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Part 1: Recap\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSlide", "section", "Part 2"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-slide-delete-001",
+    "level": 1,
+    "category": "slide-delete",
+    "prompt": "delete slide 3",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"\" | NOTES=\"\"\nSlide 3: TITLE=\"C\" | BODY=\"\" | NOTES=\"\"\nSlide 4: TITLE=\"D\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["getSlideByIndex", ".delete()", "context.sync"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-slide-delete-002",
+    "level": 1,
+    "category": "slide-delete",
+    "prompt": "delete the last slide",
+    "workbook": "Slide 1: TITLE=\"Intro\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"End\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [".delete()"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-text-format-001",
+    "level": 1,
+    "category": "text-format",
+    "prompt": "make the title on slide 1 bold and 48pt",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["font.bold", "font.size", "48"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-text-format-002",
+    "level": 1,
+    "category": "text-format",
+    "prompt": "make all body text on every slide use Inter font at 18pt",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"x\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"y\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["font.name", "Inter", "font.size", "18"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-text-format-003",
+    "level": 1,
+    "category": "text-format",
+    "prompt": "make slide 2's title red (#FF0000)",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"Highlight\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["font.color", "#FF0000"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-text-edit-001",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "change slide 1's title to 'Q4 Results'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Untitled\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["textRange.text", "Q4 Results"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-text-edit-002",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "replace all instances of 'Acme' with 'Globex' across the deck",
+    "workbook": "Slide 1: TITLE=\"About Acme\" | BODY=\"Acme is great\" | NOTES=\"\"\nSlide 2: TITLE=\"Acme Roadmap\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["textRange.text", "Globex", "Acme"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-theme-apply-001",
+    "level": 1,
+    "category": "theme-apply",
+    "prompt": "apply the corporate blue theme",
+    "workbook": "Slide 1: TITLE=\"X\" | BODY=\"Y\" | NOTES=\"\"\nSlide 2: TITLE=\"A\" | BODY=\"B\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["applyTheme", "corporate-blue"],
+    "forbiddenPatterns": ["presentation.theme"]
+  },
+  {
+    "id": "L1-theme-apply-002",
+    "level": 1,
+    "category": "theme-apply",
+    "prompt": "use the midnight theme everywhere",
+    "workbook": "Slide 1: TITLE=\"Slide 1\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["applyTheme", "midnight"],
+    "forbiddenPatterns": ["presentation.theme"]
+  },
+  {
+    "id": "L1-recolor-001",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "recolor every slide with #003366 primary, #F0F4F8 background, and #FF9900 accent",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"B\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["recolorDeck", "#003366", "#F0F4F8"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-recolor-002",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "design a calm, trustworthy theme for a healthcare startup pitch and apply it",
+    "workbook": "Slide 1: TITLE=\"HealthCo\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["recolorDeck"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-notes-write-001",
+    "level": 1,
+    "category": "notes-write",
+    "prompt": "write speaker notes for slide 2 explaining the Q4 numbers",
+    "workbook": "Slide 1: TITLE=\"Quarterly Review\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"Q4 Numbers\" | BODY=\"Revenue $4.2M\\nGrowth 23%\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSpeakerNote"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-notes-write-002",
+    "level": 1,
+    "category": "notes-write",
+    "prompt": "add a note to the current slide reminding me to mention the pricing change",
+    "workbook": "Slide 1: TITLE=\"Pricing\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSpeakerNote", "pricing"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-shape-position-001",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title on slide 1 up by 50 points",
+    "workbook": "Slide 1: TITLE=\"Hello\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [".top", "50"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-shape-position-002",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a CONFIDENTIAL watermark text box at the top of every slide",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addTextBox", "CONFIDENTIAL"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-image-insert-001",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a finance growth chart image to slide 2 on the right side",
+    "workbook": "Slide 1: TITLE=\"Overview\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"Q4 Growth\" | BODY=\"+23% YoY\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["insertImage", "finance"],
+    "forbiddenPatterns": ["addImage(\"http", "addImage('http", "addImage(`http"]
+  },
+  {
+    "id": "L1-image-insert-002",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put a technology background image on the opening slide",
+    "workbook": "Slide 1: TITLE=\"Welcome\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["insertImage", "technology"],
+    "forbiddenPatterns": ["addImage(\"http", "addImage('http"]
+  },
+  {
+    "id": "L1-web-search-needed-001",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "make a slide about today's Apple stock price",
+    "workbook": "Slide 1: TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": false,
+    "requiredPatterns": ["NEEDS_WEB_SEARCH"],
+    "forbiddenPatterns": ["$", "USD", "AAPL closed"]
+  },
+  {
+    "id": "L1-web-search-needed-002",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "add a slide showing the current weather in Sofia",
+    "workbook": "Slide 1: TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": false,
+    "requiredPatterns": ["NEEDS_WEB_SEARCH"],
+    "forbiddenPatterns": ["°C", "°F", "sunny", "rainy"]
+  },
+  {
+    "id": "L1-web-search-needed-003",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "what is the Pythagorean theorem",
+    "workbook": "Slide 1: TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": false,
+    "requiredPatterns": ["a²", "Pythagorean"],
+    "forbiddenPatterns": ["NEEDS_WEB_SEARCH"],
+    "note": "Static knowledge — must NOT request web search."
+  },
+  {
+    "id": "L1-question-handling-001",
+    "level": 1,
+    "category": "question-handling",
+    "prompt": "how many slides do I have?",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"\" | NOTES=\"\"\nSlide 3: TITLE=\"C\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["presentation.slides", "return"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-question-handling-002",
+    "level": 1,
+    "category": "question-handling",
+    "prompt": "what is the title of slide 2?",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"The Roadmap\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["getSlideByIndex", "return"],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "L1-refusal-001",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "add a fade-in animation to the title on slide 1",
+    "workbook": "Slide 1: TITLE=\"Hello\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": false,
+    "requiredPatterns": ["doesn't expose"],
+    "forbiddenPatterns": ["animations.add", "transition.add", "slide.animations", "slide.transition"]
+  },
+  {
+    "id": "L1-refusal-002",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "export this deck to PDF",
+    "workbook": "Slide 1: TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": false,
+    "requiredPatterns": ["doesn't expose"],
+    "forbiddenPatterns": ["exportToPdf", "presentation.export"]
+  },
+  {
+    "id": "L1-refusal-003",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "move slide 3 to position 1",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"\" | NOTES=\"\"\nSlide 3: TITLE=\"C\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": false,
+    "requiredPatterns": ["doesn't expose"],
+    "forbiddenPatterns": ["slides.move", "slide.move", "reorder"]
+  },
+  {
+    "id": "L1-refusal-004",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "add a bar chart to slide 2 from sales data",
+    "workbook": "Slide 1: TITLE=\"\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"Sales\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": false,
+    "requiredPatterns": ["doesn't expose"],
+    "forbiddenPatterns": ["charts.add", "slide.charts"]
+  },
+  {
+    "id": "L1-deck-generate-001",
+    "level": 1,
+    "category": "deck-generate",
+    "prompt": "create a 6-slide pitch deck about a coffee subscription service",
+    "workbook": "Slide 1: TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSlide"],
+    "forbiddenPatterns": ["presentation.slides.add("],
+    "note": "Should emit multiple addSlide calls or recommend the deck generator."
+  },
+  {
+    "id": "L1-edge-case-001",
+    "level": 1,
+    "category": "edge-cases",
+    "prompt": "delete slide 99",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["getSlideByIndex"],
+    "forbiddenPatterns": [],
+    "note": "Helper throws a clear error; code should still use the helper rather than guessing."
+  }
+]

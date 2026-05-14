@@ -1,0 +1,8 @@
+.env
+node_modules/
+feedback.jsonl
+data/
+assets/pack/*.jpg
+assets/pack/*.jpeg
+assets/pack/*.png
+assets/pack/*.tar.gz
