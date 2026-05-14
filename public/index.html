@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PowerPoint AI</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="helpers.js"></script>
+<style>
+:root {
+  --bg:       #FAFAF8;
+  --surf:     #F2F0EB;
+  --surf2:    #E8E4DE;
+  --sidebar:  #EDEAE4;
+  --text:     #1A1918;
+  --text2:    #6B6560;
+  --text3:    #A09890;
+  --accent:   #D3634B;
+  --accent2:  #B8523C;
+  --border:   #DEDAD3;
+  --code-bg:  #F5F2EE;
+  --user-bg:  #ECEAE6;
+  --input-bg: #FFFFFF;
+  --err:      #D94F4F;
+  --ok:       #4CAF6A;
+  --warn:     #E8A04C;
+  --shadow:   0 2px 8px rgba(0,0,0,.08);
+  --shadow2:  0 4px 16px rgba(0,0,0,.12);
+  --r:        8px;
+  --r2:       5px;
+}
+[data-theme="dark"] {
+  --bg:       #1B1B1B;
+  --surf:     #252525;
+  --surf2:    #2E2E2E;
+  --sidebar:  #141414;
+  --text:     #F0EDE8;
+  --text2:    #9E9890;
+  --text3:    #6B6560;
+  --accent:   #E0735A;
+  --accent2:  #F08770;
+  --border:   #333;
+  --code-bg:  #111;
+  --user-bg:  #2A2A2A;
+  --input-bg: #252525;
+  --err:      #E05555;
+  --ok:       #4CAF6A;
+  --warn:     #E8A04C;
+  --shadow:   0 2px 8px rgba(0,0,0,.3);
+  --shadow2:  0 4px 16px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:14px;color:var(--text);background:var(--bg);overflow:hidden}
+
+.app{display:flex;height:100vh;position:relative}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+
+/* Sidebar */
+.sidebar{position:fixed;inset:0;z-index:300;display:none}
+.sidebar.open{display:flex}
+.sidebar-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+.sidebar-drawer{position:absolute;left:0;top:0;bottom:0;width:240px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:1}
+.sidebar-head{padding:12px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center}
+.new-chat{flex:1;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);padding:7px 10px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.new-chat:hover{background:var(--accent2)}
+.sidebar-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:2px 5px;border-radius:4px;line-height:1}
+.sidebar-close:hover{background:var(--surf2)}
+.chat-list{flex:1;overflow-y:auto;padding:8px}
+.chat-item{padding:8px 10px;border-radius:var(--r2);cursor:pointer;position:relative;transition:background .1s;margin-bottom:2px}
+.chat-item:hover{background:var(--surf2)}
+.chat-item.active{background:var(--surf2)}
+.chat-title{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.chat-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.chat-del{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;opacity:0;font-size:13px;padding:2px 5px;border-radius:4px;transition:opacity .1s,color .1s}
+.chat-item:hover .chat-del{opacity:1}
+.chat-del:hover{color:var(--err)}
+.no-chats{padding:16px 12px;font-size:12px;color:var(--text3);text-align:center}
+
+/* Header */
+.header{height:44px;display:flex;align-items:center;gap:6px;padding:0 10px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.btn-icon{background:none;border:none;color:var(--text2);cursor:pointer;padding:5px;border-radius:var(--r2);font-size:16px;line-height:1;transition:background .1s,color .1s;display:flex;align-items:center;justify-content:center}
+.btn-icon:hover{background:var(--surf);color:var(--text)}
+.logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.logo-icon{width:20px;height:20px;background:var(--accent);border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
+.logo span{font-size:13px;font-weight:600;color:var(--text)}
+.model-btn{flex:1;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:5px 9px;font-size:12px;color:var(--text);cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:border-color .15s;min-width:0}
+.model-btn:hover{border-color:var(--accent)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex-shrink:0;transition:background .3s}
+.sync-dot.busy{background:var(--accent);animation:pulse 1s infinite}
+.sync-dot.err{background:var(--err)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* Messages */
+.messages{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:14px}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center}
+.empty-icon{width:44px;height:44px;background:var(--accent);border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px}
+.empty-title{font-size:15px;font-weight:600;color:var(--text)}
+.empty-sub{font-size:12px;color:var(--text2);line-height:1.5}
+.empty-actions{display:flex;gap:6px;width:100%;margin-top:6px}
+.empty-act-btn{flex:1;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);padding:9px 8px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s}
+.empty-act-btn:hover{background:var(--accent2)}
+.empty-act-btn.alt{background:var(--surf);color:var(--text);border:1px solid var(--border)}
+.empty-act-btn.alt:hover{background:var(--surf2);border-color:var(--accent)}
+.chips{display:flex;flex-direction:column;gap:6px;width:100%;margin-top:4px}
+.chip{background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:8px 10px;font-size:12px;color:var(--text);cursor:pointer;text-align:left;transition:background .1s,border-color .1s}
+.chip:hover{background:var(--surf2);border-color:var(--accent)}
+
+.msg{display:flex;flex-direction:column;gap:4px}
+.msg-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.msg-role{font-size:12px;font-weight:600;color:var(--text2)}
+.msg-role.user{color:var(--accent)}
+.msg-role.coach{color:#9C27B0}
+.msg-meta{font-size:11px;color:var(--text3);margin-left:auto}
+.msg-via{font-size:10px;color:var(--text3);background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:1px 6px;white-space:nowrap}
+.msg-body{font-size:14px;line-height:1.6;color:var(--text);white-space:pre-wrap;word-break:break-word}
+.msg.user .msg-body{background:var(--user-bg);padding:9px 12px;border-radius:var(--r2)}
+.msg.coach .msg-body{background:rgba(156,39,176,.06);border:1px solid rgba(156,39,176,.2);padding:10px 12px;border-radius:var(--r2)}
+.msg.error .msg-body{background:rgba(217,79,79,.1);border:1px solid rgba(217,79,79,.25);border-radius:var(--r2);padding:8px 12px;color:var(--err)}
+.msg-actions{display:flex;gap:4px;margin-top:3px;opacity:0;transition:opacity .15s}
+.msg:hover .msg-actions{opacity:1}
+.report-btn,.copy-msg-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .1s,background .1s}
+.report-btn:hover{color:var(--err);background:rgba(217,79,79,.08)}
+.report-btn.sent{color:var(--ok);cursor:default}
+.copy-msg-btn:hover{color:var(--text);background:var(--surf2)}
+.copy-msg-btn.copied{color:var(--ok)}
+
+/* Web-search pill */
+.ws-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);background:rgba(33,150,243,.08);border:1px solid rgba(33,150,243,.25);border-radius:10px;padding:2px 8px;margin-bottom:4px;cursor:pointer;transition:background .1s}
+.ws-pill:hover{background:rgba(33,150,243,.15)}
+.ws-results-panel{margin-top:6px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:8px 10px;font-size:12px;color:var(--text2);display:none}
+.ws-results-panel.open{display:block}
+.ws-result-row{padding:4px 0;border-bottom:1px dashed var(--border)}
+.ws-result-row:last-child{border-bottom:none}
+.ws-result-row a{color:var(--accent);text-decoration:none;font-weight:500}
+.ws-result-row a:hover{text-decoration:underline}
+
+/* Permission card */
+.ws-perm{margin-top:6px;background:var(--surf);border:1px solid var(--accent);border-radius:var(--r);padding:12px;font-size:13px;color:var(--text)}
+.ws-perm-title{font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ws-perm-q{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:6px 10px;margin:8px 0;font-family:monospace;font-size:12px;color:var(--text2)}
+.ws-perm-btns{display:flex;gap:6px;margin-top:8px}
+.ws-perm-allow{background:var(--accent);color:#fff;border:none;border-radius:var(--r2);padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.ws-perm-allow:hover{background:var(--accent2)}
+.ws-perm-skip{background:none;color:var(--text2);border:1px solid var(--border);border-radius:var(--r2);padding:6px 14px;font-size:13px;cursor:pointer;transition:all .15s}
+.ws-perm-skip:hover{border-color:var(--text2);color:var(--text)}
+
+/* Code block */
+.code-block{margin-top:6px;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;font-size:12px}
+.code-head{background:var(--surf);padding:5px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.code-head span{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px}
+.code-toggle{font-size:11px;color:var(--accent);font-weight:500}
+.code-body{background:var(--code-bg);padding:10px;overflow-x:auto;display:block}
+.code-body.hidden{display:none}
+.code-body pre{font-family:'Menlo','Monaco','Courier New',monospace;font-size:12px;line-height:1.5;color:var(--text)}
+.code-footer{padding:5px 10px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);background:var(--surf)}
+.copy-code-btn{background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:11px;padding:2px 9px;border-radius:4px;transition:all .15s}
+.copy-code-btn:hover{border-color:var(--accent);color:var(--accent)}
+.copy-code-btn.copied{color:var(--ok);border-color:var(--ok)}
+
+.typing{display:flex;align-items:center;gap:4px;padding:10px 0}
+.tdot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:tbounce 1.2s ease-in-out infinite}
+.tdot:nth-child(2){animation-delay:.2s}
+.tdot:nth-child(3){animation-delay:.4s}
+@keyframes tbounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.live-timer{font-size:11px;color:var(--text3);margin-left:6px}
+
+/* Coach apply notes button */
+.coach-apply{margin-top:8px;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s}
+.coach-apply:hover{background:var(--accent2)}
+
+/* Input area */
+.input-area{padding:8px 10px 10px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.input-box{background:var(--input-bg);border:1px solid var(--border);border-radius:var(--r);transition:border-color .15s}
+.input-box:focus-within{border-color:var(--accent)}
+.input-row{display:flex;align-items:flex-end;gap:4px;padding:8px}
+#msgInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:14px;font-family:inherit;resize:none;min-height:20px;max-height:120px;line-height:1.5}
+#msgInput::placeholder{color:var(--text3)}
+.input-btns{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.act-btn{background:none;border:none;color:var(--text2);cursor:pointer;padding:5px;border-radius:var(--r2);font-size:15px;line-height:1;transition:color .1s,background .1s;display:flex;align-items:center;justify-content:center}
+.act-btn:hover{color:var(--accent);background:var(--surf)}
+.send{background:var(--accent);border:none;color:#fff;cursor:pointer;padding:6px 12px;border-radius:var(--r2);font-size:13px;font-weight:600;transition:background .15s;white-space:nowrap}
+.send:hover:not(:disabled){background:var(--accent2)}
+.send:disabled{opacity:.5;cursor:not-allowed}
+.send.stop{background:var(--err)}
+.send.stop:hover{background:#C04444}
+.input-foot{padding:4px 8px 0;display:flex;align-items:center;justify-content:space-between;min-height:18px}
+.tok-info{font-size:11px;color:var(--text3)}
+.attach-badge{font-size:11px;color:var(--accent);display:flex;align-items:center;gap:4px}
+.attach-x{cursor:pointer;color:var(--text3);font-size:10px;border:none;background:none;padding:0 2px;line-height:1}
+.attach-x:hover{color:var(--err)}
+
+/* Plus popup */
+.plus-wrap{position:relative}
+.plus-popup{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow2);min-width:200px;padding:4px;display:none;z-index:200}
+.plus-popup.open{display:block}
+.plus-sep{height:1px;background:var(--border);margin:3px 0}
+.plus-item{padding:7px 10px;border-radius:var(--r2);cursor:pointer;display:flex;align-items:flex-start;gap:9px;transition:background .1s;user-select:none}
+.plus-item:hover{background:var(--surf)}
+.plus-check{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;background:transparent;transition:all .15s;flex-shrink:0;margin-top:2px}
+.plus-check.on{background:var(--accent);border-color:var(--accent)}
+.plus-label{font-size:13px;color:var(--text);line-height:1.2}
+.plus-sub{font-size:10px;color:var(--text3);margin-top:2px;line-height:1.3}
+#plusBtn.active{color:var(--accent)}
+#plusBtn.active::after{content:'';position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+#plusBtn{position:relative}
+
+/* Modal base */
+.modal{position:fixed;inset:0;z-index:400;display:none}
+.modal.open{display:flex}
+.modal-bd{position:absolute;inset:0;background:rgba(0,0,0,.3)}
+
+/* Model picker */
+.model-panel{position:absolute;top:44px;left:10px;right:10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow2);max-height:78vh;display:flex;flex-direction:column;overflow:hidden}
+.model-ph{padding:10px 12px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:space-between;position:relative}
+.filter-btn{background:none;border:1px solid var(--border);border-radius:var(--r2);color:var(--text2);cursor:pointer;font-size:12px;padding:2px 7px;line-height:1.6;transition:all .15s}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.filter-popup{position:absolute;top:calc(100% + 2px);right:10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow2);padding:8px;min-width:165px;z-index:20;display:none}
+.filter-popup.open{display:block}
+.filter-section{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:2px 4px 5px}
+.filter-row{display:flex;flex-direction:column;gap:1px;margin-bottom:6px}
+.filter-item{display:flex;align-items:center;gap:7px;padding:4px 6px;border-radius:4px;cursor:pointer;font-size:12px;color:var(--text);transition:background .1s;user-select:none}
+.filter-item:hover{background:var(--surf)}
+.filter-check{width:14px;height:14px;border:1.5px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;background:transparent;transition:all .15s;flex-shrink:0}
+.filter-check.on{background:var(--accent);border-color:var(--accent)}
+.filter-divider{height:1px;background:var(--border);margin:4px 0}
+.model-search-wrap{padding:8px 10px;border-bottom:1px solid var(--border)}
+.model-search{width:100%;padding:6px 10px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.model-search:focus{border-color:var(--accent)}
+.model-list{overflow-y:auto;flex:1}
+.model-grp-row{padding:8px 12px 4px;display:flex;align-items:center;justify-content:space-between}
+.model-grp{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.rec-info-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:0 4px;line-height:1;transition:color .1s;border-radius:50%}
+.rec-info-btn:hover{color:var(--accent)}
+.rec-reason-box{margin:0 12px 6px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:8px 10px;font-size:12px;color:var(--text2);line-height:1.5;display:none}
+.rec-reason-box.open{display:block}
+.model-opt{padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .1s}
+.model-opt:hover{background:var(--surf)}
+.model-opt.sel{background:var(--surf2)}
+.m-info{flex:1;min-width:0}
+.m-name{font-size:13px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.m-price{font-size:11px;color:var(--text3);margin-top:1px}
+.badge{font-size:10px;padding:1px 5px;border-radius:10px;font-weight:600;white-space:nowrap}
+.badge.free{background:rgba(76,175,106,.15);color:var(--ok)}
+.badge.rec{background:rgba(211,99,75,.15);color:var(--accent)}
+.badge.fast{background:rgba(33,150,243,.15);color:#2196F3}
+.badge.local{background:rgba(156,39,176,.15);color:#9C27B0}
+.badge.reason{background:rgba(255,152,0,.15);color:#FF9800}
+.badge.groq{background:rgba(0,180,160,.15);color:#00B4A0}
+.badge.custom{background:rgba(100,100,100,.15);color:var(--text2)}
+.no-local{padding:8px 12px 12px;font-size:12px;color:var(--text3);font-style:italic}
+.add-model-wrap{padding:8px 10px;border-top:1px solid var(--border);display:flex;gap:6px;align-items:center;flex-shrink:0}
+.add-model-inp{flex:1;padding:6px 9px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:12px;font-family:inherit;outline:none;transition:border-color .15s}
+.add-model-inp:focus{border-color:var(--accent)}
+.add-model-inp::placeholder{color:var(--text3)}
+.add-model-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--r2);padding:6px 10px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s;flex-shrink:0}
+.add-model-btn:hover{background:var(--accent2)}
+.model-opt-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px 5px;border-radius:3px;line-height:1;opacity:0;transition:opacity .1s,color .1s}
+.model-opt:hover .model-opt-del{opacity:1}
+.model-opt-del:hover{color:var(--err)}
+
+/* Theme picker modal */
+.theme-panel{position:absolute;top:44px;left:10px;right:10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow2);max-height:78vh;display:flex;flex-direction:column;overflow:hidden}
+.theme-list{overflow-y:auto;flex:1;padding:8px}
+.theme-card{padding:10px 12px;border:1px solid var(--border);border-radius:var(--r2);margin-bottom:6px;cursor:pointer;background:var(--surf);transition:all .15s;display:flex;align-items:center;gap:10px}
+.theme-card:hover{border-color:var(--accent);background:var(--surf2)}
+.theme-swatches{display:flex;gap:3px;flex-shrink:0}
+.theme-sw{width:18px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,.1)}
+.theme-meta{flex:1;min-width:0}
+.theme-name{font-size:13px;font-weight:600;color:var(--text)}
+.theme-font{font-size:11px;color:var(--text3);margin-top:1px}
+.theme-custom-wrap{padding:10px;border-top:1px solid var(--border);flex-shrink:0}
+.theme-custom-btn{width:100%;background:var(--surf);color:var(--text);border:1px dashed var(--border);border-radius:var(--r2);padding:9px;font-size:12px;cursor:pointer;transition:all .15s}
+.theme-custom-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Deck generator dialog */
+.gen-panel{position:absolute;top:44px;left:10px;right:10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow2);max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.gen-head{padding:12px;border-bottom:1px solid var(--border);font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.gen-body{padding:14px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.gen-grp{display:flex;flex-direction:column;gap:5px}
+.gen-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.gen-row{display:flex;gap:8px}
+.gen-input{padding:8px 10px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:13px;font-family:inherit;outline:none;width:100%}
+.gen-input:focus{border-color:var(--accent)}
+.gen-textarea{padding:8px 10px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:13px;font-family:inherit;outline:none;resize:vertical;min-height:70px;line-height:1.5}
+.gen-textarea:focus{border-color:var(--accent)}
+.gen-foot{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+.gen-progress{padding:0 14px 10px;font-size:12px;color:var(--text2)}
+.gen-bar{height:6px;background:var(--surf);border-radius:3px;overflow:hidden;margin-top:6px}
+.gen-bar-fill{height:100%;background:var(--accent);transition:width .3s}
+
+/* Settings */
+.settings{position:fixed;inset:0;z-index:400;display:none}
+.settings.open{display:flex}
+.settings-bd{position:absolute;inset:0;background:rgba(0,0,0,.3)}
+.settings-draw{position:absolute;right:0;top:0;bottom:0;width:300px;background:var(--bg);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.shead{padding:13px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.stitle{font-size:15px;font-weight:600;color:var(--text)}
+.stabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;padding:0 14px}
+.stab{background:none;border:none;padding:9px 12px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.stab:hover{color:var(--text)}
+.stab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.sbody{padding:16px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;flex:1}
+.sgrp{display:flex;flex-direction:column;gap:8px}
+.slabel{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.theme-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.theme-opt{padding:8px;border:2px solid var(--border);border-radius:var(--r2);background:var(--surf);cursor:pointer;font-size:12px;color:var(--text);text-align:center;transition:all .15s}
+.theme-opt.active{border-color:var(--accent);color:var(--accent)}
+.sinput{width:100%;padding:8px 10px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:13px;font-family:inherit;transition:border-color .15s}
+.sinput:focus{outline:none;border-color:var(--accent)}
+.stextarea{width:100%;padding:8px 10px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:13px;font-family:inherit;resize:vertical;min-height:80px;line-height:1.5;transition:border-color .15s}
+.stextarea:focus{outline:none;border-color:var(--accent)}
+.stextarea::placeholder{color:var(--text3)}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.srow-label{font-size:13px;color:var(--text)}
+.sinote{font-size:11px;color:var(--text3);margin-top:2px;display:block;line-height:1.4}
+.toggle{width:34px;height:19px;background:var(--border);border-radius:10px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--accent)}
+.toggle::after{content:'';position:absolute;width:15px;height:15px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{left:17px}
+.sdanger{width:100%;padding:8px;background:none;border:1px solid var(--err);color:var(--err);border-radius:var(--r2);cursor:pointer;font-size:13px;transition:all .15s}
+.sdanger:hover{background:rgba(217,79,79,.08)}
+.sfooter{font-size:11px;color:var(--text3);text-align:center;padding-top:4px}
+.seg-ctrl{display:flex;background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:2px;gap:2px}
+.seg-btn{background:none;border:none;border-radius:4px;padding:3px 10px;font-size:12px;cursor:pointer;color:var(--text2);transition:all .15s;white-space:nowrap}
+.seg-btn.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.cost-row{display:flex;align-items:center;gap:8px;margin-top:4px}
+.cost-slider{flex:1;accent-color:var(--accent)}
+.cost-val{font-size:12px;font-weight:600;color:var(--text);min-width:36px;text-align:right}
+
+.pack-status{font-size:12px;padding:6px 8px;border-radius:var(--r2);background:var(--surf);border:1px solid var(--border);color:var(--text2)}
+.pack-status.ok{border-color:var(--ok);color:var(--ok)}
+.pack-status.dl{border-color:var(--accent);color:var(--accent)}
+.pack-btn{padding:7px;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);cursor:pointer;font-size:12px;font-weight:600;transition:background .15s}
+.pack-btn:hover:not(:disabled){background:var(--accent2)}
+.pack-btn:disabled{opacity:.6;cursor:not-allowed}
+.pack-btn.alt{background:var(--surf);color:var(--text);border:1px solid var(--border)}
+.pack-btn.alt:hover{background:var(--surf2)}
+
+/* Cost warning dialog */
+.cost-dialog{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center}
+.cost-dialog.open{display:flex}
+.cost-dialog-bd{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.cost-dialog-box{position:relative;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow2);padding:20px;max-width:300px;width:90%;z-index:1}
+.cost-dialog-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cost-dialog-body{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
+.cost-dialog-btns{display:flex;gap:8px;justify-content:flex-end}
+.cost-cancel{background:none;border:1px solid var(--border);color:var(--text2);border-radius:var(--r2);padding:6px 14px;cursor:pointer;font-size:13px;transition:all .15s}
+.cost-cancel:hover{border-color:var(--text2);color:var(--text)}
+.cost-ok{background:var(--accent);border:none;color:#fff;border-radius:var(--r2);padding:6px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:background .15s}
+.cost-ok:hover{background:var(--accent2)}
+
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#fileInput{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="main">
+    <header class="header">
+      <button class="btn-icon" onclick="openSidebar()" title="Chat history">☰</button>
+      <div class="logo"><div class="logo-icon">AI</div><span>PowerPoint AI</span></div>
+      <button class="model-btn" id="modelBtn" onclick="openModelPicker()">Loading…</button>
+      <button class="btn-icon" onclick="openThemePicker()" title="Themes">🎨</button>
+      <span class="sync-dot busy" id="syncDot" title="Syncing…"></span>
+      <button class="btn-icon" onclick="openSettings()" title="Settings">⚙</button>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">✦</div>
+        <div class="empty-title">PowerPoint AI Assistant</div>
+        <div class="empty-sub">Ask me to add slides, change themes, write speaker notes, or build a whole deck.</div>
+        <div class="empty-actions">
+          <button class="empty-act-btn" onclick="openDeckGenerator()">+ New Deck</button>
+          <button class="empty-act-btn alt" onclick="coachCurrentSlide()">🎤 Coach me</button>
+        </div>
+        <div class="chips">
+          <button class="chip" onclick="useSugg(this)">Make slide 2's title bold and 48pt</button>
+          <button class="chip" onclick="useSugg(this)">Create a 10-slide pitch deck about climate change</button>
+          <button class="chip" onclick="useSugg(this)">Apply a corporate blue theme</button>
+          <button class="chip" onclick="useSugg(this)">Write speaker notes for the current slide</button>
+          <button class="chip" onclick="useSugg(this)">How many slides do I have?</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-box">
+        <div class="input-row">
+          <textarea id="msgInput" placeholder="Ask anything…" rows="1"
+            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <div class="input-btns">
+            <button class="act-btn" onclick="document.getElementById('fileInput').click()" title="Attach file">📎</button>
+            <input type="file" id="fileInput" accept=".txt,.csv,.json,.md,.pptx" onchange="attachFile(event)">
+            <div class="plus-wrap">
+              <div class="plus-popup" id="plusPopup">
+                <div class="plus-item" onclick="toggleOpt('deep')">
+                  <div class="plus-check" id="deepCheck"></div>
+                  <div><div class="plus-label">Deep Think</div><div class="plus-sub">Refines your prompt + maximum reasoning budget</div></div>
+                </div>
+                <div class="plus-item" onclick="toggleOpt('dynamic')">
+                  <div class="plus-check" id="dynamicCheck"></div>
+                  <div><div class="plus-label">Dynamic</div><div class="plus-sub">AI calibrates thinking depth for each prompt</div></div>
+                </div>
+                <div class="plus-item" onclick="toggleOpt('auto')">
+                  <div class="plus-check" id="autoCheck"></div>
+                  <div><div class="plus-label">Auto Model</div><div class="plus-sub">AI picks the best model per prompt</div></div>
+                </div>
+                <div class="plus-sep"></div>
+                <div class="plus-item" onclick="toggleOpt('plan')">
+                  <div class="plus-check" id="planCheck"></div>
+                  <div><div class="plus-label">Plan First</div><div class="plus-sub">Brief plan before executing changes</div></div>
+                </div>
+                <div class="plus-item" onclick="toggleOpt('slideByStep')">
+                  <div class="plus-check" id="slideByStepCheck"></div>
+                  <div><div class="plus-label">Slide-by-slide preview</div><div class="plus-sub">List affected slides before multi-slide changes</div></div>
+                </div>
+              </div>
+              <button class="act-btn" id="plusBtn" onclick="togglePlus()" title="Options">+</button>
+            </div>
+            <button class="send" id="sendBtn" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+        <div class="input-foot">
+          <span id="attachBadge"></span>
+          <span class="tok-info" id="tokInfo"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-backdrop" onclick="closeSidebar()"></div>
+  <div class="sidebar-drawer">
+    <div class="sidebar-head">
+      <button class="new-chat" onclick="newChat()">+ New Chat</button>
+      <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    </div>
+    <div class="chat-list" id="chatList"><div class="no-chats">No chats yet</div></div>
+  </div>
+</div>
+
+<!-- Model picker -->
+<div class="modal" id="modelModal">
+  <div class="modal-bd" onclick="closeModelPicker()"></div>
+  <div class="model-panel">
+    <div class="model-ph">
+      <span>Select Model</span>
+      <button class="filter-btn" id="filterBtn" onclick="toggleFilterPopup(event)">⊞ Filter</button>
+      <div class="filter-popup" id="filterPopup">
+        <div class="filter-section">Filter by tag</div>
+        <div class="filter-row">
+          <div class="filter-item" onclick="toggleFilter('free')"><div class="filter-check" id="fc-free"></div>Free</div>
+          <div class="filter-item" onclick="toggleFilter('fast')"><div class="filter-check" id="fc-fast"></div>Fast</div>
+          <div class="filter-item" onclick="toggleFilter('reason')"><div class="filter-check" id="fc-reason"></div>Reasoning</div>
+          <div class="filter-item" onclick="toggleFilter('groq')"><div class="filter-check" id="fc-groq"></div>Groq</div>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-section">Sort by price</div>
+        <div class="filter-row">
+          <div class="filter-item" onclick="setSortMode('asc')"><div class="filter-check" id="fc-sort-asc"></div>Low → High</div>
+          <div class="filter-item" onclick="setSortMode('desc')"><div class="filter-check" id="fc-sort-desc"></div>High → Low</div>
+          <div class="filter-item" onclick="setSortMode('free')"><div class="filter-check" id="fc-sort-free"></div>Free only</div>
+        </div>
+      </div>
+    </div>
+    <div class="model-search-wrap">
+      <input class="model-search" id="modelSearch" placeholder="Search models…" oninput="renderModelList(this.value)" autocomplete="off">
+    </div>
+    <div class="model-list" id="modelList"></div>
+    <div class="add-model-wrap">
+      <input class="add-model-inp" id="addModelInp" placeholder="Add model ID — e.g. anthropic/claude-opus-4-5" autocomplete="off"
+        onkeydown="if(event.key==='Enter')addCustomModel()">
+      <button class="add-model-btn" onclick="addCustomModel()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Theme picker -->
+<div class="modal" id="themeModal">
+  <div class="modal-bd" onclick="closeThemePicker()"></div>
+  <div class="theme-panel">
+    <div class="model-ph"><span>Choose a Theme</span></div>
+    <div class="theme-list" id="themeList"></div>
+    <div class="theme-custom-wrap">
+      <button class="theme-custom-btn" onclick="customThemePrompt()">+ Design a custom theme with AI</button>
+    </div>
+  </div>
+</div>
+
+<!-- Deck generator -->
+<div class="modal" id="deckGenModal">
+  <div class="modal-bd" onclick="closeDeckGenerator()"></div>
+  <div class="gen-panel">
+    <div class="gen-head"><span>Generate a New Deck</span><button class="btn-icon" onclick="closeDeckGenerator()">✕</button></div>
+    <div class="gen-body">
+      <div class="gen-grp">
+        <div class="gen-label">Topic</div>
+        <textarea class="gen-textarea" id="genTopic" placeholder="e.g. Q4 sales review for the leadership team"></textarea>
+      </div>
+      <div class="gen-row">
+        <div class="gen-grp" style="flex:1">
+          <div class="gen-label">Slides</div>
+          <input class="gen-input" id="genSlides" type="number" min="3" max="30" value="10">
+        </div>
+        <div class="gen-grp" style="flex:2">
+          <div class="gen-label">Audience</div>
+          <input class="gen-input" id="genAudience" placeholder="Board, customers, students…" value="general">
+        </div>
+      </div>
+      <div class="gen-grp">
+        <div class="gen-label">Tone</div>
+        <div class="seg-ctrl" id="genToneCtrl">
+          <button class="seg-btn active" onclick="setGenTone('pitch')">Pitch</button>
+          <button class="seg-btn" onclick="setGenTone('formal')">Formal</button>
+          <button class="seg-btn" onclick="setGenTone('casual')">Casual</button>
+          <button class="seg-btn" onclick="setGenTone('educational')">Educational</button>
+        </div>
+      </div>
+    </div>
+    <div class="gen-progress" id="genProgress" style="display:none">
+      <span id="genProgressText">Generating…</span>
+      <div class="gen-bar"><div class="gen-bar-fill" id="genBarFill" style="width:0%"></div></div>
+    </div>
+    <div class="gen-foot">
+      <button class="cost-cancel" onclick="closeDeckGenerator()">Cancel</button>
+      <button class="cost-ok" id="genGoBtn" onclick="generateDeck()">Generate Deck</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="settings" id="settingsPanel">
+  <div class="settings-bd" onclick="closeSettings()"></div>
+  <div class="settings-draw">
+    <div class="shead"><span class="stitle">Settings</span><button class="btn-icon" onclick="closeSettings()">✕</button></div>
+    <div class="stabs">
+      <button class="stab active" id="stab-general" onclick="switchSettingsTab('general')">General</button>
+      <button class="stab" id="stab-prefs" onclick="switchSettingsTab('prefs')">Preferences</button>
+      <button class="stab" id="stab-data" onclick="switchSettingsTab('data')">Data</button>
+    </div>
+
+    <!-- General -->
+    <div class="sbody" id="sbody-general">
+      <div class="sgrp">
+        <div class="slabel">Theme</div>
+        <div class="theme-row">
+          <button class="theme-opt" id="tLight" onclick="setTheme('light')">☀ Light</button>
+          <button class="theme-opt" id="tDark"  onclick="setTheme('dark')">☾ Dark</button>
+        </div>
+      </div>
+      <div class="sgrp">
+        <div class="slabel">API Keys</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:4px">OpenRouter</div>
+            <input class="sinput" type="password" id="apiKeyInp" placeholder="sk-or-v1-…" oninput="saveKey('or')">
+            <span class="sinote">openrouter.ai — access all models</span>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:4px">Groq</div>
+            <input class="sinput" type="password" id="groqKeyInp" placeholder="gsk_…" oninput="saveKey('groq')">
+            <span class="sinote">groq.com — ultra-fast inference</span>
+          </div>
+        </div>
+        <span class="sinote">Keys stored locally on your device only.</span>
+      </div>
+      <div class="sgrp">
+        <div class="slabel">Behaviour</div>
+        <div class="srow"><span class="srow-label">Auto-sync deck</span><div class="toggle on" id="autoSyncTog" onclick="togSet('autoSync','autoSyncTog')"></div></div>
+        <div class="srow" style="margin-top:8px"><span class="srow-label">Show generated code</span><div class="toggle on" id="showCodeTog" onclick="togSet('showCode','showCodeTog')"></div></div>
+      </div>
+      <div class="sgrp">
+        <div class="slabel">History</div>
+        <button class="sdanger" onclick="clearAllHistory()">Delete all chat history</button>
+      </div>
+      <div class="sfooter">PowerPoint AI Assistant · v1</div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="sbody" id="sbody-prefs" style="display:none">
+      <div class="sgrp">
+        <div class="slabel">Your Preferences</div>
+        <textarea class="stextarea" id="prefsInp" placeholder="e.g. Always use Inter font. Prefer minimal slide designs. Use sentence case for titles." oninput="savePrefs()"></textarea>
+        <span class="sinote">The AI follows these on every message.</span>
+      </div>
+      <div class="sgrp">
+        <div class="slabel">Cost Limit</div>
+        <div class="srow" style="margin-bottom:6px">
+          <span class="srow-label" style="font-size:12px">Limit per</span>
+          <div class="seg-ctrl">
+            <button class="seg-btn active" id="seg-prompt" onclick="setCostLimitType('prompt')">Prompt</button>
+            <button class="seg-btn" id="seg-session" onclick="setCostLimitType('session')">Session</button>
+          </div>
+        </div>
+        <div class="cost-row">
+          <input type="range" class="cost-slider" id="costSlider" min="0" max="10" step="1" value="0" oninput="updateCostSlider(this.value)">
+          <span class="cost-val" id="costSliderVal">Off</span>
+        </div>
+        <span class="sinote" id="costNote">No limit — all prompts allowed.</span>
+        <span class="sinote" id="sessionCostNote" style="margin-top:4px"></span>
+      </div>
+      <div class="sgrp">
+        <div class="slabel">Session Cost</div>
+        <div style="font-size:13px;color:var(--text)">This session: <strong id="sessionCostDisplay">$0.000</strong></div>
+        <button class="sdanger" style="margin-top:6px" onclick="resetSessionCost()">Reset session cost</button>
+      </div>
+    </div>
+
+    <!-- Data tab: image pack + web search -->
+    <div class="sbody" id="sbody-data" style="display:none">
+      <div class="sgrp">
+        <div class="slabel">Image Asset Pack</div>
+        <div class="pack-status" id="packStatus">Checking…</div>
+        <div style="display:flex;gap:6px">
+          <button class="pack-btn" id="packDlBtn" onclick="downloadPack()">Download asset pack</button>
+          <button class="pack-btn alt" onclick="verifyPack()">Re-verify</button>
+        </div>
+        <span class="sinote" id="packNote">All images are CC0 from Pexels, Unsplash and Pixabay — free for commercial use.</span>
+      </div>
+      <div class="sgrp">
+        <div class="slabel">Web Search</div>
+        <div class="srow" style="margin-bottom:4px">
+          <span class="srow-label" style="font-size:12px">Mode</span>
+          <div class="seg-ctrl">
+            <button class="seg-btn" id="ws-off"      onclick="setWebSearchMode('off')">Ask each time</button>
+            <button class="seg-btn" id="ws-on"       onclick="setWebSearchMode('on')">Always on</button>
+            <button class="seg-btn" id="ws-disabled" onclick="setWebSearchMode('disabled')">Disabled</button>
+          </div>
+        </div>
+        <span class="sinote" id="wsNote">Default. The AI will ask permission per search.</span>
+        <span class="sinote" id="wsProvNote">Provider: Brave Search</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cost warning dialog -->
+<div class="cost-dialog" id="costDialog">
+  <div class="cost-dialog-bd" onclick="cancelSend()"></div>
+  <div class="cost-dialog-box">
+    <div class="cost-dialog-title">⚠ Cost Limit</div>
+    <div class="cost-dialog-body" id="costDialogBody"></div>
+    <div class="cost-dialog-btns">
+      <button class="cost-cancel" onclick="cancelSend()">Cancel</button>
+      <button class="cost-ok" onclick="confirmSend()">Send Anyway</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let chatId = null, history = [], summary = null, deckData = '', currentSlide = '';
+let loading = false, ctrl = null, attached = null;
+let totalTok = 0, autoSync = true, showCode = true;
+let opts = { deep: false, dynamic: false, auto: false, plan: false, slideByStep: false };
+let selectedModel = localStorage.getItem('selModel') || 'meta-llama/llama-3.3-70b-instruct';
+let localModels = [], customModels = [], catalogModels = [], catalogLoaded = false, changeReady = false, syncTimer = null;
+let plusOpen = false, timerInterval = null;
+let recentModels = JSON.parse(localStorage.getItem('recentModels') || '[]');
+let modelUsage   = JSON.parse(localStorage.getItem('modelUsage')   || '{}');
+let activeModelFilter = null, modelSortMode = null, filterPopupOpen = false;
+let lastRecommendation = null, recReasonOpen = false;
+let userPreferences = localStorage.getItem('userPreferences') || '';
+let costLimitType = localStorage.getItem('costLimitType') || 'prompt';
+let costLimitIdx  = parseInt(localStorage.getItem('costLimitIdx') || '0');
+let sessionCost = 0;
+let pendingSendResolve = null;
+let webSearchMode = localStorage.getItem('webSearchMode') || 'off';
+let activeTheme = localStorage.getItem('activeTheme') || null;
+let themesData = {};
+let genTone = 'pitch';
+let pendingWebSearchResults = []; // accumulates per-turn for re-prompt
+
+const PROMPT_LIMITS  = [0, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.10, 0.20, 0.50, 1.00];
+const SESSION_LIMITS = [0, 0.01,  0.02,  0.05,  0.10, 0.25, 0.50, 1.00, 2.00, 5.00, 10.00];
+
+const OR_MODELS = [
+  {id:'meta-llama/llama-3.3-70b-instruct',     name:'Llama 3.3 70B',    provider:'OpenRouter', in:0.07, out:0.30, tags:['rec']},
+  {id:'meta-llama/llama-3.1-8b-instruct:free', name:'Llama 3.1 8B',     provider:'OpenRouter', in:0,    out:0,    tags:['free']},
+  {id:'google/gemini-2.0-flash-001',           name:'Gemini 2.0 Flash', provider:'OpenRouter', in:0,    out:0,    tags:['free','fast']},
+  {id:'google/gemini-2.5-pro-preview',         name:'Gemini 2.5 Pro',   provider:'OpenRouter', in:1.25, out:10,   tags:[]},
+  {id:'anthropic/claude-sonnet-4-5',           name:'Claude Sonnet 4.5',provider:'OpenRouter', in:3,    out:15,   tags:[]},
+  {id:'anthropic/claude-3-haiku',              name:'Claude 3 Haiku',   provider:'OpenRouter', in:0.25, out:1.25, tags:['fast']},
+  {id:'openai/gpt-4o',                         name:'GPT-4o',           provider:'OpenRouter', in:2.50, out:10,   tags:[]},
+  {id:'openai/gpt-4o-mini',                    name:'GPT-4o Mini',      provider:'OpenRouter', in:0.15, out:0.60, tags:['fast']},
+  {id:'deepseek/deepseek-r1',                  name:'DeepSeek R1',      provider:'OpenRouter', in:0.55, out:2.19, tags:['reason']},
+  {id:'qwen/qwen-2.5-72b-instruct',            name:'Qwen 2.5 72B',     provider:'OpenRouter', in:0.35, out:0.40, tags:[]},
+];
+const GROQ_MODELS = [
+  {id:'llama-3.3-70b-versatile', name:'Llama 3.3 70B', provider:'Groq', in:0.59, out:0.79, tags:['groq','fast']},
+  {id:'llama-3.1-8b-instant',    name:'Llama 3.1 8B',  provider:'Groq', in:0.05, out:0.08, tags:['groq','fast']},
+  {id:'mixtral-8x7b-32768',      name:'Mixtral 8x7B',  provider:'Groq', in:0.24, out:0.24, tags:['groq']},
+];
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+Office.onReady(async info => {
+  if (info.host !== Office.HostType.PowerPoint) return;
+  loadSettings();
+  customModels = JSON.parse(localStorage.getItem('customModels') || '[]');
+  await Promise.all([loadChats(), detectLocal(), loadThemes(), refreshPackStatus(), refreshWebSearchStatus()]);
+  renderModelBtn();
+  await readDeck();
+  registerListeners();
+  if (!chatId) newChat(false);
+  document.addEventListener('click', e => {
+    if (plusOpen && !e.target.closest('.plus-wrap')) closePlus();
+    if (filterPopupOpen && !e.target.closest('.model-ph')) closeFilterPopup();
+  });
+});
+
+// ── Settings ─────────────────────────────────────────────────────────────────
+function loadSettings() {
+  const th = localStorage.getItem('theme') || 'light';
+  setTheme(th, false);
+  autoSync = localStorage.getItem('autoSync') !== 'false';
+  showCode = localStorage.getItem('showCode') !== 'false';
+  document.getElementById('autoSyncTog').className = 'toggle' + (autoSync?' on':'');
+  document.getElementById('showCodeTog').className = 'toggle' + (showCode?' on':'');
+  const k = localStorage.getItem('apiKey');   if (k)  document.getElementById('apiKeyInp').value  = k;
+  const gk= localStorage.getItem('groqKey');  if (gk) document.getElementById('groqKeyInp').value = gk;
+  document.getElementById('prefsInp').value = userPreferences;
+  document.getElementById('seg-prompt').className  = 'seg-btn' + (costLimitType==='prompt'?' active':'');
+  document.getElementById('seg-session').className = 'seg-btn' + (costLimitType==='session'?' active':'');
+  document.getElementById('costSlider').value = costLimitIdx;
+  updateCostSlider(costLimitIdx, false);
+  // web search mode
+  ['off','on','disabled'].forEach(m =>
+    document.getElementById('ws-'+m).className = 'seg-btn' + (webSearchMode===m?' active':'')
+  );
+  updateWebSearchNote();
+}
+function setTheme(t, save=true) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('tLight').className = 'theme-opt' + (t==='light'?' active':'');
+  document.getElementById('tDark').className  = 'theme-opt' + (t==='dark'?' active':'');
+  if (save) localStorage.setItem('theme', t);
+}
+function saveKey(provider) {
+  const id = provider==='or'?'apiKeyInp':'groqKeyInp';
+  const key = provider==='or'?'apiKey':'groqKey';
+  const k = document.getElementById(id).value.trim();
+  if (k) localStorage.setItem(key, k); else localStorage.removeItem(key);
+}
+function togSet(key, id) {
+  if (key==='autoSync') { autoSync=!autoSync; localStorage.setItem('autoSync',autoSync); document.getElementById(id).className='toggle'+(autoSync?' on':''); }
+  else { showCode=!showCode; localStorage.setItem('showCode',showCode); document.getElementById(id).className='toggle'+(showCode?' on':''); }
+}
+function savePrefs() {
+  userPreferences = document.getElementById('prefsInp').value;
+  localStorage.setItem('userPreferences', userPreferences);
+}
+function setCostLimitType(t) {
+  costLimitType = t;
+  localStorage.setItem('costLimitType', t);
+  document.getElementById('seg-prompt').className  = 'seg-btn' + (t==='prompt'?' active':'');
+  document.getElementById('seg-session').className = 'seg-btn' + (t==='session'?' active':'');
+  updateCostSlider(costLimitIdx, false);
+}
+function updateCostSlider(val, save=true) {
+  costLimitIdx = parseInt(val);
+  if (save) localStorage.setItem('costLimitIdx', costLimitIdx);
+  const lim = getCostLimit();
+  document.getElementById('costSliderVal').textContent = lim === 0 ? 'Off' : '$' + lim.toFixed(lim < 0.01 ? 3 : 2);
+  document.getElementById('costNote').textContent = lim === 0
+    ? 'No limit — all prompts allowed.'
+    : `Max $${lim.toFixed(lim < 0.01 ? 3 : 2)} per ${costLimitType}. You'll be warned before exceeding.`;
+}
+function getCostLimit() {
+  const arr = costLimitType === 'prompt' ? PROMPT_LIMITS : SESSION_LIMITS;
+  return arr[Math.min(costLimitIdx, arr.length - 1)] || 0;
+}
+function resetSessionCost() { sessionCost = 0; updateSessionCostDisplay(); }
+function updateSessionCostDisplay() {
+  const el = document.getElementById('sessionCostDisplay');
+  if (el) el.textContent = '$' + sessionCost.toFixed(3);
+  const note = document.getElementById('sessionCostNote');
+  if (note) {
+    const lim = getCostLimit();
+    if (lim > 0 && costLimitType === 'session') {
+      note.textContent = `Session limit: $${lim.toFixed(2)} — $${Math.max(0, lim - sessionCost).toFixed(3)} remaining.`;
+    } else { note.textContent = ''; }
+  }
+}
+function switchSettingsTab(tab) {
+  ['general','prefs','data'].forEach(t => {
+    document.getElementById('sbody-'+t).style.display = tab === t ? '' : 'none';
+    document.getElementById('stab-'+t).className = 'stab' + (tab===t?' active':'');
+  });
+}
+function openSettings()  { document.getElementById('settingsPanel').classList.add('open'); }
+function closeSettings() { document.getElementById('settingsPanel').classList.remove('open'); }
+
+// ── Web search settings ─────────────────────────────────────────────────────
+function setWebSearchMode(m) {
+  webSearchMode = m;
+  localStorage.setItem('webSearchMode', m);
+  ['off','on','disabled'].forEach(x =>
+    document.getElementById('ws-'+x).className = 'seg-btn' + (m===x?' active':'')
+  );
+  updateWebSearchNote();
+}
+function updateWebSearchNote() {
+  const note = document.getElementById('wsNote');
+  if (!note) return;
+  note.textContent = ({
+    off: 'The AI will ask permission per search before reaching the web.',
+    on: 'Searches happen automatically when the AI needs live data.',
+    disabled: 'No web access; the AI will tell you to enable it if needed.',
+  })[webSearchMode] || '';
+}
+async function refreshWebSearchStatus() {
+  try {
+    const r = await fetch('/api/web-search/status');
+    const d = await r.json();
+    const el = document.getElementById('wsProvNote');
+    if (el) el.textContent = `Provider: ${d.provider} — ${d.configured ? 'API key configured' : 'NO API KEY (set BRAVE_KEY in .env)'}`;
+  } catch {}
+}
+
+// ── Asset pack settings ─────────────────────────────────────────────────────
+async function refreshPackStatus() {
+  try {
+    const r = await fetch('/api/assets/status');
+    const d = await r.json();
+    const el = document.getElementById('packStatus');
+    if (!el) return;
+    if (d.downloaded) {
+      el.className = 'pack-status ok';
+      const mb = (d.sizeBytes/1024/1024).toFixed(1);
+      el.textContent = `Downloaded · ${d.imageCount} images · ${mb} MB · ${d.categories.length} categories`;
+    } else if (d.imageCount > 0 && d.totalImages) {
+      el.className = 'pack-status dl';
+      el.textContent = `Partial · ${d.imageCount}/${d.totalImages} images downloaded`;
+    } else {
+      el.className = 'pack-status';
+      el.textContent = `Not downloaded · ${d.totalImages || 0} images available`;
+    }
+  } catch {}
+}
+async function downloadPack() {
+  const btn = document.getElementById('packDlBtn');
+  btn.disabled = true; btn.textContent = 'Starting…';
+  try {
+    const r = await fetch('/api/assets/download-pack', { method: 'POST' });
+    if (!r.ok) { btn.disabled = false; btn.textContent = 'Download asset pack'; alert('Download failed: ' + (await r.json()).error); return; }
+    const ev = new EventSource('/api/assets/download-pack/progress');
+    ev.onmessage = e => {
+      const s = JSON.parse(e.data);
+      btn.textContent = s.active ? `Downloading ${s.done}/${s.total}…` : 'Done';
+      if (!s.active && s.done >= s.total) { ev.close(); btn.disabled = false; btn.textContent = 'Re-download pack'; refreshPackStatus(); }
+    };
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Download asset pack';
+    alert('Download failed: ' + e.message);
+  }
+}
+async function verifyPack() {
+  await fetch('/api/assets/download-pack', { method: 'POST' }).catch(()=>{});
+  refreshPackStatus();
+}
+
+// ── Themes ──────────────────────────────────────────────────────────────────
+async function loadThemes() {
+  try { const r = await fetch('/api/themes'); themesData = await r.json(); } catch {}
+}
+function openThemePicker() {
+  const list = document.getElementById('themeList');
+  list.innerHTML = '';
+  Object.entries(themesData).forEach(([key, t]) => {
+    const card = document.createElement('div');
+    card.className = 'theme-card';
+    const swatches = [t.primary, t.secondary, t.accent, t.bg, t.text]
+      .map(c => `<div class="theme-sw" style="background:${c}"></div>`).join('');
+    card.innerHTML = `<div class="theme-swatches">${swatches}</div>
+      <div class="theme-meta"><div class="theme-name">${esc(t.name)}</div><div class="theme-font">${esc(t.font)}</div></div>`;
+    card.onclick = () => { closeThemePicker(); document.getElementById('msgInput').value = `Apply the ${t.name} theme to the deck.`; sendMessage(); activeTheme = key; localStorage.setItem('activeTheme', key); };
+    list.appendChild(card);
+  });
+  document.getElementById('themeModal').classList.add('open');
+}
+function closeThemePicker() { document.getElementById('themeModal').classList.remove('open'); }
+function customThemePrompt() {
+  closeThemePicker();
+  const inp = document.getElementById('msgInput');
+  inp.value = 'Design a custom theme for ';
+  inp.focus();
+  autoResize(inp);
+}
+
+// ── Deck generator ──────────────────────────────────────────────────────────
+function openDeckGenerator() { document.getElementById('deckGenModal').classList.add('open'); }
+function closeDeckGenerator() {
+  document.getElementById('deckGenModal').classList.remove('open');
+  document.getElementById('genProgress').style.display = 'none';
+  document.getElementById('genGoBtn').disabled = false;
+}
+function setGenTone(t) {
+  genTone = t;
+  document.querySelectorAll('#genToneCtrl .seg-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+async function generateDeck() {
+  const topic = document.getElementById('genTopic').value.trim();
+  if (!topic) { alert('Enter a topic first.'); return; }
+  const slideCount = parseInt(document.getElementById('genSlides').value) || 10;
+  const audience = document.getElementById('genAudience').value.trim() || 'general';
+  const goBtn = document.getElementById('genGoBtn');
+  goBtn.disabled = true;
+  document.getElementById('genProgress').style.display = '';
+  document.getElementById('genProgressText').textContent = 'Asking AI for outline…';
+  document.getElementById('genBarFill').style.width = '5%';
+
+  const isGroq = selectedModel.startsWith('groq:');
+  const isOllama = selectedModel.startsWith('ollama:');
+  const modelId = isGroq ? selectedModel.slice(5) : isOllama ? selectedModel.slice(7) : selectedModel;
+  const apiKey = localStorage.getItem('apiKey') || undefined;
+  const groqKey = localStorage.getItem('groqKey') || undefined;
+
+  try {
+    const r = await fetch('/api/generate-deck', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic, slideCount, audience, tone: genTone, model: modelId, useOllama: isOllama, useGroq: isGroq, apiKey, groqKey })
+    });
+    const data = await r.json();
+    if (data.error) { alert('Generation failed: ' + data.error); closeDeckGenerator(); return; }
+    const outline = data.outline || [];
+    if (!outline.length) { alert('Got an empty outline.'); closeDeckGenerator(); return; }
+
+    addMsg('user', `Generate a ${genTone} ${slideCount}-slide deck about: ${topic}`);
+    history.push({ role: 'user', content: `Generate a ${genTone} ${slideCount}-slide deck about: ${topic}`, time: new Date().toISOString() });
+    addMsg('assistant', `📋 Outline ready — ${outline.length} slides. Building now…`);
+
+    for (let i = 0; i < outline.length; i++) {
+      const s = outline[i];
+      document.getElementById('genProgressText').textContent = `Generating slide ${i+1} of ${outline.length}: ${s.title}`;
+      document.getElementById('genBarFill').style.width = (5 + 90 * (i / outline.length)) + '%';
+      const code = `await addSlide(${JSON.stringify(s.layout)}, ${JSON.stringify(s.title)}, ${JSON.stringify(s.body)}, ${JSON.stringify(s.notes)});`;
+      const r2 = await execCode(code);
+      if (!r2.ok) {
+        addMsg('assistant', `⚠ Slide ${i+1} failed: ${r2.err}`, true);
+      }
+    }
+    document.getElementById('genBarFill').style.width = '100%';
+    document.getElementById('genProgressText').textContent = 'Done.';
+    addMsg('assistant', `✓ Created ${outline.length} slides.`);
+    history.push({ role: 'assistant', content: `Created ${outline.length} slides.` });
+    await saveChat();
+    setTimeout(closeDeckGenerator, 800);
+  } catch (e) {
+    alert('Generation failed: ' + e.message);
+    goBtn.disabled = false;
+  }
+}
+
+// ── Coach ───────────────────────────────────────────────────────────────────
+async function coachCurrentSlide() {
+  let slideText = '', slideNotes = '';
+  try {
+    await PowerPoint.run(async ctx => {
+      const sel = ctx.presentation.getSelectedSlides();
+      sel.load('items/id');
+      await ctx.sync();
+      let slide = sel.items[0];
+      if (!slide) {
+        ctx.presentation.slides.load('items/id');
+        await ctx.sync();
+        slide = ctx.presentation.slides.items[0];
+      }
+      if (!slide) throw new Error('No slides in this deck.');
+      slide.shapes.load('items/textFrame/textRange/text');
+      slide.notesPage.notesTextFrame.load('textRange/text');
+      await ctx.sync();
+      slideText = (slide.shapes.items || []).map(s => {
+        try { return s.textFrame.textRange.text || ''; } catch { return ''; }
+      }).filter(Boolean).join('\n');
+      try { slideNotes = slide.notesPage.notesTextFrame.textRange.text || ''; } catch {}
+    });
+  } catch (e) {
+    addMsg('assistant', '⚠ Could not read current slide: ' + e.message, true);
+    return;
+  }
+
+  const isGroq = selectedModel.startsWith('groq:');
+  const isOllama = selectedModel.startsWith('ollama:');
+  const modelId = isGroq ? selectedModel.slice(5) : isOllama ? selectedModel.slice(7) : selectedModel;
+  const apiKey = localStorage.getItem('apiKey') || undefined;
+  const groqKey = localStorage.getItem('groqKey') || undefined;
+
+  addTyping();
+  try {
+    const r = await fetch('/api/coach', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slideText, slideNotes, focus: 'all', model: modelId, useOllama: isOllama, useGroq: isGroq, apiKey, groqKey })
+    });
+    const d = await r.json();
+    removeTyping();
+    if (d.error) { addMsg('assistant', '⚠ Coach failed: ' + d.error, true); return; }
+    const el = mkMsg('assistant', d.feedback, false, null, d.usage?.completion_tokens, null, null, null, true);
+    // Apply notes button
+    const suggested = (d.feedback.match(/SUGGESTED NOTES:?\s*([\s\S]*)/i) || [])[1] || '';
+    if (suggested.trim()) {
+      const apply = document.createElement('button');
+      apply.className = 'coach-apply';
+      apply.textContent = '✓ Apply suggested notes';
+      apply.onclick = async () => {
+        apply.disabled = true; apply.textContent = 'Applying…';
+        const code = `await addSpeakerNote(-1, ${JSON.stringify(suggested.trim())}, false);`;
+        const r2 = await execCode(code);
+        apply.textContent = r2.ok ? '✓ Notes applied' : '⚠ Failed: ' + r2.err;
+      };
+      el.appendChild(apply);
+    }
+    document.getElementById('messages').appendChild(el);
+    document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    history.push({ role: 'assistant', content: '🎤 Coach: ' + d.feedback });
+    await saveChat();
+  } catch (e) {
+    removeTyping();
+    addMsg('assistant', '⚠ Coach failed: ' + e.message, true);
+  }
+}
+
+// ── Cost estimation ──────────────────────────────────────────────────────────
+function estimateCost(extraText) {
+  const model = allModelsFlat().find(m => m.id === selectedModel);
+  if (!model || (!model.in && !model.out)) return 0;
+  const text = [...history.slice(-8), { content: extraText || '' }]
+    .map(m => m.content || '').join(' ') + (deckData || '');
+  const inTok  = Math.ceil(text.length / 3.5);
+  const outTok = 800;
+  return (inTok * model.in + outTok * model.out) / 1_000_000;
+}
+function addActualCost(usage, modelId) {
+  const model = allModelsFlat().find(m => m.id === (modelId || selectedModel));
+  if (!model || (!model.in && !model.out)) return;
+  const inTok  = usage?.prompt_tokens     || 0;
+  const outTok = usage?.completion_tokens || 0;
+  sessionCost += (inTok * model.in + outTok * model.out) / 1_000_000;
+  updateSessionCostDisplay();
+}
+function checkCostBefore(text) {
+  const lim = getCostLimit();
+  if (lim === 0) return Promise.resolve(true);
+  if (costLimitType === 'session' && sessionCost >= lim) {
+    return showCostDialog(`Your session cost is already $${sessionCost.toFixed(3)}, which exceeds your $${lim.toFixed(2)} session limit.`);
+  }
+  const est = estimateCost(text);
+  if (est > 0) {
+    if (costLimitType === 'prompt' && est > lim) {
+      return showCostDialog(`This prompt is estimated to cost $${est.toFixed(4)}, which exceeds your $${lim.toFixed(lim < 0.01 ? 3 : 2)} per-prompt limit.`);
+    }
+    if (costLimitType === 'session' && sessionCost + est > lim) {
+      return showCostDialog(`This prompt (~$${est.toFixed(4)}) would bring your session total to $${(sessionCost + est).toFixed(3)}, exceeding the $${lim.toFixed(2)} limit.`);
+    }
+  }
+  return Promise.resolve(true);
+}
+function showCostDialog(msg) {
+  document.getElementById('costDialogBody').textContent = msg;
+  document.getElementById('costDialog').classList.add('open');
+  return new Promise(resolve => { pendingSendResolve = resolve; });
+}
+function confirmSend() { document.getElementById('costDialog').classList.remove('open'); if (pendingSendResolve) { pendingSendResolve(true); pendingSendResolve = null; } }
+function cancelSend()  { document.getElementById('costDialog').classList.remove('open'); if (pendingSendResolve) { pendingSendResolve(false); pendingSendResolve = null; } }
+
+// ── Plus popup ──────────────────────────────────────────────────────────────
+function togglePlus() { plusOpen ? closePlus() : openPlus(); }
+function openPlus()  { plusOpen=true; document.getElementById('plusPopup').classList.add('open'); }
+function closePlus() { plusOpen=false; document.getElementById('plusPopup').classList.remove('open'); }
+function toggleOpt(k) {
+  opts[k] = !opts[k];
+  const idMap = { deep:'deepCheck', dynamic:'dynamicCheck', auto:'autoCheck', plan:'planCheck', slideByStep:'slideByStepCheck' };
+  if (idMap[k]) document.getElementById(idMap[k]).className = 'plus-check' + (opts[k]?' on':'');
+  const anyOn = Object.values(opts).some(Boolean);
+  document.getElementById('plusBtn').className = 'act-btn' + (anyOn?' active':'');
+}
+
+// ── Model picker ────────────────────────────────────────────────────────────
+async function detectLocal() {
+  try { const r = await fetch('/api/models/local'); localModels = await r.json(); } catch { localModels = []; }
+}
+function allModelsFlat() {
+  return [
+    ...OR_MODELS,
+    ...GROQ_MODELS.map(m=>({...m, id:'groq:'+m.id})),
+    ...localModels.map(m=>({id:'ollama:'+m.id, name:m.name, provider:'Ollama', in:0, out:0, tags:['local']})),
+    ...customModels,
+  ];
+}
+function renderModelBtn() {
+  const f = allModelsFlat().find(m => m.id === selectedModel);
+  document.getElementById('modelBtn').textContent = (f?.name || selectedModel) + ' ▾';
+}
+function addToRecent(id) {
+  recentModels = [id, ...recentModels.filter(r => r !== id)].slice(0, 5);
+  localStorage.setItem('recentModels', JSON.stringify(recentModels));
+  modelUsage[id] = (modelUsage[id] || 0) + 1;
+  localStorage.setItem('modelUsage', JSON.stringify(modelUsage));
+}
+function collectSpecs() {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const ext = gl?.getExtension('WEBGL_debug_renderer_info');
+    return {
+      cores:     navigator.hardwareConcurrency || null,
+      memory:    navigator.deviceMemory || null,
+      gpu:       ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : null,
+      gpuVendor: ext ? gl.getParameter(ext.UNMASKED_VENDOR_WEBGL)   : null,
+      platform:  navigator.platform || null,
+    };
+  } catch { return {}; }
+}
+function getRecommendedModelId() {
+  if (lastRecommendation?.modelId && allModelsFlat().find(m => m.id === lastRecommendation.modelId))
+    return lastRecommendation.modelId;
+  const entries = Object.entries(modelUsage);
+  if (entries.length) {
+    const [topId, topCount] = entries.sort((a,b)=>b[1]-a[1])[0];
+    if (topCount >= 3 && allModelsFlat().find(m => m.id === topId)) return topId;
+  }
+  const cores = navigator.hardwareConcurrency || 4;
+  const mem   = navigator.deviceMemory || 4;
+  if (mem <= 4 || cores <= 4)  return 'google/gemini-2.0-flash-001';
+  if (mem >= 16 && cores >= 8) return 'google/gemini-2.5-pro-preview';
+  return 'meta-llama/llama-3.3-70b-instruct';
+}
+async function fetchRecommendation() {
+  const apiKey = localStorage.getItem('apiKey') || undefined;
+  try {
+    const r = await fetch('/api/recommend-model', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        specs: collectSpecs(),
+        modelUsage,
+        preferences: userPreferences,
+        availableModels: allModelsFlat().map(m=>({id:m.id,name:m.name,in:m.in,out:m.out,tags:m.tags})),
+        apiKey,
+      })
+    });
+    if (r.ok) {
+      const rec = await r.json();
+      if (rec.modelId && allModelsFlat().find(m => m.id === rec.modelId)) {
+        lastRecommendation = rec;
+        renderModelList(document.getElementById('modelSearch')?.value || '');
+      }
+    }
+  } catch {}
+}
+function toggleFilterPopup(e) {
+  e.stopPropagation();
+  filterPopupOpen = !filterPopupOpen;
+  document.getElementById('filterPopup').classList.toggle('open', filterPopupOpen);
+  document.getElementById('filterBtn').classList.toggle('active', filterPopupOpen);
+}
+function closeFilterPopup() {
+  filterPopupOpen = false;
+  document.getElementById('filterPopup')?.classList.remove('open');
+  document.getElementById('filterBtn')?.classList.remove('active');
+}
+function toggleFilter(tag) {
+  activeModelFilter = activeModelFilter === tag ? null : tag;
+  ['free','fast','reason','groq'].forEach(t =>
+    document.getElementById('fc-'+t).className = 'filter-check' + (activeModelFilter===t?' on':'')
+  );
+  updateFilterBtnState();
+  renderModelList(document.getElementById('modelSearch').value);
+}
+function setSortMode(mode) {
+  modelSortMode = modelSortMode === mode ? null : mode;
+  ['asc','desc','free'].forEach(m =>
+    document.getElementById('fc-sort-'+m).className = 'filter-check' + (modelSortMode===m?' on':'')
+  );
+  updateFilterBtnState();
+  renderModelList(document.getElementById('modelSearch').value);
+}
+function updateFilterBtnState() {
+  const active = activeModelFilter !== null || modelSortMode !== null;
+  document.getElementById('filterBtn').className = 'filter-btn' + (active || filterPopupOpen ? ' active' : '');
+}
+function sortModels(models) {
+  if (modelSortMode === 'asc')  return [...models].sort((a,b) => (a.in+a.out)-(b.in+b.out));
+  if (modelSortMode === 'desc') return [...models].sort((a,b) => (b.in+b.out)-(a.in+a.out));
+  if (modelSortMode === 'free') return models.filter(m => !m.in && !m.out);
+  return models;
+}
+function filterTag(models) {
+  if (!activeModelFilter) return models;
+  return models.filter(m => (m.tags||[]).includes(activeModelFilter));
+}
+function allModelGroups() {
+  return [
+    { label:'OpenRouter', models:OR_MODELS },
+    { label:'Groq',       models:GROQ_MODELS.map(m=>({...m,id:'groq:'+m.id})) },
+    ...(customModels.length ? [{ label:'Custom', models:customModels, custom:true }] : []),
+    ...(localModels.length  ? [{ label:'Local — Ollama', models:localModels.map(m=>({id:'ollama:'+m.id,name:m.name,provider:'Ollama',in:0,out:0,tags:['local']})) }] : []),
+  ];
+}
+function mkModelOpt(m, isCustom) {
+  const el = document.createElement('div');
+  el.className = 'model-opt' + (m.id===selectedModel?' sel':'');
+  const priceStr = (!m.in&&!m.out) ? (isCustom?'Custom · OpenRouter':'Free') : ('$'+m.in+' / $'+m.out+' per 1M tok');
+  const badges = (m.tags||[]).map(t=>'<span class="badge '+t+'">'+t+'</span>').join('');
+  el.innerHTML = '<div class="m-info"><div class="m-name">'+esc(m.name)+badges+'</div><div class="m-price">'+(isCustom?esc(m.id):esc(m.provider))+' · '+priceStr+'</div></div>';
+  if (isCustom) {
+    const del = document.createElement('button');
+    del.className='model-opt-del'; del.title='Remove'; del.textContent='✕';
+    del.onclick = e => { e.stopPropagation(); removeCustomModel(m.id); };
+    el.appendChild(del);
+  }
+  el.onclick = e => {
+    if (e.target.classList.contains('model-opt-del')) return;
+    selectedModel=m.id; localStorage.setItem('selModel',m.id);
+    addToRecent(m.id); renderModelBtn(); closeModelPicker();
+  };
+  return el;
+}
+function renderModelList(query) {
+  const list = document.getElementById('modelList');
+  list.innerHTML = '';
+  const q = (query||'').toLowerCase().trim();
+
+  if (!q) {
+    const recId  = getRecommendedModelId();
+    const recObj = allModelsFlat().find(m => m.id === recId);
+    if (recObj && !activeModelFilter && !modelSortMode) {
+      const row = document.createElement('div'); row.className='model-grp-row';
+      const lbl = document.createElement('div'); lbl.className='model-grp'; lbl.textContent='Recommended';
+      const infoBtn = document.createElement('button'); infoBtn.className='rec-info-btn'; infoBtn.textContent='ⓘ';
+      infoBtn.title = lastRecommendation?.reason || 'Loading recommendation…';
+      infoBtn.onclick = e => { e.stopPropagation(); toggleRecReason(); };
+      row.appendChild(lbl); row.appendChild(infoBtn); list.appendChild(row);
+      const reasonBox = document.createElement('div'); reasonBox.className='rec-reason-box'; reasonBox.id='recReasonBox';
+      reasonBox.textContent = lastRecommendation?.reason || 'Analysing your system…';
+      list.appendChild(reasonBox);
+      list.appendChild(mkModelOpt(recObj, customModels.some(c=>c.id===recObj.id)));
+    }
+
+    const recentObjs = recentModels
+      .filter(id => id !== recId)
+      .map(id => allModelsFlat().find(m=>m.id===id)).filter(Boolean);
+    if (recentObjs.length && !activeModelFilter && !modelSortMode) {
+      const lbl=document.createElement('div'); lbl.className='model-grp'; lbl.style='padding:8px 12px 4px';lbl.textContent='Recently Used';
+      list.appendChild(lbl);
+      recentObjs.forEach(m=>list.appendChild(mkModelOpt(m, customModels.some(c=>c.id===m.id))));
+    }
+
+    for (const grp of allModelGroups()) {
+      let models = filterTag(sortModels(grp.models));
+      if (!models.length) continue;
+      const lbl=document.createElement('div'); lbl.className='model-grp'; lbl.style='padding:8px 12px 4px';lbl.textContent=grp.label;
+      list.appendChild(lbl);
+      models.forEach(m=>list.appendChild(mkModelOpt(m, grp.custom||false)));
+    }
+    if (!localModels.length) {
+      const d=document.createElement('div');d.className='no-local';d.textContent='No local Ollama models detected.';list.appendChild(d);
+    }
+    return;
+  }
+
+  const presetIds = new Set([...OR_MODELS.map(m=>m.id),...GROQ_MODELS.map(m=>'groq:'+m.id)]);
+  const customIds = new Set(customModels.map(m=>m.id));
+  let source = catalogLoaded ? catalogModels : allModelsFlat();
+  let hits = source.filter(m=>(m.name||'').toLowerCase().includes(q)||(m.id||'').toLowerCase().includes(q));
+  hits = filterTag(sortModels(hits));
+  if (!hits.length) {
+    const d=document.createElement('div');d.className='no-local';
+    d.textContent='No models match "'+esc(query)+'".'+(catalogLoaded?'':' (catalog still loading)');
+    list.appendChild(d); return;
+  }
+  hits.forEach(m=>{
+    const isPreset=presetIds.has(m.id), isCustom=customIds.has(m.id);
+    const el=document.createElement('div');
+    el.className='model-opt'+(m.id===selectedModel?' sel':'');
+    const priceStr=(!m.in&&!m.out)?'Free':('$'+m.in+' / $'+m.out+' per 1M tok');
+    const ctxStr=m.context?' · '+Math.round(m.context/1000)+'k ctx':'';
+    const badge=isCustom?'<span class="badge rec">pinned</span>':isPreset?'<span class="badge fast">preset</span>':'';
+    el.innerHTML='<div class="m-info"><div class="m-name">'+esc(m.name)+badge+'</div><div class="m-price">'+esc(m.id)+' · '+priceStr+ctxStr+'</div></div>';
+    if (isCustom){const del=document.createElement('button');del.className='model-opt-del';del.title='Remove';del.textContent='✕';del.onclick=e=>{e.stopPropagation();removeCustomModel(m.id);};el.appendChild(del);}
+    el.onclick=e=>{
+      if(e.target.classList.contains('model-opt-del'))return;
+      if(!isPreset&&!isCustom){customModels.push({id:m.id,name:m.name,provider:'OpenRouter',in:m.in||0,out:m.out||0,tags:['custom']});localStorage.setItem('customModels',JSON.stringify(customModels));}
+      selectedModel=m.id;localStorage.setItem('selModel',m.id);addToRecent(m.id);renderModelBtn();closeModelPicker();
+    };
+    list.appendChild(el);
+  });
+  if(!catalogLoaded){const d=document.createElement('div');d.className='no-local';d.textContent='Loading full catalog in background…';list.appendChild(d);}
+}
+function toggleRecReason() { recReasonOpen = !recReasonOpen; document.getElementById('recReasonBox')?.classList.toggle('open', recReasonOpen); }
+async function loadCatalog() {
+  if(catalogLoaded)return;
+  try{const r=await fetch('/api/models/catalog');if(r.ok){catalogModels=await r.json();catalogLoaded=true;const q=document.getElementById('modelSearch')?.value;if(q)renderModelList(q);}}catch{}
+}
+function addCustomModel() {
+  const inp=document.getElementById('addModelInp');const raw=inp.value.trim();if(!raw)return;
+  const id=raw,name=id.includes('/')?id.split('/').pop():id;
+  if(customModels.find(m=>m.id===id)){inp.value='';return;}
+  const cat=catalogModels.find(m=>m.id===id);
+  customModels.push({id,name:cat?.name||name,provider:id.startsWith('groq:')?'Groq':'OpenRouter',in:cat?.in||0,out:cat?.out||0,tags:['custom']});
+  localStorage.setItem('customModels',JSON.stringify(customModels));
+  inp.value='';renderModelList(document.getElementById('modelSearch').value);renderModelBtn();
+}
+function removeCustomModel(id) {
+  customModels=customModels.filter(m=>m.id!==id);
+  localStorage.setItem('customModels',JSON.stringify(customModels));
+  if(selectedModel===id){selectedModel=OR_MODELS[0].id;localStorage.setItem('selModel',selectedModel);renderModelBtn();}
+  renderModelList(document.getElementById('modelSearch').value);
+}
+function openModelPicker() {
+  activeModelFilter=null; modelSortMode=null; recReasonOpen=false;
+  closeFilterPopup();
+  ['free','fast','reason','groq','sort-asc','sort-desc','sort-free'].forEach(t=>{const el=document.getElementById('fc-'+t);if(el)el.className='filter-check';});
+  updateFilterBtnState();
+  document.getElementById('modelModal').classList.add('open');
+  const inp=document.getElementById('modelSearch'); inp.value='';
+  renderModelList('');
+  setTimeout(()=>inp.focus(),50);
+  loadCatalog();
+  fetchRecommendation();
+}
+function closeModelPicker() { document.getElementById('modelModal').classList.remove('open'); document.getElementById('modelSearch').value=''; }
+
+// ── Sidebar / Chat history ──────────────────────────────────────────────────
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
+async function loadChats() {
+  try{const r=await fetch('/api/chats');const chats=await r.json();renderChatList(chats);if(chats.length&&!chatId)await loadChat(chats[0].id);}catch{}
+}
+function renderChatList(chats) {
+  const el=document.getElementById('chatList');
+  if(!chats.length){el.innerHTML='<div class="no-chats">No chats yet</div>';return;}
+  el.innerHTML=chats.map(c=>{
+    const d=new Date(c.updatedAt).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    return '<div class="chat-item'+(c.id===chatId?' active':'')+'" onclick="chatClick(event,\''+c.id+'\')">'+
+      '<div class="chat-title">'+esc(c.title)+'</div>'+
+      '<div class="chat-meta">'+d+' · '+(c.messageCount||0)+' msgs</div>'+
+      '<button class="chat-del" onclick="delChat(event,\''+c.id+'\')" title="Delete">✕</button>'+
+    '</div>';
+  }).join('');
+}
+async function chatClick(e,id){if(!e.target.classList.contains('chat-del'))await loadChat(id);}
+async function loadChat(id) {
+  try{const r=await fetch('/api/chats/'+id);const c=await r.json();chatId=id;history=c.messages||[];summary=c.summary||null;totalTok=c.totalTokens||0;renderMsgs();updateTok();closeSidebar();refreshChatList();}catch{}
+}
+async function newChat(doSave=true) {
+  if(doSave&&chatId)await saveChat();
+  try{const r=await fetch('/api/chats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:'New Chat',messages:[]})});const c=await r.json();chatId=c.id;history=[];summary=null;totalTok=0;renderEmpty();updateTok();closeSidebar();await loadChats();}catch{}
+}
+async function saveChat(title) {
+  if(!chatId)return;
+  const t=title||history.find(m=>m.role==='user')?.content?.split('\n')[0]?.slice(0,50)||'New Chat';
+  try{await fetch('/api/chats/'+chatId,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:t,messages:history,summary,totalTokens:totalTok})});await loadChats();}catch{}
+}
+async function delChat(e,id) {
+  e.stopPropagation();await fetch('/api/chats/'+id,{method:'DELETE'});
+  if(chatId===id){chatId=null;history=[];renderEmpty();}await loadChats();
+}
+async function clearAllHistory() {
+  if(!confirm('Delete all chat history? This cannot be undone.'))return;
+  const r=await fetch('/api/chats');const chats=await r.json();
+  await Promise.all(chats.map(c=>fetch('/api/chats/'+c.id,{method:'DELETE'})));
+  chatId=null;history=[];renderEmpty();closeSettings();await loadChats();
+}
+async function refreshChatList(){try{const r=await fetch('/api/chats');renderChatList(await r.json());}catch{}}
+async function generateTitle(userMsg,aiReply) {
+  try{const k=localStorage.getItem('apiKey');const r=await fetch('/api/title',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userMsg,aiReply,apiKey:k||undefined})});const d=await r.json();return d.title||null;}catch{return null;}
+}
+
+// ── Render ──────────────────────────────────────────────────────────────────
+function renderEmpty() {
+  document.getElementById('messages').innerHTML=
+    '<div class="empty-state" id="emptyState">'+
+    '<div class="empty-icon">✦</div>'+
+    '<div class="empty-title">PowerPoint AI Assistant</div>'+
+    '<div class="empty-sub">Ask me to add slides, change themes, write speaker notes, or build a whole deck.</div>'+
+    '<div class="empty-actions">'+
+      '<button class="empty-act-btn" onclick="openDeckGenerator()">+ New Deck</button>'+
+      '<button class="empty-act-btn alt" onclick="coachCurrentSlide()">🎤 Coach me</button>'+
+    '</div>'+
+    '<div class="chips">'+
+    '<button class="chip" onclick="useSugg(this)">Make slide 2&apos;s title bold and 48pt</button>'+
+    '<button class="chip" onclick="useSugg(this)">Create a 10-slide pitch deck about climate change</button>'+
+    '<button class="chip" onclick="useSugg(this)">Apply a corporate blue theme</button>'+
+    '<button class="chip" onclick="useSugg(this)">Write speaker notes for the current slide</button>'+
+    '<button class="chip" onclick="useSugg(this)">How many slides do I have?</button>'+
+    '</div></div>';
+}
+function renderMsgs() {
+  const ui=history.filter(m=>m.role==='user'||m.role==='assistant');
+  if(!ui.length){renderEmpty();return;}
+  const box=document.getElementById('messages'); box.innerHTML='';
+  ui.forEach(m=>box.appendChild(mkMsg(m.role,m.content,m.isErr,m.ms,m.tok,m.code,m.time,m.via)));
+  box.scrollTop=box.scrollHeight;
+}
+function addMsg(role,text,isErr=false,ms=null,tok=null,code=null,via=null) {
+  document.getElementById('emptyState')?.remove();
+  const el=mkMsg(role,text,isErr,ms,tok,code,null,via);
+  const box=document.getElementById('messages'); box.appendChild(el); box.scrollTop=box.scrollHeight;
+  return el;
+}
+function mkMsg(role,text,isErr,ms,tok,code,savedTime,via,isCoach) {
+  const el=document.createElement('div');
+  el.className='msg '+role+(isErr?' error':'')+(isCoach?' coach':'');
+  const timeStr=savedTime
+    ?new Date(savedTime).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})
+    :new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+  let meta=timeStr;
+  if(role==='assistant'){
+    const parts=[];
+    if(ms!=null)parts.push((ms/1000).toFixed(1)+'s');
+    if(tok!=null)parts.push(tok.toLocaleString()+' tok');
+    parts.push(timeStr);
+    meta=parts.join(' · ');
+  }
+  const viaTag = via ? '<span class="msg-via">via '+esc(via)+'</span>' : '';
+  const roleLabel = role==='user' ? 'You' : (isCoach ? '🎤 Coach' : 'PowerPoint AI');
+  const roleClass = role==='user' ? 'user' : (isCoach ? 'coach' : 'assistant');
+  el.innerHTML='<div class="msg-head"><span class="msg-role '+roleClass+'">'+roleLabel+'</span>'+viaTag+'<span class="msg-meta">'+meta+'</span></div>'+
+    '<div class="msg-body">'+esc(text)+'</div>';
+  if(code&&showCode)el.appendChild(mkCode(code));
+  const actions=document.createElement('div'); actions.className='msg-actions';
+  const copyBtn=document.createElement('button'); copyBtn.className='copy-msg-btn'; copyBtn.innerHTML='⎘ Copy';
+  copyBtn.onclick=()=>{navigator.clipboard.writeText(text).then(()=>{copyBtn.innerHTML='✓ Copied';copyBtn.classList.add('copied');setTimeout(()=>{copyBtn.innerHTML='⎘ Copy';copyBtn.classList.remove('copied');},1500);});};
+  actions.appendChild(copyBtn);
+  if(role==='assistant'&&!isErr&&!isCoach){
+    const rb=document.createElement('button');rb.className='report-btn';rb.title='Report';rb.innerHTML='⚑ Report';
+    rb.onclick=()=>reportMsg(rb,text,code);actions.appendChild(rb);
+  }
+  el.appendChild(actions);
+  return el;
+}
+function mkCode(code) {
+  const w=document.createElement('div');w.className='code-block';
+  const h=document.createElement('div');h.className='code-head';
+  h.innerHTML='<span>Generated Code</span><span class="code-toggle">hide ▲</span>';
+  const b=document.createElement('div');b.className='code-body';
+  const p=document.createElement('pre');p.textContent=code;b.appendChild(p);
+  const footer=document.createElement('div');footer.className='code-footer';
+  const cb=document.createElement('button');cb.className='copy-code-btn';cb.textContent='⎘ Copy code';
+  cb.onclick=()=>{navigator.clipboard.writeText(code).then(()=>{cb.textContent='✓ Copied';cb.classList.add('copied');setTimeout(()=>{cb.textContent='⎘ Copy code';cb.classList.remove('copied');},1500);});};
+  footer.appendChild(cb);b.appendChild(footer);
+  h.onclick=()=>{const hide=b.classList.toggle('hidden');h.querySelector('.code-toggle').textContent=hide?'show ▼':'hide ▲';};
+  w.appendChild(h);w.appendChild(b);return w;
+}
+function addTyping() {
+  document.getElementById('emptyState')?.remove();
+  const el=document.createElement('div');el.className='msg assistant';el.id='typing';
+  el.innerHTML='<div class="msg-head"><span class="msg-role assistant">PowerPoint AI</span><span class="live-timer" id="liveTimer">0.0s</span></div>'+
+    '<div class="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>';
+  const box=document.getElementById('messages');box.appendChild(el);box.scrollTop=box.scrollHeight;
+  let sec=0;
+  timerInterval=setInterval(()=>{sec+=0.1;const t=document.getElementById('liveTimer');if(t)t.textContent=sec.toFixed(1)+'s';},100);
+}
+function removeTyping(){clearInterval(timerInterval);timerInterval=null;document.getElementById('typing')?.remove();}
+function updateTok(){document.getElementById('tokInfo').textContent=totalTok>0?totalTok.toLocaleString()+' tok this chat':'';}
+
+// ── Web search UI ───────────────────────────────────────────────────────────
+function addWebSearchPill(parentEl, ws) {
+  if (!ws) return;
+  const pill = document.createElement('div');
+  pill.className = 'ws-pill';
+  pill.innerHTML = `🔍 searched the web · "${esc((ws.query||'').slice(0,60))}" · ${esc(ws.provider||'brave')} · ${(ws.results||[]).length} results`;
+  const panel = document.createElement('div');
+  panel.className = 'ws-results-panel';
+  panel.innerHTML = (ws.results||[]).map(r =>
+    `<div class="ws-result-row"><a href="${esc(r.url)}" target="_blank">${esc(r.title)}</a><div>${esc(r.snippet||'')}</div></div>`
+  ).join('') || '<i>No results.</i>';
+  pill.onclick = () => panel.classList.toggle('open');
+  parentEl.insertBefore(pill, parentEl.firstChild);
+  parentEl.appendChild(panel);
+}
+
+function addWebSearchPermissionCard(parentEl, wsReq, retryCallback) {
+  const card = document.createElement('div');
+  card.className = 'ws-perm';
+  card.innerHTML = `<div class="ws-perm-title">🔍 Live data needed</div>
+    <div>${esc(wsReq.reason || 'The AI needs to look something up online.')}</div>
+    <div class="ws-perm-q">${esc(wsReq.query || '')}</div>
+    <div class="ws-perm-btns">
+      <button class="ws-perm-allow">Allow this search</button>
+      <button class="ws-perm-skip">Skip</button>
+    </div>`;
+  card.querySelector('.ws-perm-allow').onclick = async () => {
+    card.querySelector('.ws-perm-allow').disabled = true;
+    card.querySelector('.ws-perm-allow').textContent = 'Searching…';
+    try {
+      const r = await fetch('/api/web-search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: wsReq.query, count: 5 }) });
+      if (!r.ok) { card.querySelector('.ws-perm-allow').textContent = 'Search failed'; return; }
+      const ws = await r.json();
+      pendingWebSearchResults.push(ws);
+      card.remove();
+      retryCallback();
+    } catch (e) { card.querySelector('.ws-perm-allow').textContent = 'Failed: ' + e.message; }
+  };
+  card.querySelector('.ws-perm-skip').onclick = () => card.remove();
+  parentEl.appendChild(card);
+}
+
+// ── Sync ────────────────────────────────────────────────────────────────────
+function setSyncStatus(state,text){const d=document.getElementById('syncDot');d.className='sync-dot'+(state==='busy'?' busy':state==='err'?' err':'');d.title=text;}
+
+async function readDeck() {
+  setSyncStatus('busy','Reading deck…');
+  try {
+    await PowerPoint.run(async ctx => {
+      const slides = ctx.presentation.slides;
+      slides.load('items/id');
+      await ctx.sync();
+      const sel = ctx.presentation.getSelectedSlides();
+      try { sel.load('items/id'); await ctx.sync(); } catch {}
+
+      const MAX_SLIDES = 30;
+      const truncated = slides.items.length > MAX_SLIDES;
+      const parts = [];
+      const slideArr = slides.items.slice(0, MAX_SLIDES);
+      for (let i = 0; i < slideArr.length; i++) {
+        const slide = slideArr[i];
+        try {
+          slide.shapes.load('items/name, items/textFrame/textRange/text, items/placeholderFormat/type');
+          slide.notesPage.notesTextFrame.load('textRange/text');
+          await ctx.sync();
+          let title = '', body = '', notes = '';
+          for (const sh of slide.shapes.items) {
+            try {
+              const t = sh.textFrame.textRange.text || '';
+              if (!t.trim()) continue;
+              if (sh.placeholderFormat.type === 'title') title = t.slice(0, 200);
+              else body += (body ? ' | ' : '') + t.slice(0, 500);
+            } catch {}
+          }
+          try { notes = (slide.notesPage.notesTextFrame.textRange.text || '').slice(0, 300); } catch {}
+          parts.push(`Slide ${i+1} (id=${slide.id}): TITLE=${JSON.stringify(title)} | BODY=${JSON.stringify(body)} | NOTES=${JSON.stringify(notes)}`);
+        } catch {}
+      }
+      if (truncated) parts.push(`[...${slides.items.length - MAX_SLIDES} more slides not shown]`);
+
+      // Determine "current slide" name/index
+      let curIdx = -1;
+      try {
+        if (sel.items?.length) {
+          const selId = sel.items[0].id;
+          curIdx = slides.items.findIndex(s => s.id === selId);
+        }
+      } catch {}
+      currentSlide = curIdx >= 0 ? `Slide ${curIdx+1} (id=${slides.items[curIdx].id})` : '(none selected)';
+
+      deckData = parts.join('\n');
+      setSyncStatus('ok','Synced — ' + slides.items.length + ' slides');
+    });
+  } catch (e) {
+    setSyncStatus('err','Sync failed');
+    console.error('readDeck error', e);
+  }
+}
+async function registerListeners() {
+  if (changeReady) return;
+  try {
+    await PowerPoint.run(async ctx => {
+      try {
+        ctx.presentation.onSelectionChanged.add(() => {
+          if (autoSync) { clearTimeout(syncTimer); syncTimer = setTimeout(() => readDeck(), 1500); }
+        });
+      } catch {}
+      await ctx.sync();
+      changeReady = true;
+    });
+  } catch {}
+}
+
+// ── Code execution ──────────────────────────────────────────────────────────
+async function execCode(code) {
+  let ret = null;
+  try {
+    await PowerPoint.run(async ctx => {
+      const presentation = ctx.presentation;
+      const BUILT_IN_THEMES = window.PPHelpers.BUILT_IN_THEMES;
+
+      // ── Helpers ──
+      async function listSlides() {
+        presentation.slides.load('items/id, items/layout/name');
+        await ctx.sync();
+        const out = [];
+        for (let i = 0; i < presentation.slides.items.length; i++) {
+          const s = presentation.slides.items[i];
+          let title = '';
+          try {
+            s.shapes.load('items/placeholderFormat/type, items/textFrame/textRange/text');
+            await ctx.sync();
+            const t = s.shapes.items.find(sh => { try { return sh.placeholderFormat.type === 'title'; } catch { return false; } });
+            title = t ? (t.textFrame.textRange.text || '') : '';
+          } catch {}
+          let layout = '';
+          try { layout = s.layout?.name || ''; } catch {}
+          out.push({ index: i, id: s.id, title, layout });
+        }
+        return out;
+      }
+
+      async function getSlideByIndex(i) {
+        presentation.slides.load('items/id');
+        await ctx.sync();
+        const slides = presentation.slides.items;
+        if (i < 0) i = slides.length + i;
+        if (i < 0 || i >= slides.length) throw new Error('Slide index ' + i + ' out of range (0–' + (slides.length-1) + ').');
+        return slides[i];
+      }
+
+      async function getCurrentSlide() {
+        const sel = presentation.getSelectedSlides();
+        sel.load('items/id');
+        await ctx.sync();
+        if (!sel.items.length) {
+          presentation.slides.load('items/id');
+          await ctx.sync();
+          if (!presentation.slides.items.length) throw new Error('Presentation has no slides.');
+          return presentation.slides.items[0];
+        }
+        return sel.items[0];
+      }
+
+      async function findShapeByName(slide, name) {
+        slide.shapes.load('items/name');
+        await ctx.sync();
+        const sh = slide.shapes.items.find(x => x.name === name);
+        if (!sh) throw new Error("Shape '" + name + "' not found on this slide.");
+        return sh;
+      }
+
+      async function addSlide(layout, title, body, notes) {
+        const blob = await window.PPHelpers.buildPptxBase64(layout || 'title-content', title || '', body || '', notes || '');
+        // Get slide count before
+        presentation.slides.load('items/id');
+        await ctx.sync();
+        const beforeCount = presentation.slides.items.length;
+        try {
+          presentation.insertSlidesFromBase64(blob, { formatting: 'UseDestinationTheme' });
+          await ctx.sync();
+        } catch (e) {
+          presentation.insertSlidesFromBase64(blob, { formatting: 'KeepSourceFormatting' });
+          await ctx.sync();
+        }
+        // Re-apply active theme if any
+        if (activeTheme && BUILT_IN_THEMES[activeTheme]) {
+          try { await applyThemeToSlideIndex(beforeCount, BUILT_IN_THEMES[activeTheme]); } catch {}
+        }
+        return beforeCount;
+      }
+
+      async function addTextBox(slideIndex, text, opts) {
+        opts = opts || {};
+        const slide = await getSlideByIndex(slideIndex);
+        const tb = slide.shapes.addTextBox(text || '');
+        tb.left = opts.left ?? 100;
+        tb.top = opts.top ?? 100;
+        tb.width = opts.width ?? 300;
+        tb.height = opts.height ?? 80;
+        try {
+          if (opts.fontSize) tb.textFrame.textRange.font.size = opts.fontSize;
+          if (opts.bold) tb.textFrame.textRange.font.bold = true;
+          if (opts.color) tb.textFrame.textRange.font.color = opts.color;
+          if (opts.fontName) tb.textFrame.textRange.font.name = opts.fontName;
+        } catch {}
+        await ctx.sync();
+        return tb;
+      }
+
+      async function applyThemeToSlideIndex(idx, palette) {
+        const slide = await getSlideByIndex(idx);
+        slide.shapes.load('items/placeholderFormat/type, items/textFrame');
+        await ctx.sync();
+        for (const sh of slide.shapes.items) {
+          try {
+            const isTitle = sh.placeholderFormat.type === 'title';
+            sh.textFrame.textRange.font.color = isTitle ? palette.primary : palette.text;
+            if (palette.font) sh.textFrame.textRange.font.name = palette.font;
+          } catch {}
+        }
+        try { slide.background?.fill?.setSolidColor?.(palette.bg); } catch {}
+        await ctx.sync();
+      }
+
+      async function recolorDeck(palette) {
+        presentation.slides.load('items/id');
+        await ctx.sync();
+        let touched = 0, skipped = 0;
+        for (const slide of presentation.slides.items) {
+          slide.shapes.load('items/placeholderFormat/type, items/textFrame, items/fill');
+          await ctx.sync();
+          for (const sh of slide.shapes.items) {
+            try {
+              let isTitle = false;
+              try { isTitle = sh.placeholderFormat.type === 'title'; } catch {}
+              try {
+                sh.textFrame.textRange.font.color = isTitle ? palette.primary : palette.text;
+                if (palette.font) sh.textFrame.textRange.font.name = palette.font;
+              } catch {}
+              try { sh.fill.setSolidColor(isTitle ? palette.primary : palette.bg); } catch {}
+              touched++;
+            } catch { skipped++; }
+          }
+          try { slide.background?.fill?.setSolidColor?.(palette.bg); } catch {}
+          await ctx.sync();
+        }
+        return 'Recolored ' + touched + ' shapes' + (skipped ? '; ' + skipped + ' skipped (likely SmartArt or grouped objects)' : '') + '.';
+      }
+
+      async function applyTheme(themeName) {
+        const t = BUILT_IN_THEMES[themeName];
+        if (!t) throw new Error('Unknown theme "' + themeName + '". Choose from: ' + Object.keys(BUILT_IN_THEMES).join(', '));
+        const summary = await recolorDeck(t);
+        activeTheme = themeName;
+        localStorage.setItem('activeTheme', themeName);
+        return summary;
+      }
+
+      async function addSpeakerNote(slideIndex, text, append) {
+        const slide = slideIndex === -1 ? await getCurrentSlide() : await getSlideByIndex(slideIndex);
+        slide.notesPage.notesTextFrame.load('textRange/text');
+        await ctx.sync();
+        let cur = '';
+        try { cur = slide.notesPage.notesTextFrame.textRange.text || ''; } catch {}
+        slide.notesPage.notesTextFrame.textRange.text = (append === false ? text : ((cur ? cur + '\n' : '') + text));
+        await ctx.sync();
+      }
+
+      async function insertImage(slideIndex, category, keywordOrTags, position) {
+        const tags = Array.isArray(keywordOrTags) ? keywordOrTags.join(',') : String(keywordOrTags || '');
+        const r = await fetch('/api/assets/pick?category=' + encodeURIComponent(category) + '&keywords=' + encodeURIComponent(tags));
+        if (!r.ok) {
+          const err = await r.json().catch(() => ({error:'unknown'}));
+          throw new Error('Image pick failed: ' + (err.error || r.status));
+        }
+        const img = await r.json();
+        const slide = await getSlideByIndex(slideIndex);
+        const pic = slide.shapes.addImage(img.base64);
+        try {
+          pic.left = position?.left ?? 100;
+          pic.top = position?.top ?? 100;
+          pic.width = position?.width ?? 320;
+          pic.height = position?.height ?? 240;
+        } catch {}
+        await ctx.sync();
+        return pic;
+      }
+
+      // ── Execute AI code ──
+      const fn = new Function(
+        'context','presentation','PowerPoint',
+        'addSlide','addTextBox','applyTheme','recolorDeck','addSpeakerNote',
+        'getCurrentSlide','getSlideByIndex','findShapeByName','listSlides','insertImage','BUILT_IN_THEMES',
+        'return (async()=>{ ' + code + ' })();'
+      );
+      const rv = await fn(
+        ctx, presentation, PowerPoint,
+        addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote,
+        getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, BUILT_IN_THEMES
+      );
+      if (rv !== undefined && rv !== null) ret = String(rv);
+    });
+    await readDeck();
+    return { ok: true, err: null, result: ret };
+  } catch (e) {
+    return { ok: false, err: e.message, result: null };
+  }
+}
+
+// ── Input helpers ───────────────────────────────────────────────────────────
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function useSugg(btn){document.getElementById('msgInput').value=btn.textContent;sendMessage();}
+function attachFile(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{attached={name:f.name,content:ev.target.result};document.getElementById('attachBadge').innerHTML='📎 <span style="color:var(--text2)">'+esc(f.name)+'</span> <button class="attach-x" onclick="clearAttach()">✕</button>';};r.readAsText(f);e.target.value='';}
+function clearAttach(){attached=null;document.getElementById('attachBadge').innerHTML='';}
+
+// ── Summarise ───────────────────────────────────────────────────────────────
+async function maybeSummarize() {
+  if(history.length<10)return;
+  try{const k=localStorage.getItem('apiKey');const r=await fetch('/api/summarize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history.slice(0,-4),previousSummary:summary||undefined,apiKey:k||undefined})});const d=await r.json();if(d.summary){summary=d.summary;history=history.slice(-4);}}catch{}
+}
+
+// ── Stop ────────────────────────────────────────────────────────────────────
+function stopGen(){ctrl?.abort();loading=false;removeTyping();const b=document.getElementById('sendBtn');b.textContent='Send';b.className='send';b.onclick=sendMessage;}
+
+// ── Send ────────────────────────────────────────────────────────────────────
+async function sendMessage() {
+  const inp=document.getElementById('msgInput');
+  let text=inp.value.trim();
+  if(!text&&!attached)return;
+  if(loading)return;
+  closePlus();
+
+  if(attached){text+=(text?'\n\n':'')+'[Attached: '+attached.name+']\n'+attached.content.slice(0,8000);clearAttach();}
+
+  const allowed = await checkCostBefore(text);
+  if (!allowed) return;
+
+  inp.value='';inp.style.height='auto';loading=true;
+  const sb=document.getElementById('sendBtn');sb.textContent='■ Stop';sb.className='send stop';sb.onclick=stopGen;
+
+  const userMsg={role:'user',content:text,time:new Date().toISOString()};
+  history.push(userMsg);addMsg('user',text);
+  pendingWebSearchResults = [];
+  addTyping();
+  await maybeSummarize();
+  await runChatTurn();
+
+  loading=false;
+  const sb2=document.getElementById('sendBtn');sb2.textContent='Send';sb2.className='send';sb2.onclick=sendMessage;
+}
+
+async function runChatTurn() {
+  const t0=Date.now();ctrl=new AbortController();
+  const isGroq   =selectedModel.startsWith('groq:');
+  const isOllama =selectedModel.startsWith('ollama:');
+  const modelId  =isGroq?selectedModel.slice(5):isOllama?selectedModel.slice(7):selectedModel;
+  const apiKey   =localStorage.getItem('apiKey')||undefined;
+  const groqKey  =localStorage.getItem('groqKey')||undefined;
+
+  try{
+    const res=await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,
+      body:JSON.stringify({
+        messages:history.slice(-8),deckData,currentSlide,summary,
+        model:modelId,useOllama:isOllama,useGroq:isGroq,apiKey,groqKey,
+        settings: { allowWebSearch: webSearchMode },
+        webSearchResults: pendingWebSearchResults.length ? pendingWebSearchResults : undefined,
+        options:{
+          deepThink:  opts.deep,
+          dynamicDepth: opts.dynamic,
+          autoModel:  opts.auto,
+          plan:       opts.plan,
+          slideByStep: opts.slideByStep,
+          preferences: userPreferences,
+          costLimit:  getCostLimit(),
+          availableModels: opts.auto
+            ? allModelsFlat().filter(m=>!m.id.startsWith('ollama:')).map(m=>({id:m.id,name:m.name,in:m.in,out:m.out,tags:m.tags}))
+            : undefined,
+        }
+      })
+    });
+    const data=await res.json();
+    const ms=Date.now()-t0;
+    removeTyping();
+
+    if(data.error){
+      addMsg('assistant','⚠ '+data.error,true,ms);
+      return;
+    }
+
+    const{response:reply,code,usage,selectedModel:autoSelected,plan,webSearchRequest,webSearchUsed}=data;
+
+    if(plan){history.push({role:'assistant',content:'📋 Plan:\n'+plan});addMsg('assistant','📋 Plan:\n'+plan);}
+    const tok=usage?.completion_tokens??null;
+    if(tok){totalTok+=tok;updateTok();}
+    if(usage)addActualCost(usage, autoSelected||modelId);
+
+    const viaName = autoSelected ? (allModelsFlat().find(m=>m.id===autoSelected)?.name||autoSelected) : null;
+    const isFirst=history.filter(m=>m.role==='assistant').length===0;
+
+    let msgEl = null;
+    if(reply){
+      history.push({role:'assistant',content:reply,ms,tok,time:new Date().toISOString(),via:viaName});
+      msgEl = addMsg('assistant',reply,false,ms,tok,null,viaName);
+      if (webSearchUsed) addWebSearchPill(msgEl, webSearchUsed);
+    }
+
+    // Permission card if AI requested a search and mode=off
+    if (webSearchRequest && !code) {
+      const parent = msgEl || addMsg('assistant', 'I need to look something up online.', false);
+      addWebSearchPermissionCard(parent, webSearchRequest, async () => {
+        addTyping();
+        await runChatTurn(); // re-run with results in pendingWebSearchResults
+      });
+      return;
+    }
+
+    if(code){
+      const r=await execCode(code);
+      if(showCode){const last=document.getElementById('messages').lastElementChild;if(last&&!last.querySelector('.code-block'))last.appendChild(mkCode(code));}
+      if(r.ok){
+        if(r.result){history.push({role:'assistant',content:r.result});addMsg('assistant',r.result,false,null,null);}
+        else if(!reply){addMsg('assistant','✓ Done.');}
+      }else{
+        addMsg('assistant','⚠ Error: '+r.err,true);
+        history.push({role:'user',content:'The code failed: "'+r.err+'". Fix it with a corrected CODE_JS block.'});
+        const rr=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({messages:history.slice(-8),deckData,currentSlide,summary,model:modelId,useOllama:isOllama,useGroq:isGroq,apiKey,groqKey,settings:{allowWebSearch:webSearchMode}})});
+        const rd=await rr.json();
+        if(rd.code){const rres=await execCode(rd.code);if(rd.response)history.push({role:'assistant',content:rd.response});addMsg('assistant',rres.ok?'✓ Fixed.':'⚠ Retry failed: '+rres.err,!rres.ok);}
+      }
+    }
+
+    if(getCostLimit()>0&&costLimitType==='session'&&sessionCost>getCostLimit()){
+      const over=(sessionCost-getCostLimit()).toFixed(3);
+      addMsg('assistant',`⚠ Session cost ($${sessionCost.toFixed(3)}) has exceeded your $${getCostLimit().toFixed(2)} limit by $${over}. You'll need to confirm each subsequent prompt.`,true);
+    }
+
+    if(isFirst&&reply){const text=history.find(m=>m.role==='user')?.content||'';const title=await generateTitle(text,reply);if(title)await saveChat(title);else await saveChat();}
+    else await saveChat();
+  }catch(e){
+    removeTyping();
+    if(e.name!=='AbortError')addMsg('assistant','⚠ Could not reach the server. Is it running?',true);
+  }
+}
+
+async function reportMsg(btn,response,code) {
+  if(btn.classList.contains('sent'))return;
+  const prompt=history.slice().reverse().find(m=>m.role==='user')?.content||'';
+  try{await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,response,code:code||null,model:selectedModel,timestamp:new Date().toISOString()})});btn.innerHTML='✓ Reported';btn.classList.add('sent');}catch{btn.innerHTML='⚑ Report';}
+}
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+</script>
+</body>
+</html>
