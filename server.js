@@ -56,6 +56,18 @@ const USE_GROQ       = false;
 const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
 const GROQ_KEY       = process.env.GROQ_KEY;
 const BRAVE_KEY      = process.env.BRAVE_KEY;
+const GOOGLE_KEY     = process.env.GOOGLE_KEY;
+const GOOGLE_CX      = process.env.GOOGLE_CX;
+const PROVIDER_PREF  = (process.env.WEB_SEARCH_PROVIDER || 'google').toLowerCase();
+
+// Resolved web-search provider: respects env preference, falls back to whichever is configured.
+function resolvedProvider() {
+  if (PROVIDER_PREF === 'google' && GOOGLE_KEY && GOOGLE_CX) return 'google';
+  if (PROVIDER_PREF === 'brave'  && BRAVE_KEY)               return 'brave';
+  if (GOOGLE_KEY && GOOGLE_CX)                                return 'google';
+  if (BRAVE_KEY)                                              return 'brave';
+  return null;
+}
 
 const DEFAULT_MODEL = USE_OPENROUTER
   ? 'meta-llama/llama-3.3-70b-instruct'
@@ -67,7 +79,7 @@ const DEFAULT_MODEL = USE_OPENROUTER
 const SYSTEM_PROMPT = `You are an AI assistant built directly into Microsoft PowerPoint. You have complete read/write access to the entire deck.
 
 CRITICAL RULE — HOW YOU MAKE CHANGES:
-When the user asks you to do ANYTHING to the deck, you MUST output a CODE_JS block containing valid Office JavaScript API code. This code runs inside PowerPoint.run(async (context) => { ... }). You have access to "context", "presentation" (= context.presentation), the full "PowerPoint" namespace, and these injected helpers: addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, BUILT_IN_THEMES.
+When the user asks you to do ANYTHING to the deck, you MUST output a CODE_JS block containing valid Office JavaScript API code. This code runs inside PowerPoint.run(async (context) => { ... }). You have access to "context", "presentation" (= context.presentation), the full "PowerPoint" namespace, and these injected helpers: addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, moveSlide, BUILT_IN_THEMES.
 
 FORMAT:
 CODE_JS::
@@ -75,28 +87,42 @@ CODE_JS::
 ::END_CODE
 
 RULES FOR YOUR CODE:
-- You write the BODY of an async function that receives (context, presentation, PowerPoint, addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, BUILT_IN_THEMES).
+- You write the BODY of an async function that receives (context, presentation, PowerPoint, addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, moveSlide, BUILT_IN_THEMES).
 - Always call "await context.sync();" after .load() and after writes.
 - Use ApiVersion 1.1–1.8 only (PowerPoint Online compatible).
 - NEVER use console.log. Throw errors with throw new Error("...").
 
-NEVER USE THESE — they DO NOT EXIST in PowerPoint Office.js:
+WHAT YOU CAN DO (use helpers):
+- Add slides with TRANSITIONS (fade / push / wipe / zoom / cut) — pass options to addSlide.
+- Add slides with a basic FADE-IN ANIMATION on body content — pass animation:"fadeIn" to addSlide.
+- Reorder slides via the moveSlide(fromIndex, toIndex) helper (it deletes + re-inserts to simulate movement).
+- Everything else from the helper list.
+
+NEVER USE THESE — they DO NOT EXIST in PowerPoint Office.js, even with workarounds:
 - presentation.theme.* (no theme API — use applyTheme/recolorDeck helpers instead)
-- slide.background.image = ...
-- slide.animations.*, slide.transition.* (no animation/transition API)
-- presentation.exportToPdf(), presentation.export*() (no export API)
-- slide.charts.add() (no chart creation API on slides)
-- shape.smartArt.* (no SmartArt API)
-- presentation.runSlideShow() (no slideshow control)
+- slide.animations.*, slide.transition.* — NOT available as live JS APIs on existing slides. To use animations or transitions, set them at slide CREATION time via addSlide(layout, title, body, notes, { transition, animation }). You cannot retrofit them onto existing slides.
+- presentation.exportToPdf(), presentation.export*() (no export API of any kind — refuse cleanly)
+- slide.charts.add(), shape.chart.* (no chart creation API on slides — refuse; suggest using insertImage with a charts-diagrams category image as a workaround)
+- shape.smartArt.* (no SmartArt API — refuse)
+- presentation.runSlideShow() (no slideshow control — refuse)
 - presentation.slides.add() (does not exist — use addSlide helper)
-- slides.move(), slide.move() (no reorder API)
+- slides.move(), slide.move() (no live reorder API — use the moveSlide helper instead)
 
 HOW TO ADD A NEW SLIDE — ALWAYS use the addSlide helper:
-  await addSlide(layout, title, body, notes);
-    layout: "title" | "title-content" | "two-content" | "blank" | "section"
-    title:  string
-    body:   string (use \\n for line breaks; bullets auto-applied)
-    notes:  optional string for speaker notes
+  await addSlide(layout, title, body, notes, options);
+    layout:  "title" | "title-content" | "two-content" | "blank" | "section"
+    title:   string
+    body:    string (use \\n for line breaks; bullets auto-applied)
+    notes:   optional string for speaker notes
+    options: optional {
+      transition: "fade" | "push" | "wipe" | "zoom" | "cut" | "none",   // default "none"
+      animation:  "fadeIn" | "none",                                     // default "none" — applies to body
+      transitionSpeed: "slow" | "med" | "fast"                            // default "med"
+    }
+
+HOW TO REORDER A SLIDE — use the moveSlide helper:
+  await moveSlide(fromIndex, toIndex);
+    Both are 0-based. Internally it reads the slide's content, inserts a copy at toIndex, then deletes the original. Speaker notes and titles are preserved; complex per-shape formatting may be simplified.
 
 HOW TO EDIT EXISTING SLIDES — use the direct API:
   shape.textFrame.textRange.text = "New text";
@@ -236,6 +262,29 @@ CODE_JS::
 await insertImage(1, "finance", ["growth","chart"], { left: 400, top: 120, width: 320, height: 240 });
 ::END_CODE
 
+User: "add a fade transition to every NEW slide we just created"
+Response:
+Note: transitions can only be applied at slide creation time. For new slides, pass options to addSlide.
+CODE_JS::
+await addSlide("title-content", "Quarterly Update", "Highlight 1\\nHighlight 2", "Open with the YoY hook.", { transition: "fade" });
+::END_CODE
+
+User: "create a 3-slide section with fade transitions and a fade-in body animation"
+Response:
+Building a 3-slide section with fade transitions and fade-in body animation.
+CODE_JS::
+await addSlide("section",       "Part 2: Roadmap", "", "", { transition: "fade", animation: "fadeIn" });
+await addSlide("title-content", "Roadmap Q1",      "Ship onboarding redesign\\nLaunch mobile beta", "", { transition: "fade", animation: "fadeIn" });
+await addSlide("title-content", "Roadmap Q2",      "GA mobile\\nEnterprise SSO", "", { transition: "fade", animation: "fadeIn" });
+::END_CODE
+
+User: "move slide 4 to position 2"
+Response:
+Moving slide 4 to position 2 via delete + re-insert.
+CODE_JS::
+await moveSlide(3, 1);
+::END_CODE
+
 READING DATA — only "return" when the user wants to KNOW something:
 
 User: "how many slides do I have?"
@@ -286,7 +335,10 @@ When you DO receive <WEB_SEARCH_RESULTS query="..."> in the conversation, use th
 
 OTHER RULES:
 - Be concise. One short sentence explaining what you're doing, then the CODE_JS block.
-- If asked for an unsupported feature (animation/transition/export/chart/SmartArt/slideshow/reorder), respond cleanly: "PowerPoint Office.js doesn't expose <X>. As a workaround you can <Y>." and DO NOT emit fabricated CODE_JS.
+- For ANIMATIONS on NEW slides: pass {animation:"fadeIn"} to addSlide. For EXISTING slides, explain the live-edit limit and offer to recreate the slide.
+- For TRANSITIONS on NEW slides: pass {transition:"fade"|"push"|"wipe"|"zoom"|"cut"} to addSlide. For EXISTING slides, same recreate-or-skip explanation.
+- For SLIDE REORDERING: use moveSlide(from, to).
+- For CHART CREATION, PDF EXPORT, SMARTART, SLIDESHOW CONTROL: refuse cleanly — "PowerPoint Office.js doesn't expose <X>. As a workaround you can <Y>." (For charts, suggest insertImage with category "charts-diagrams" as a workaround.)
 - For VBA macros: write complete code in triple backtick vba blocks and tell the user to press Alt+F11.
 - Only skip CODE_JS if the user is purely asking a question with no changes needed.`
 + (DEFAULT_MODEL.toLowerCase().includes('qwen') ? '\n/no_think' : '')
@@ -755,11 +807,56 @@ function takeWebToken() {
 }
 
 app.get('/api/web-search/status', (req, res) => {
-  res.json({ provider: 'brave', configured: !!BRAVE_KEY });
+  const provider = resolvedProvider();
+  res.json({
+    provider,
+    configured: !!provider,
+    pref: PROVIDER_PREF,
+    available: {
+      google: !!(GOOGLE_KEY && GOOGLE_CX),
+      brave:  !!BRAVE_KEY,
+    },
+  });
 });
 
+async function runWebSearch(query, count) {
+  const provider = resolvedProvider();
+  if (!provider) throw Object.assign(new Error('no_provider_configured'), { status: 503 });
+
+  if (provider === 'google') {
+    const url = 'https://www.googleapis.com/customsearch/v1?key=' + encodeURIComponent(GOOGLE_KEY)
+              + '&cx=' + encodeURIComponent(GOOGLE_CX)
+              + '&q=' + encodeURIComponent(query)
+              + '&num=' + count;
+    const r = await fetch(url);
+    const data = await r.json();
+    if (data.error) throw new Error(data.error.message || 'google_search_failed');
+    const results = (data.items || []).slice(0, count).map(x => ({
+      title: x.title || '',
+      url: x.link || '',
+      snippet: (x.snippet || '').replace(/\s+/g, ' ').slice(0, 400),
+      age: null,
+    }));
+    return { query, provider: 'google', results, fetchedAt: new Date().toISOString() };
+  }
+
+  // brave
+  const url = 'https://api.search.brave.com/res/v1/web/search?q=' + encodeURIComponent(query) + '&count=' + count;
+  const r = await fetch(url, {
+    headers: { 'X-Subscription-Token': BRAVE_KEY, 'Accept': 'application/json' }
+  });
+  const data = await r.json();
+  const results = (data.web?.results || []).slice(0, count).map(x => ({
+    title: x.title || '',
+    url: x.url || '',
+    snippet: (x.description || '').replace(/<[^>]+>/g, '').slice(0, 400),
+    age: x.age || null,
+  }));
+  return { query, provider: 'brave', results, fetchedAt: new Date().toISOString() };
+}
+
 app.post('/api/web-search', async (req, res) => {
-  if (!BRAVE_KEY) return res.status(503).json({ error: 'no_provider_configured' });
+  if (!resolvedProvider()) return res.status(503).json({ error: 'no_provider_configured' });
   if (!takeWebToken()) return res.status(429).json({ error: 'rate_limited' });
 
   const query = String(req.body.query || '').trim();
@@ -767,26 +864,16 @@ app.post('/api/web-search', async (req, res) => {
   if (!query) return res.status(400).json({ error: 'missing_query' });
 
   try {
-    const url = 'https://api.search.brave.com/res/v1/web/search?q=' + encodeURIComponent(query) + '&count=' + count;
-    const r = await fetch(url, {
-      headers: { 'X-Subscription-Token': BRAVE_KEY, 'Accept': 'application/json' }
-    });
-    const data = await r.json();
-    const results = (data.web?.results || []).slice(0, count).map(x => ({
-      title: x.title || '',
-      url: x.url || '',
-      snippet: (x.description || '').replace(/<[^>]+>/g, '').slice(0, 400),
-      age: x.age || null,
-    }));
-    const out = { query, provider: 'brave', results, fetchedAt: new Date().toISOString() };
+    const out = await runWebSearch(query, count);
     try {
       const log = fs.existsSync(WEB_LOG) ? JSON.parse(fs.readFileSync(WEB_LOG, 'utf8')) : [];
-      log.push({ query, count: results.length, fetchedAt: out.fetchedAt });
+      log.push({ query, provider: out.provider, count: out.results.length, fetchedAt: out.fetchedAt });
       fs.writeFileSync(WEB_LOG, JSON.stringify(log.slice(-200), null, 2));
     } catch {}
     res.json(out);
   } catch (err) {
-    res.status(500).json({ error: 'search_failed', detail: err.message });
+    const status = err.status || 500;
+    res.status(status).json({ error: status === 503 ? 'no_provider_configured' : 'search_failed', detail: err.message });
   }
 });
 
@@ -1013,25 +1100,16 @@ app.post('/api/chat', async (req, res) => {
     // ── Web search interception ─────────────────────────────────────────
     let webSearchUsed = null;
     const wsReq = parseWebSearchRequest(responseText);
-    if (wsReq && webSearchMode === 'on' && BRAVE_KEY) {
+    if (wsReq && webSearchMode === 'on' && resolvedProvider()) {
       try {
-        const url = 'https://api.search.brave.com/res/v1/web/search?q=' + encodeURIComponent(wsReq.query) + '&count=5';
-        const r = await fetch(url, { headers: { 'X-Subscription-Token': BRAVE_KEY, 'Accept': 'application/json' } });
-        const data = await r.json();
-        const results = (data.web?.results || []).slice(0, 5).map(x => ({
-          title: x.title || '',
-          url: x.url || '',
-          snippet: (x.description || '').replace(/<[^>]+>/g, '').slice(0, 400),
-          age: x.age || null,
-        }));
-        webSearchUsed = { query: wsReq.query, provider: 'brave', results, fetchedAt: new Date().toISOString() };
+        webSearchUsed = await runWebSearch(wsReq.query, 5);
         // Re-prompt the model with results
         const followup = [
           ...allMessages,
           { role: 'assistant', content: responseText },
           { role: 'user', content:
-            `<WEB_SEARCH_RESULTS query="${wsReq.query.replace(/"/g,'&quot;')}">\n` +
-            results.map((r, i) => `${i+1}. ${r.title} — ${r.url}\n   ${r.snippet}`).join('\n') +
+            `<WEB_SEARCH_RESULTS query="${wsReq.query.replace(/"/g,'&quot;')}" provider="${webSearchUsed.provider}">\n` +
+            webSearchUsed.results.map((r, i) => `${i+1}. ${r.title} — ${r.url}\n   ${r.snippet}`).join('\n') +
             `\n</WEB_SEARCH_RESULTS>\n\nNow proceed with the original request using these facts. Emit CODE_JS if changes are needed.`
           }
         ];
@@ -1084,6 +1162,8 @@ server.listen(3000, () => {
   console.log('PowerPoint AI Assistant running at https://localhost:3000');
   console.log(`Mode: ${USE_OPENROUTER ? 'OpenRouter' : USE_MLX ? 'MLX' : USE_GROQ ? 'Groq' : 'Ollama'}`);
   console.log(`Default model: ${DEFAULT_MODEL}`);
-  console.log(`Brave Search: ${BRAVE_KEY ? 'configured' : 'not configured'}`);
+  const prov = resolvedProvider();
+  console.log(`Web search: ${prov ? prov + ' (configured)' : 'not configured'}`);
+  console.log(`  Google: ${(GOOGLE_KEY && GOOGLE_CX) ? 'ready' : 'no GOOGLE_KEY/GOOGLE_CX'} · Brave: ${BRAVE_KEY ? 'ready' : 'no BRAVE_KEY'} · preference: ${PROVIDER_PREF}`);
   console.log(`Asset pack: ${packStatus().downloaded ? `${packStatus().imageCount} images` : 'not downloaded'}`);
 });

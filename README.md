@@ -9,7 +9,9 @@ A private, local AI assistant for Microsoft PowerPoint — built as an Office Ta
 - **Theme & color scheme designer.** Pick from 8 built-in themes (Corporate Blue, Modern Mono, Warm Sunset, Midnight, Pastel, High Contrast, Terracotta, Forest) or ask the AI to design a custom palette and recolor the whole deck.
 - **Presenter coach.** Click "🎤 Coach me" on any slide. Get feedback on clarity, timing, an engagement hook, and ready-to-read speaker notes you can apply with one click.
 - **Local image asset pack.** Download a curated CC0 image library (~800 images across 14 categories — people, technology, finance, nature, healthcare, etc.). When the AI needs to insert an image, it picks the best match from your local pack. **No AI image generation, ever.**
-- **Web search on demand.** When the AI needs live data (today's stock prices, current weather, recent news), it tells you it can't reach the web and offers a one-time search you can approve. Or set web search to always-on in Settings if you don't need fully-local operation.
+- **Web search on demand.** When the AI needs live data (today's stock prices, current weather, recent news), it tells you it can't reach the web and offers a one-time search you can approve. Or set web search to always-on in Settings if you don't need fully-local operation. **Google Custom Search** is the default provider; Brave Search is a drop-in alternative.
+- **Transitions and animations on new slides.** Pass `{transition:"fade"}` or `{animation:"fadeIn"}` to `addSlide` and the AI bakes the OOXML animation/transition timing into the slide on creation. (Live edits to animations on *existing* slides aren't possible — PowerPoint Office.js doesn't expose that — but the AI will offer to recreate the slide for you.)
+- **Slide reordering.** The AI uses a `moveSlide(from, to)` helper that copies a slide's content + notes + layout, inserts it at the target, then deletes the original. Works around the fact that PowerPoint Office.js has no native reorder API.
 
 ## Features at a glance
 
@@ -28,7 +30,10 @@ A private, local AI assistant for Microsoft PowerPoint — built as an Office Ta
 - **Microsoft PowerPoint** (desktop or web — desktop works most reliably)
 - An **OpenRouter API key** (free tier available at openrouter.ai)
 - Optional: **Groq API key** for ultra-fast inference
-- Optional: **Brave Search API key** for the web-search feature (2,000 free queries/month at brave.com/search/api)
+- Optional: a **web search provider**:
+  - **Google Custom Search** (default, recommended) — 100 free queries/day. Set `GOOGLE_KEY` + `GOOGLE_CX`. Create a key at console.cloud.google.com and a search engine at programmablesearchengine.google.com (toggle "Search the entire web" on).
+  - **OR Brave Search** — 2,000 free queries/month at brave.com/search/api. Set `BRAVE_KEY`.
+  - Pick one with `WEB_SEARCH_PROVIDER=google` (or `brave`) in `.env`.
 
 ## Setup
 
@@ -40,8 +45,11 @@ A private, local AI assistant for Microsoft PowerPoint — built as an Office Ta
 2. Copy `.env.example` to `.env` and add your API keys:
    ```
    OPENROUTER_KEY=sk-or-v1-...
-   GROQ_KEY=gsk_...            # optional
-   BRAVE_KEY=BSA...             # optional, enables web search
+   GROQ_KEY=gsk_...               # optional
+   GOOGLE_KEY=...                  # optional, enables web search (Google Custom Search)
+   GOOGLE_CX=...                   # the Custom Search Engine ID
+   BRAVE_KEY=...                   # optional, alternative web-search provider
+   WEB_SEARCH_PROVIDER=google      # or 'brave'
    ```
 
 3. Generate the icon PNGs (one time):
@@ -78,17 +86,28 @@ A private, local AI assistant for Microsoft PowerPoint — built as an Office Ta
 - "What's the title of slide 5?"
 - "Design a calm trustworthy theme for a healthcare startup and apply it"
 
-## What the AI can't do (and will say so)
+## What the AI can do — even the "hard" stuff
 
-PowerPoint Office.js doesn't expose these — the AI cleanly refuses and offers a workaround:
+Office.js doesn't expose certain APIs, but the assistant works around them where it can:
 
-- Animations or transitions
-- Slideshow control (start/stop presenter mode)
-- Export to PDF / image
-- Chart creation on slides
-- SmartArt creation
-- Slide reordering (drag in the Slides panel instead)
-- AI image generation (use the local asset pack)
+| Capability | How |
+|---|---|
+| **Add transitions to new slides** (fade / push / wipe / zoom / cut) | OOXML `<p:transition>` baked into the slide template |
+| **Add fade-in animation to new slides** | OOXML `<p:timing>` block with the fade-in preset |
+| **Reorder slides** (`moveSlide(from, to)`) | Copy content + delete original, then rotate via repeated moves |
+| **Insert images** (no AI gen) | Picks from local CC0 asset pack via `insertImage` |
+| **Live web data** | One-time Google or Brave search with user permission |
+
+## What the AI still can't do (and will say so)
+
+These have no Office.js API and no reasonable OOXML workaround. The AI refuses cleanly:
+
+- **Editing animations or transitions on EXISTING slides** — only applicable at creation time. The AI will offer to recreate the slide with the desired animation.
+- **Export to PDF / image** — no JS API.
+- **Chart creation** on slides — no JS API. Workaround: AI uses `insertImage` with category `charts-diagrams` for a generic chart image.
+- **SmartArt creation** — no JS API.
+- **Slideshow control** (start/stop presenter mode) — no JS API.
+- **AI image generation** — by design (use the local asset pack instead).
 
 ## Project structure
 

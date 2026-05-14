@@ -323,10 +323,94 @@
       .replace(/'/g, '&apos;');
   }
 
-  /* Build a single slide.xml for the given layout/title/body */
-  function buildSlideXml(layout, title, body) {
+  /* Build transition XML for slide.xml */
+  function buildTransitionXml(opts) {
+    if (!opts || !opts.transition || opts.transition === 'none') return '';
+    const spd = ['slow','med','fast'].includes(opts.transitionSpeed) ? opts.transitionSpeed : 'med';
+    const t = opts.transition;
+    let inner = '';
+    if (t === 'fade')      inner = '<p:fade/>';
+    else if (t === 'push') inner = '<p:push dir="l"/>';
+    else if (t === 'wipe') inner = '<p:wipe dir="l"/>';
+    else if (t === 'zoom') inner = '<p:zoom/>';
+    else if (t === 'cut')  inner = '<p:cut/>';
+    else return '';
+    return `<p:transition spd="${spd}">${inner}</p:transition>`;
+  }
+
+  /* Build a fade-in animation timing block for a given shape id (defaults to body shape spid=3) */
+  function buildAnimationXml(opts) {
+    if (!opts || !opts.animation || opts.animation === 'none') return '';
+    if (opts.animation !== 'fadeIn') return '';
+    const spid = opts.animationSpid || 3;
+    return `<p:timing>
+  <p:tnLst>
+    <p:par>
+      <p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot">
+        <p:childTnLst>
+          <p:seq concurrent="1" nextAc="seek">
+            <p:cTn id="2" dur="indefinite" nodeType="mainSeq">
+              <p:childTnLst>
+                <p:par>
+                  <p:cTn id="3" fill="hold">
+                    <p:stCondLst><p:cond delay="indefinite"/></p:stCondLst>
+                    <p:childTnLst>
+                      <p:par>
+                        <p:cTn id="4" fill="hold">
+                          <p:stCondLst><p:cond delay="0"/></p:stCondLst>
+                          <p:childTnLst>
+                            <p:par>
+                              <p:cTn id="5" presetID="10" presetClass="entr" presetSubtype="0" fill="hold" grpId="0" nodeType="afterEffect">
+                                <p:stCondLst><p:cond delay="0"/></p:stCondLst>
+                                <p:childTnLst>
+                                  <p:set>
+                                    <p:cBhvr>
+                                      <p:cTn id="6" dur="1" fill="hold">
+                                        <p:stCondLst><p:cond delay="0"/></p:stCondLst>
+                                      </p:cTn>
+                                      <p:tgtEl><p:spTgt spid="${spid}"/></p:tgtEl>
+                                      <p:attrNameLst><p:attrName>style.visibility</p:attrName></p:attrNameLst>
+                                    </p:cBhvr>
+                                    <p:to><p:strVal val="visible"/></p:to>
+                                  </p:set>
+                                  <p:anim calcmode="lin" valueType="num">
+                                    <p:cBhvr additive="base">
+                                      <p:cTn id="7" dur="500" fill="hold"/>
+                                      <p:tgtEl><p:spTgt spid="${spid}"/></p:tgtEl>
+                                      <p:attrNameLst><p:attrName>style.opacity</p:attrName></p:attrNameLst>
+                                    </p:cBhvr>
+                                    <p:tavLst>
+                                      <p:tav tm="0"><p:val><p:fltVal val="0"/></p:val></p:tav>
+                                      <p:tav tm="100000"><p:val><p:fltVal val="1"/></p:val></p:tav>
+                                    </p:tavLst>
+                                  </p:anim>
+                                </p:childTnLst>
+                              </p:cTn>
+                            </p:par>
+                          </p:childTnLst>
+                        </p:cTn>
+                      </p:par>
+                    </p:childTnLst>
+                  </p:cTn>
+                </p:par>
+              </p:childTnLst>
+            </p:cTn>
+            <p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst>
+            <p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst>
+          </p:seq>
+        </p:childTnLst>
+      </p:cTn>
+    </p:par>
+  </p:tnLst>
+</p:timing>`;
+  }
+
+  /* Build a single slide.xml for the given layout/title/body/options */
+  function buildSlideXml(layout, title, body, opts) {
     const titleText = esc(title || '');
     const bodyLines = (body || '').split(/\r?\n/).filter(Boolean);
+    const transitionXml = buildTransitionXml(opts);
+    const animationXml  = buildAnimationXml(opts);
 
     const titleShape = (titleText || layout !== 'blank') ? `
       <p:sp>
@@ -447,6 +531,8 @@
     </p:spTree>
   </p:cSld>
   <p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>
+  ${transitionXml}
+  ${animationXml}
 </p:sld>`;
   }
 
@@ -507,7 +593,7 @@
   }
 
   /* Build a complete one-slide PPTX file as base64. Requires JSZip on window. */
-  async function buildPptxBase64(layout, title, body, notes) {
+  async function buildPptxBase64(layout, title, body, notes, opts) {
     if (typeof JSZip === 'undefined') {
       throw new Error('JSZip not loaded — image insertion and slide creation will not work.');
     }
@@ -524,7 +610,7 @@
     ppt.folder('slideMasters').folder('_rels').file('slideMaster1.xml.rels', SLIDE_MASTER_RELS_XML);
     ppt.folder('slideLayouts').file('slideLayout1.xml', SLIDE_LAYOUT_XML);
     ppt.folder('slideLayouts').folder('_rels').file('slideLayout1.xml.rels', SLIDE_LAYOUT_RELS_XML);
-    ppt.folder('slides').file('slide1.xml', buildSlideXml(layout, title, body));
+    ppt.folder('slides').file('slide1.xml', buildSlideXml(layout, title, body, opts || {}));
     ppt.folder('slides').folder('_rels').file('slide1.xml.rels', buildSlideRelsXml());
     ppt.folder('notesMasters').file('notesMaster1.xml', NOTES_MASTER_XML);
     ppt.folder('notesMasters').folder('_rels').file('notesMaster1.xml.rels', NOTES_MASTER_RELS_XML);
@@ -538,6 +624,8 @@
   window.PPHelpers = {
     BUILT_IN_THEMES,
     LAYOUTS,
+    TRANSITIONS: ['none','fade','push','wipe','zoom','cut'],
+    ANIMATIONS: ['none','fadeIn'],
     buildPptxBase64,
     esc,
   };

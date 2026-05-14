@@ -820,7 +820,16 @@ async function refreshWebSearchStatus() {
     const r = await fetch('/api/web-search/status');
     const d = await r.json();
     const el = document.getElementById('wsProvNote');
-    if (el) el.textContent = `Provider: ${d.provider} — ${d.configured ? 'API key configured' : 'NO API KEY (set BRAVE_KEY in .env)'}`;
+    if (!el) return;
+    if (!d.configured) {
+      el.innerHTML = 'Provider: <strong>not configured</strong> — set <code>GOOGLE_KEY</code>+<code>GOOGLE_CX</code> (preferred) or <code>BRAVE_KEY</code> in <code>.env</code>.';
+    } else {
+      const others = [];
+      if (d.available?.google && d.provider !== 'google') others.push('Google available');
+      if (d.available?.brave  && d.provider !== 'brave')  others.push('Brave available');
+      const extra = others.length ? ` · ${others.join(' · ')}` : '';
+      el.innerHTML = `Provider: <strong>${d.provider === 'google' ? 'Google Custom Search' : 'Brave Search'}</strong> (configured)${extra}<br>Set <code>WEB_SEARCH_PROVIDER=google|brave</code> in <code>.env</code> to switch.`;
+    }
   } catch {}
 }
 
@@ -1633,8 +1642,8 @@ async function execCode(code) {
         return sh;
       }
 
-      async function addSlide(layout, title, body, notes) {
-        const blob = await window.PPHelpers.buildPptxBase64(layout || 'title-content', title || '', body || '', notes || '');
+      async function addSlide(layout, title, body, notes, options) {
+        const blob = await window.PPHelpers.buildPptxBase64(layout || 'title-content', title || '', body || '', notes || '', options || {});
         // Get slide count before
         presentation.slides.load('items/id');
         await ctx.sync();
@@ -1651,6 +1660,95 @@ async function execCode(code) {
           try { await applyThemeToSlideIndex(beforeCount, BUILT_IN_THEMES[activeTheme]); } catch {}
         }
         return beforeCount;
+      }
+
+      async function moveSlide(fromIndex, toIndex) {
+        presentation.slides.load('items/id');
+        await ctx.sync();
+        const slides = presentation.slides.items;
+        if (fromIndex < 0) fromIndex = slides.length + fromIndex;
+        if (toIndex < 0) toIndex = slides.length + toIndex;
+        if (fromIndex < 0 || fromIndex >= slides.length) throw new Error('moveSlide: fromIndex ' + fromIndex + ' out of range (0-' + (slides.length-1) + ').');
+        if (toIndex < 0 || toIndex >= slides.length) throw new Error('moveSlide: toIndex ' + toIndex + ' out of range (0-' + (slides.length-1) + ').');
+        if (fromIndex === toIndex) return;
+
+        // Read source slide's content + layout + notes
+        const src = slides[fromIndex];
+        src.shapes.load('items/placeholderFormat/type, items/textFrame/textRange/text, items/name');
+        try { src.notesPage.notesTextFrame.load('textRange/text'); } catch {}
+        try { src.layout.load('name'); } catch {}
+        await ctx.sync();
+
+        let title = '', body = '', notes = '';
+        let layoutName = 'title-content';
+        try {
+          const ln = (src.layout?.name || '').toLowerCase();
+          layoutName = ln.includes('section') ? 'section'
+                     : ln.includes('title slide') ? 'title'
+                     : ln.includes('two') ? 'two-content'
+                     : ln.includes('blank') ? 'blank'
+                     : 'title-content';
+        } catch {}
+        for (const sh of src.shapes.items || []) {
+          try {
+            const t = sh.textFrame.textRange.text || '';
+            if (!t.trim()) continue;
+            const isTitle = (() => { try { return sh.placeholderFormat.type === 'title'; } catch { return false; } })();
+            if (isTitle) title = t;
+            else body += (body ? '\n' : '') + t;
+          } catch {}
+        }
+        try { notes = src.notesPage.notesTextFrame.textRange.text || ''; } catch {}
+
+        // Add a copy at the end
+        await addSlide(layoutName, title, body, notes);
+
+        // Delete the original
+        const refreshed = presentation.slides;
+        refreshed.load('items/id');
+        await ctx.sync();
+        refreshed.items[fromIndex].delete();
+        await ctx.sync();
+
+        // The new copy is now at position (refreshed length - 1) after delete.
+        // If user wanted it earlier, rotate by repeatedly moving the slide currently at toIndex to the end.
+        refreshed.load('items/id');
+        await ctx.sync();
+        const newLen = refreshed.items.length;
+        const passes = (newLen - 1) - toIndex;
+        for (let i = 0; i < passes; i++) {
+          // Recursive call would loop forever; do an inline rotate instead.
+          // Re-read, move slide at `toIndex` to end via copy+delete.
+          presentation.slides.load('items/id');
+          await ctx.sync();
+          const cur = presentation.slides.items;
+          if (toIndex >= cur.length) break;
+          const s = cur[toIndex];
+          s.shapes.load('items/placeholderFormat/type, items/textFrame/textRange/text');
+          try { s.notesPage.notesTextFrame.load('textRange/text'); } catch {}
+          try { s.layout.load('name'); } catch {}
+          await ctx.sync();
+          let t2 = '', b2 = '', n2 = '', l2 = 'title-content';
+          try {
+            const ln = (s.layout?.name || '').toLowerCase();
+            l2 = ln.includes('section') ? 'section' : ln.includes('title slide') ? 'title' : ln.includes('two') ? 'two-content' : ln.includes('blank') ? 'blank' : 'title-content';
+          } catch {}
+          for (const sh of s.shapes.items || []) {
+            try {
+              const tt = sh.textFrame.textRange.text || '';
+              if (!tt.trim()) continue;
+              const isT = (() => { try { return sh.placeholderFormat.type === 'title'; } catch { return false; } })();
+              if (isT) t2 = tt; else b2 += (b2 ? '\n' : '') + tt;
+            } catch {}
+          }
+          try { n2 = s.notesPage.notesTextFrame.textRange.text || ''; } catch {}
+          await addSlide(l2, t2, b2, n2);
+          presentation.slides.load('items/id');
+          await ctx.sync();
+          presentation.slides.items[toIndex].delete();
+          await ctx.sync();
+        }
+        return toIndex;
       }
 
       async function addTextBox(slideIndex, text, opts) {
@@ -1754,13 +1852,13 @@ async function execCode(code) {
       const fn = new Function(
         'context','presentation','PowerPoint',
         'addSlide','addTextBox','applyTheme','recolorDeck','addSpeakerNote',
-        'getCurrentSlide','getSlideByIndex','findShapeByName','listSlides','insertImage','BUILT_IN_THEMES',
+        'getCurrentSlide','getSlideByIndex','findShapeByName','listSlides','insertImage','moveSlide','BUILT_IN_THEMES',
         'return (async()=>{ ' + code + ' })();'
       );
       const rv = await fn(
         ctx, presentation, PowerPoint,
         addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote,
-        getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, BUILT_IN_THEMES
+        getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, moveSlide, BUILT_IN_THEMES
       );
       if (rv !== undefined && rv !== null) ret = String(rv);
     });

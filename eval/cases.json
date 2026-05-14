@@ -251,14 +251,35 @@
     "forbiddenPatterns": []
   },
   {
-    "id": "L1-refusal-001",
+    "id": "L1-animation-001",
     "level": 1,
-    "category": "refusal",
-    "prompt": "add a fade-in animation to the title on slide 1",
-    "workbook": "Slide 1: TITLE=\"Hello\" | BODY=\"\" | NOTES=\"\"",
-    "mustHaveCode": false,
-    "requiredPatterns": ["doesn't expose"],
-    "forbiddenPatterns": ["animations.add", "transition.add", "slide.animations", "slide.transition"]
+    "category": "animation",
+    "prompt": "add a new slide with title 'Vision' and a fade-in animation on the body",
+    "workbook": "Slide 1: TITLE=\"Intro\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSlide", "fadeIn", "animation"],
+    "forbiddenPatterns": ["slide.animations.add", "slide.transition.add"],
+    "note": "Animations supported on NEW slides only via addSlide options."
+  },
+  {
+    "id": "L1-transition-001",
+    "level": 1,
+    "category": "transition",
+    "prompt": "create a new section divider slide titled 'Part 2' with a fade transition",
+    "workbook": "Slide 1: TITLE=\"Part 1\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["addSlide", "section", "fade", "transition"],
+    "forbiddenPatterns": ["slide.transition.add"]
+  },
+  {
+    "id": "L1-move-001",
+    "level": 1,
+    "category": "slide-reorder",
+    "prompt": "move slide 3 to position 1",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"\" | NOTES=\"\"\nSlide 3: TITLE=\"C\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": ["moveSlide"],
+    "forbiddenPatterns": ["slides.move(", "slide.move("]
   },
   {
     "id": "L1-refusal-002",
@@ -271,14 +292,15 @@
     "forbiddenPatterns": ["exportToPdf", "presentation.export"]
   },
   {
-    "id": "L1-refusal-003",
+    "id": "L1-refusal-005",
     "level": 1,
     "category": "refusal",
-    "prompt": "move slide 3 to position 1",
-    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"\" | NOTES=\"\"\nSlide 3: TITLE=\"C\" | BODY=\"\" | NOTES=\"\"",
+    "prompt": "edit the existing fade animation on slide 2's body to be slower",
+    "workbook": "Slide 1: TITLE=\"A\" | BODY=\"\" | NOTES=\"\"\nSlide 2: TITLE=\"B\" | BODY=\"text\" | NOTES=\"\"",
     "mustHaveCode": false,
-    "requiredPatterns": ["doesn't expose"],
-    "forbiddenPatterns": ["slides.move", "slide.move", "reorder"]
+    "requiredPatterns": ["existing"],
+    "forbiddenPatterns": ["slide.animations =", "slide.animations.add"],
+    "note": "Animations can only be applied at slide creation. AI should explain and offer to recreate."
   },
   {
     "id": "L1-refusal-004",
