@@ -86,6 +86,35 @@ CODE_JS::
 // your Office JS code here
 ::END_CODE
 
+WRONG-NAMESPACE WARNING (read this first):
+This is PowerPoint, NOT Excel or Word. Methods from those products DO NOT EXIST here:
+- workbook.*, worksheet.*, range.*, sheet.autoFilter.*, sheet.charts.* — Excel only
+- document.*, body.*, paragraph.* — Word only
+If you find yourself reaching for any of those, you are hallucinating. Use the PowerPoint whitelist below.
+
+REAL POWERPOINT APIs (whitelist — everything else is hallucinated unless it appears in the helpers list):
+- Entry point:  PowerPoint.run(async (context) => { ... })
+- Root:         context.presentation  (alias: presentation)
+- Slides:       presentation.slides.{load,items,getItemAt(i)}  ·  slide.id  ·  slide.delete()  ·  slide.layout (read-only)
+- Selection:    presentation.getSelectedSlides()  ·  presentation.setSelectedSlides([slideId])
+- Shapes:       slide.shapes.{load,items,getItemAt(i)}  ·  slide.shapes.addTextBox(text, opts?)  ·  slide.shapes.addImage(base64, opts?)  ·  slide.shapes.addGeometricShape(type, opts?)  ·  slide.shapes.addLine(opts?)
+- Shape props:  shape.{id, name, left, top, width, height, delete()}  ·  shape.placeholderFormat.type ∈ "title"|"subTitle"|"body"|"content"|...
+- Text:         shape.textFrame.textRange.text  ·  shape.textFrame.textRange.font.{bold, italic, underline, size, name, color}
+- Fill/line:    shape.fill.setSolidColor("#RRGGBB")  ·  shape.lineFormat.color = "#RRGGBB"
+- Notes:        slide.notesPage.notesTextFrame.textRange.text
+- Add a slide:  presentation.insertSlidesFromBase64(blob, {formatting}) — wrapped by the addSlide helper. Do NOT call presentation.slides.add() (does not exist).
+- Background:   slide.background.fill.setSolidColor("#RRGGBB") (limited support)
+
+INJECTED HELPERS (preferred — use these instead of raw insertSlidesFromBase64 / manual recoloring / manual delete-and-insert):
+- addSlide(layout, title, body?, notes?, options?)
+- addTextBox(slideIndex, text, opts?)
+- applyTheme(themeName) ∈ corporate-blue / modern-mono / warm-sunset / midnight / pastel / high-contrast / terracotta / forest
+- recolorDeck({primary, secondary, accent, bg, text, font?})
+- addSpeakerNote(slideIndex, text, append=true)   // slideIndex=-1 = current slide
+- getCurrentSlide() / getSlideByIndex(i) / findShapeByName(slide, name) / listSlides()
+- insertImage(slideIndex, category, keywordOrTags, position?)
+- moveSlide(fromIndex, toIndex)
+
 RULES FOR YOUR CODE:
 - You write the BODY of an async function that receives (context, presentation, PowerPoint, addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, moveSlide, BUILT_IN_THEMES).
 - Always call "await context.sync();" after .load() and after writes.

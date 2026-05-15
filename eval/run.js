@@ -123,7 +123,7 @@ function checkPatterns(text, code, required, forbidden) {
 async function judge(tc, aiResponse, code) {
   const isQuestion = tc.mustHaveCode === false;
   const resp = await callLLM([
-    { role: 'system', content: 'You are a strict expert evaluator of Office JavaScript API code for PowerPoint. You score precisely — never give round multiples of 10 unless exactly right.' },
+    { role: 'system', content: 'You are a strict expert evaluator of Office JavaScript API code for PowerPoint. You score precisely — never give round multiples of 10 unless exactly right.\n\nIMPORTANT — the code runs inside a wrapper that injects these HELPER FUNCTIONS into scope. Treat ALL of them as VALID, not as hallucinations:\n  addSlide(layout, title, body?, notes?, options?)  — options accepts {transition: "fade"|"push"|"wipe"|"zoom"|"cut", animation: "fadeIn"|"none", transitionSpeed: "slow"|"med"|"fast"}\n  addTextBox(slideIndex, text, opts?)\n  applyTheme(themeName)               — themeName ∈ corporate-blue / modern-mono / warm-sunset / midnight / pastel / high-contrast / terracotta / forest\n  recolorDeck(palette)\n  addSpeakerNote(slideIndex, text, append?)   — slideIndex=-1 means current slide\n  getCurrentSlide()\n  getSlideByIndex(i)\n  findShapeByName(slide, name)\n  listSlides()\n  insertImage(slideIndex, category, keywordOrTags, position?)\n  moveSlide(fromIndex, toIndex)\n  BUILT_IN_THEMES                     — object of theme palettes\nALSO injected: context, presentation (= context.presentation), PowerPoint namespace. Code is the body of an async function inside PowerPoint.run(async (context) => { ... }).' },
     {
       role: 'user',
       content: `Score this AI assistant response on FOUR dimensions, each out of 25 points.
@@ -139,15 +139,20 @@ ${code ? `GENERATED CODE:\n${code}` : 'NO CODE WAS GENERATED.'}
 
 ${isQuestion
   ? `This is a QUESTION OR REFUSAL — no code expected. Score:
-A) ACCURACY (0-25): Is the answer factually correct and complete? For refusals, does it correctly identify what PowerPoint Office.js cannot do (animations, transitions, exporting, slide reordering, chart creation, SmartArt, slideshow control)?
+A) ACCURACY (0-25): Is the answer factually correct and complete? For refusals, does it correctly identify what PowerPoint Office.js cannot do? Genuinely-impossible operations (refuse cleanly): PDF/image export, chart creation on slides, SmartArt creation, slideshow control (runSlideShow), editing animations/transitions on EXISTING slides. Possible (do NOT refuse): adding NEW slides with transitions/animations via addSlide options, reordering via moveSlide, recoloring via recolorDeck/applyTheme.
 B) CLARITY (0-25): Is it clear and easy to understand?
 C) RELEVANCE (0-25): Does it directly address the question without padding?
-D) BONUS (0-25): Extra credit for offering workarounds, suggesting Settings options (e.g. "enable web search"), or noting PowerPoint-specific caveats.`
+D) BONUS (0-25): Extra credit for offering workarounds (e.g. "recreate the slide with the animation" or "insertImage with charts-diagrams category as a chart workaround"), suggesting Settings options (e.g. "enable web search"), or noting PowerPoint-specific caveats.`
   : `Score each dimension carefully. Deduct proportionally for each flaw:
-A) API_CORRECTNESS (0-25): Does the code use real PowerPoint Office JS APIs? HEAVILY penalise hallucinated methods: presentation.theme.* (no theme API), slide.animations.*, slide.transition.*, presentation.exportToPdf(), presentation.export*(), slide.charts.add(), shape.smartArt.*, presentation.runSlideShow(), presentation.slides.add() (use addSlide helper), slides.move(), slide.background.image=. Real APIs: PowerPoint.run, presentation.slides, slide.shapes, shape.textFrame.textRange, slide.notesPage.notesTextFrame, slide.shapes.addTextBox, slide.shapes.addImage, slide.shapes.addGeometricShape, presentation.insertSlidesFromBase64, presentation.getSelectedSlides.
+
+A) API_CORRECTNESS (0-25): Does the code use real PowerPoint Office.js APIs OR the injected helpers listed in your instructions?
+   HEAVILY penalise hallucinated methods that DO NOT EXIST:
+     presentation.theme.* (no theme API), slide.animations.* / slide.transition.* (no LIVE animation/transition API — only via addSlide options on NEW slides), presentation.exportToPdf() / presentation.export*(), slide.charts.add(), shape.smartArt.*, presentation.runSlideShow(), presentation.slides.add() (use addSlide helper instead), slides.move() / slide.move() (use moveSlide helper instead), slide.background.image=, worksheet.* (that's Excel — wrong namespace), workbook.*, document.* (that's Word — wrong namespace).
+   Real native APIs: PowerPoint.run, ctx.presentation, presentation.slides, slide.shapes, slide.shapes.addTextBox, slide.shapes.addImage, slide.shapes.addGeometricShape, slide.shapes.addLine, shape.textFrame.textRange, shape.textFrame.textRange.font.{bold,size,color,name,italic,underline}, shape.fill.setSolidColor, shape.lineFormat.color, shape.{left,top,width,height}, shape.delete(), slide.delete(), slide.notesPage.notesTextFrame.textRange.text, presentation.insertSlidesFromBase64, presentation.getSelectedSlides, presentation.setSelectedSlides.
+   DO NOT penalize the injected helpers (addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, moveSlide, BUILT_IN_THEMES) — they are VALID in this environment.
 B) COMPLETENESS (0-25): Does the code fully address the request? Partial solutions lose points.
-C) WOULD_IT_WORK (0-25): Would this code actually execute in PowerPoint without runtime errors? Check load/sync order, variable scope, correct method signatures.
-D) APPROACH (0-25): Does it use best practices and the available helpers (addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage) instead of re-implementing them manually? For image insertion, MUST use insertImage helper — never addImage with a URL.`}
+C) WOULD_IT_WORK (0-25): Would this code actually execute in PowerPoint without runtime errors? Check load/sync order, variable scope, correct method signatures, proper await on all helper calls.
+D) APPROACH (0-25): Does it use best practices and the available helpers instead of re-implementing them manually? For image insertion, MUST use insertImage helper — never addImage with a URL string. For new slides, MUST use addSlide helper. For reordering, MUST use moveSlide helper. For theming, prefer applyTheme/recolorDeck over manual per-shape recoloring.`}
 
 Deduct points specifically for each issue you identify. Do NOT round to multiples of 5 — use precise values like 18, 22, 7.
 
