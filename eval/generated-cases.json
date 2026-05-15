@@ -100,5 +100,365 @@
       "addTextBox"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-add-001",
+    "level": 2,
+    "category": "slide-add",
+    "prompt": "add a new slide with title 'Key Features' and two columns of bullets: 'Feature 1, Feature 2' and 'Feature 3, Feature 4'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our product\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-add-002",
+    "level": 2,
+    "category": "slide-add",
+    "prompt": "insert a new slide after the current slide with title 'Technical Details' and a speaker note 'Please refer to appendix for more information'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Overview\" | BODY=\"Our product is innovative\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addSpeakerNote"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-add-003",
+    "level": 2,
+    "category": "slide-add",
+    "prompt": "add a new slide with title 'Comparison' and a table with two rows and three columns: 'Feature, Our Product, Competitor'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Market Analysis\" | BODY=\"Our product is competitive\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTable"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-add-004",
+    "level": 2,
+    "category": "slide-add",
+    "prompt": "add a new slide with title 'Call to Action' and a text box with the text 'Contact us at sales@example.com' and apply a theme to the new slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Conclusion\" | BODY=\"Thank you for your attention\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox",
+      "applyTheme"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-theme-apply-101",
+    "level": 2,
+    "category": "theme-apply",
+    "prompt": "apply the corporate blue theme to all slides except the title slide, which should use the midnight theme",
+    "workbook": "Slide 1 (id=256): TITLE=\"Company Overview\" | BODY=\"Welcome to our company\" | NOTES=\"Introduction to the company\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "applyTheme"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-theme-apply-102",
+    "level": 2,
+    "category": "theme-apply",
+    "prompt": "use the 'retro' theme on slides with an odd slide number and the 'modern' theme on slides with an even slide number",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is the first slide\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Background\" | BODY=\"This is the second slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "applyTheme"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-theme-apply-103",
+    "level": 2,
+    "category": "theme-apply",
+    "prompt": "apply the 'nature' theme to all slides that contain a picture, and the 'city' theme to all slides that do not contain a picture",
+    "workbook": "Slide 1 (id=256): TITLE=\"Park\" | BODY=\"A picture of a park\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Skyscraper\" | BODY=\"A picture of a skyscraper\" | NOTES=\"\", Slide 3 (id=258): TITLE=\"Text\" | BODY=\"This is a text slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "applyTheme"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-theme-apply-104",
+    "level": 2,
+    "category": "theme-apply",
+    "prompt": "apply the 'dark' theme to all slides that have a speaker note, and the 'light' theme to all slides that do not have a speaker note",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome\" | NOTES=\"Introduction to the presentation\", Slide 2 (id=257): TITLE=\"Background\" | BODY=\"This is the background\" | NOTES=\"\", Slide 3 (id=258): TITLE=\"Conclusion\" | BODY=\"Conclusion\" | NOTES=\"Conclusion of the presentation\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "applyTheme"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-notes-write-001",
+    "level": 2,
+    "category": "notes-write",
+    "prompt": "write speaker notes for the slide with the title 'Market Analysis' explaining the decline in sales and include a reminder to discuss the marketing strategy",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Market Analysis\" | BODY=\"Sales have declined by 10%\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSpeakerNote",
+      "getSlideById"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-notes-write-002",
+    "level": 2,
+    "category": "notes-write",
+    "prompt": "add a note to the current slide with a table summarizing the key points and a reminder to elaborate on the technical details",
+    "workbook": "Slide 1 (id=256): TITLE=\"Technical Overview\" | BODY=\"Our product uses AI and ML\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Key Features\" | BODY=\"Feature 1, Feature 2, Feature 3\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTable",
+      "addSpeakerNote"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-notes-write-003",
+    "level": 2,
+    "category": "notes-write",
+    "prompt": "write speaker notes for the slide with the body text 'Our mission is to...' and include a quote from the CEO and a reminder to emphasize the company values",
+    "workbook": "Slide 1 (id=256): TITLE=\"Company Overview\" | BODY=\"Our mission is to make a difference\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Our Team\" | BODY=\"Meet our team\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSpeakerNote",
+      "getSlideByBody"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-notes-write-004",
+    "level": 2,
+    "category": "notes-write",
+    "prompt": "add a note to the last slide with a summary of the key takeaways and a reminder to provide additional resources for further learning",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Conclusion\" | BODY=\"Thank you for your attention\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSpeakerNote",
+      "getLastSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-shape-position-101",
+    "level": 2,
+    "category": "shape-position",
+    "prompt": "align the last text box on slide 3 to the right edge of the slide and 20 points below the title",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a sample presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "alignToEdge"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-shape-position-102",
+    "level": 2,
+    "category": "shape-position",
+    "prompt": "insert a new slide with a picture and position it 10 points from the top and 15 points from the left edge of the slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Company Overview\" | BODY=\"Our mission is to...\" | NOTES=\"Meeting on Friday\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addPicture"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-shape-position-103",
+    "level": 2,
+    "category": "shape-position",
+    "prompt": "move all text boxes on slide 2 down by 30 points to make room for a new header",
+    "workbook": "Slide 1 (id=256): TITLE=\"Agenda\" | BODY=\"Point 1, Point 2, Point 3\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getTextBoxes",
+      "moveDown"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-shape-position-104",
+    "level": 2,
+    "category": "shape-position",
+    "prompt": "center a new text box vertically on slide 4 and make it 50% of the slide width",
+    "workbook": "Slide 1 (id=256): TITLE=\"Conclusion\" | BODY=\"Summary of key points\" | NOTES=\"Next steps\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "setWidth",
+      "centerVertically"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-question-handling-003",
+    "level": 2,
+    "category": "question-handling",
+    "prompt": "What is the longest speaker note in the presentation?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"This is a short note.\", Slide 2 (id=257): TITLE=\"Problem Statement\" | BODY=\"We need to solve this problem\" | NOTES=\"This is a very long note that goes on and on and has multiple sentences. It should be considered the longest note in the presentation.\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSpeakerNote"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-question-handling-004",
+    "level": 2,
+    "category": "question-handling",
+    "prompt": "How many slides have a title that contains the word 'solution'?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"The Solution\" | BODY=\"We have found a solution\" | NOTES=\"\", Slide 3 (id=258): TITLE=\"Another Solution Approach\" | BODY=\"This is another way to solve the problem\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-question-handling-005",
+    "level": 2,
+    "category": "question-handling",
+    "prompt": "What is the text of the first slide that has a body containing the word 'problem'?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Problem Statement\" | BODY=\"We need to solve this problem\" | NOTES=\"\", Slide 3 (id=258): TITLE=\"Solution\" | BODY=\"We have found a solution\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-question-handling-006",
+    "level": 2,
+    "category": "question-handling",
+    "prompt": "How many slides have a note that is empty?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Problem Statement\" | BODY=\"We need to solve this problem\" | NOTES=\"This is a note.\", Slide 3 (id=258): TITLE=\"Solution\" | BODY=\"We have found a solution\" | NOTES=\"\", Slide 4 (id=259): TITLE=\"Conclusion\" | BODY=\"Thank you for listening\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSpeakerNote"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-transition-011",
+    "level": 2,
+    "category": "transition",
+    "prompt": "insert a new slide after the current slide with a title 'Conclusion' and apply a fade transition to it, given the current slide has a picture and a text box",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"This is the first slide\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "applyTheme"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-transition-012",
+    "level": 2,
+    "category": "transition",
+    "prompt": "create a new section divider slide with a title 'Summary' and a fade transition, and add a speaker note with the text 'Please review the key points'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Overview\" | BODY=\"This presentation covers...\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addSpeakerNote"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-transition-013",
+    "level": 2,
+    "category": "transition",
+    "prompt": "insert a new slide before the current slide with a title 'Background' and apply a fade transition to it, given the current slide has a table and a text box",
+    "workbook": "Slide 1 (id=256): TITLE=\"Problem Statement\" | BODY=\"The current situation is...\" | NOTES=\"This is the problem we are trying to solve\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "applyTheme"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-transition-014",
+    "level": 2,
+    "category": "transition",
+    "prompt": "create a new slide with a title 'Future Work' and a fade transition, and add a text box with the text 'We plan to...'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"This is the first slide\", Slide 2 (id=257): TITLE=\"Methodology\" | BODY=\"We used...\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-reorder-001",
+    "level": 2,
+    "category": "slide-reorder",
+    "prompt": "swap slides 2 and 5, then move the new slide 2 to position 3",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "moveTo"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-reorder-002",
+    "level": 2,
+    "category": "slide-reorder",
+    "prompt": "move the slide with title 'Conclusion' to the beginning of the deck",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Body\" | BODY=\"This is the body of the presentation\" | NOTES=\"\", Slide 3 (id=258): TITLE=\"Conclusion\" | BODY=\"Thank you for listening\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideById",
+      "moveTo"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-reorder-003",
+    "level": 2,
+    "category": "slide-reorder",
+    "prompt": "insert a new slide with title 'Break' after the slide with title 'Body', then move the new slide to position 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Body\" | BODY=\"This is the body of the presentation\" | NOTES=\"\", Slide 3 (id=258): TITLE=\"Conclusion\" | BODY=\"Thank you for listening\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "insertSlide",
+      "moveTo"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-reorder-004",
+    "level": 2,
+    "category": "slide-reorder",
+    "prompt": "move the last slide to the second position, then move the new second slide to the last position",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\", Slide 2 (id=257): TITLE=\"Body\" | BODY=\"This is the body of the presentation\" | NOTES=\"\", Slide 3 (id=258): TITLE=\"Conclusion\" | BODY=\"Thank you for listening\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideById",
+      "moveTo"
+    ],
+    "forbiddenPatterns": []
   }
 ]

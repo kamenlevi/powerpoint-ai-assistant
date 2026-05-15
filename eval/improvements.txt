@@ -1,6 +1,5 @@
-To apply a theme, use the presentation.theme property, e.g., presentation.theme = "corporate-blue".
-For recoloring, use the slide.master.theme.colorScheme property, e.g., slide.master.theme.colorScheme = { name: "Custom", colors: { primary: "#003366", background: "#F0F4F8", accent: "#FF9900" } }.
-To add a speaker note, use slide.notesPage.notesTextFrame.text, e.g., slide.notesPage.notesTextFrame.text = "Remember to mention the pricing change.".
-To insert an image, use slide.shapes.addImage, e.g., slide.shapes.addImage("image.png", { left: 400, top: 120, width: 320, height: 240 }).
-For web searches, suggest using an external service or API, e.g., "To get the current Apple stock price, you can use a web search or an API like Alpha Vantage.".
-To create a new slide with a transition, use presentation.slides.add, e.g., const newSlide = presentation.slides.add(); newSlide.shapes.title.text = "Part 2"; newSlide.transitions.add(Office.PowerPoint.TransitionType.fade).
+For web searches, suggest using the retrieved information to generate a slide, e.g., "To get the current Apple stock price, you can use a web search, then use addSlide to create a new slide with the retrieved information."
+When applying animations, note that shape animations are not supported, but you can use addSlide with an animation parameter to animate the entire slide, e.g., await addSlide("title-content", "Values", "Value 1\\nValue 2", "", { animation: "wheel" }).
+To apply animations on specific shapes, consider using the addTextBox helper with animation parameters, e.g., await addTextBox(slideIndex, "Value 1", { left: 100, top: 200, width: 200, height: 50, animation: "fadeIn" }).
+For animations not supported by Office.js, suggest workarounds like recreating the slide or using alternative animations, e.g., "To apply a zoom animation, consider recreating the slide with the desired animation or using a different animation like fade-in."
+To add a new text box with animation, use the addTextBox helper with animation parameters, e.g., await addTextBox(slideIndex, "Summary", { left: 100, top: 200, width: 200, height: 50, animation: "slideIn" }).
