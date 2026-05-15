@@ -7,11 +7,12 @@
     "lastRun": "2026-05-15T15-46-01"
   },
   "slide-delete": {
-    "level": 2,
-    "masteredAt": "2026-05-15T15-46-01",
-    "runsAtLevel": 0,
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
     "lastScore": 97,
-    "lastRun": "2026-05-15T15-46-01"
+    "lastRun": "2026-05-15T15-46-01",
+    "note": "Was promoted to level 2 on 2026-05-15 but the generated level-2 cases referenced hallucinated APIs (slide.speakerNotes, slide.title.includes, presentation.sildes.getItem) and were discarded. Reset to level 1."
   },
   "text-format": {
     "level": 1,
@@ -77,11 +78,12 @@
     "lastRun": "2026-05-15T15-46-01"
   },
   "animation": {
-    "level": 2,
-    "masteredAt": "2026-05-15T15-46-01",
-    "runsAtLevel": 0,
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
     "lastScore": 100,
-    "lastRun": "2026-05-15T15-46-01"
+    "lastRun": "2026-05-15T15-46-01",
+    "note": "Was promoted to level 2 on 2026-05-15 but the generated level-2 cases required applyAnimation (not a real helper) and were discarded. Reset to level 1."
   },
   "transition": {
     "level": 1,

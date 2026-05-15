@@ -23,6 +23,12 @@ const COST_PER_1M_IN   = 0.07;
 const COST_PER_1M_OUT  = 0.30;
 const BUDGET_USD       = 0.50;
 const MASTERY_THRESHOLD      = 95;
+// Only promote a category if EVERY OTHER category is also performing well —
+// otherwise we balloon the suite while the model is still failing basics.
+const PROMOTION_GATE_OTHERS  = 85;
+const HARDER_CASES_PER_GEN   = 2;     // was 4 — user requested 1-2
+const EASIER_CASES_PER_GEN   = 2;     // was 3
+const NEW_CAT_CASES_PER_GEN  = 1;     // was 2 — only a tiny seed
 const NEW_CAT_THRESHOLD      = 95;
 const NEW_CAT_L2_THRESHOLD   = 90;
 const STUCK_RUNS_THRESHOLD   = 3;
@@ -33,6 +39,77 @@ const PATHS = {
   progress:  path.join(__dirname, 'progress.json'),
   results:   path.join(__dirname, 'results'),
 };
+
+// ── Hallucination blacklist ──────────────────────────────────────────────────
+// Patterns that must NEVER appear in generated test cases (requiredPatterns) or
+// in auto-patched system-prompt rules. These are APIs that DO NOT EXIST in
+// PowerPoint Office.js — letting them slip in would poison the eval loop.
+const HALLUCINATION_BLACKLIST = [
+  // wrong-namespace from Excel/Word
+  /\bworkbook\./i, /\bworksheet\./i, /\bsheet\.autoFilter/i, /\bsheet\.charts\.add/i,
+  /\bdocument\.body/i, /\bdocument\.paragraphs/i,
+  // PowerPoint methods that don't exist
+  /\bpresentation\.theme\b/i, /\bpresentation\.slides\.add\b/i, /\bpresentation\.sildes/i,
+  /\bpresentation\.exportToPdf/i, /\bpresentation\.export(?!.*Base64)/i,
+  /\bpresentation\.runSlideShow/i,
+  /\bslide\.master\b/i, /\bslide\.theme\b/i,
+  /\bslide\.transitions\b/i, /\bslide\.transition\.add/i,
+  /\bslide\.animations\.add/i,
+  /\bslide\.speakerNotes\b/i,
+  /\bslide\.title\.(?!text)/i,         // slides have no .title property; titles live in placeholder shapes
+  /\bslide\.body\b/i,
+  /\bslide\.charts\.add/i,
+  /\bshape\.smartArt/i,
+  /\bOffice\.PowerPoint\.TransitionType/i,
+  // helpers that DO NOT exist in our environment
+  /\bapplyAnimation\b/i, /\bapplyTransition\b/i,
+];
+
+// Whitelist of strings that CAN appear in requiredPatterns — used as guidance
+// when prompting the generator. Not enforced as an allowlist (would be too
+// strict) but printed in the prompt so the model has a menu.
+const PATTERN_WHITELIST_HINT = [
+  // helpers (preferred)
+  'addSlide', 'addTextBox', 'applyTheme', 'recolorDeck', 'addSpeakerNote',
+  'getCurrentSlide', 'getSlideByIndex', 'findShapeByName', 'listSlides',
+  'insertImage', 'moveSlide', 'BUILT_IN_THEMES',
+  // real native APIs
+  'PowerPoint.run', 'presentation.slides', 'slide.shapes', 'slide.delete()',
+  'shape.textFrame.textRange', 'shape.textFrame.textRange.font.bold',
+  'shape.textFrame.textRange.font.size', 'shape.textFrame.textRange.font.color',
+  'shape.textFrame.textRange.font.name',
+  'shape.fill.setSolidColor', 'shape.lineFormat.color',
+  'slide.notesPage.notesTextFrame.textRange.text',
+  'presentation.insertSlidesFromBase64', 'presentation.getSelectedSlides',
+  '.load(', 'context.sync', 'return',
+  // option keys
+  'fadeIn', 'transition', 'fade', 'push', 'wipe', 'zoom', 'cut',
+];
+
+function isHallucinated(text) {
+  if (typeof text !== 'string') return false;
+  return HALLUCINATION_BLACKLIST.some(p => p.test(text));
+}
+
+function validateGeneratedCase(c) {
+  if (!c || typeof c !== 'object') return { ok: false, reason: 'not an object' };
+  if (!c.id || !c.prompt || !c.category) return { ok: false, reason: 'missing id/prompt/category' };
+  const reqs = Array.isArray(c.requiredPatterns) ? c.requiredPatterns : [];
+  for (const r of reqs) {
+    if (isHallucinated(r)) return { ok: false, reason: `requiredPattern uses hallucinated API: ${r}` };
+  }
+  if (isHallucinated(c.prompt)) return { ok: false, reason: 'prompt references hallucinated API' };
+  if (isHallucinated(c.note || '')) return { ok: false, reason: 'note references hallucinated API' };
+  return { ok: true };
+}
+
+function validateImprovement(text) {
+  const issues = [];
+  for (const p of HALLUCINATION_BLACKLIST) {
+    if (p.test(text)) issues.push(p.toString());
+  }
+  return { ok: issues.length === 0, issues };
+}
 
 if (!fs.existsSync(PATHS.results)) fs.mkdirSync(PATHS.results, { recursive: true });
 
@@ -190,7 +267,7 @@ async function generateFix(failingResults, currentImprovements) {
   ).join('\n\n');
 
   const resp = await callLLM([
-    { role: 'system', content: 'You are an expert at improving system prompts for a PowerPoint AI assistant that generates Office JavaScript code.' },
+    { role: 'system', content: 'You are an expert at improving system prompts for a PowerPoint AI assistant that generates Office JavaScript code. You only use real PowerPoint Office.js APIs or listed helpers — never invent APIs.' },
     {
       role: 'user',
       content: `The following test cases are FAILING (score < 70). Analyse the errors and generate new rules or examples to add to the system prompt so the AI handles these cases correctly.
@@ -204,8 +281,20 @@ ${currentImprovements || '(none)'}
 Constraints:
 - Only add rules or examples that would fix the specific failures above
 - Use the same format as the existing prompt (plain text rules or CODE_JS examples)
-- Use the available helpers (addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage)
-- Never propose APIs that do not exist (presentation.theme.*, slide.animations.*, presentation.slides.add, etc.)
+- ONLY use these injected helpers: addSlide(layout,title,body?,notes?,options?), addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage, moveSlide.
+- ONLY use these real Office.js patterns:
+    PowerPoint.run, presentation.slides, slide.shapes, shape.textFrame.textRange.text,
+    shape.textFrame.textRange.font.{bold,size,color,name},
+    shape.fill.setSolidColor, shape.lineFormat.color,
+    shape.{left,top,width,height}, slide.delete(), shape.delete(),
+    slide.notesPage.notesTextFrame.textRange.text,
+    presentation.insertSlidesFromBase64, presentation.getSelectedSlides
+- NEVER propose APIs that do not exist. Specifically forbidden:
+    presentation.theme.*, presentation.slides.add, presentation.exportToPdf,
+    presentation.runSlideShow, slide.master, slide.theme, slide.transitions,
+    slide.animations.add, slide.speakerNotes, slide.title.<x>, slide.body,
+    slide.charts.add, shape.smartArt, Office.PowerPoint.TransitionType,
+    workbook.*, worksheet.*, document.*, applyAnimation, applyTransition.
 - Be concise — 3–8 lines max
 - Do NOT duplicate existing rules
 
@@ -217,6 +306,20 @@ Return ONLY the new text to add. No explanation, no preamble.`,
 }
 
 function applyImprovements(newText) {
+  // Validate the new improvement text against the hallucination blacklist
+  // BEFORE writing it. A bad patch poisons every subsequent server start by
+  // appending hallucinated rules to the system prompt.
+  const v = validateImprovement(newText);
+  if (!v.ok) {
+    console.warn('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.warn('  SYSTEM PROMPT PATCH REJECTED (hallucinated APIs)');
+    console.warn('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.warn('  Issues:', v.issues.join(', '));
+    console.warn('  Proposed patch (NOT applied):');
+    for (const line of newText.split('\n')) console.warn(`  ! ${line}`);
+    console.warn('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    return false;
+  }
   const impFile = path.join(__dirname, 'improvements.txt');
   const oldText = fs.existsSync(impFile) ? fs.readFileSync(impFile, 'utf8').trim() : '';
   fs.writeFileSync(impFile, newText + '\n');
@@ -228,20 +331,29 @@ function applyImprovements(newText) {
   console.log('AFTER:');
   for (const line of newText.split('\n')) console.log(`  + ${line}`);
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+  return true;
 }
 
 async function generateNewCategory(existingCategories) {
   const knownList = existingCategories.join(', ');
   const resp = await callLLM([
-    { role: 'system', content: 'You generate JSON test cases for a PowerPoint AI assistant evaluation suite. Return only valid JSON.' },
+    { role: 'system', content: 'You generate JSON test cases for a PowerPoint AI assistant evaluation suite. Return only valid JSON. Only use real PowerPoint Office.js APIs or listed helpers.' },
     {
       role: 'user',
       content: `The eval suite already covers: ${knownList}.
 
 Pick ONE new PowerPoint feature category not in that list (e.g. shape positioning, font-pairing, agenda-slide, conclusion-slide, table-add, hyperlink, alignment, image-grid, gradient-fill, slide-number, footer, etc.).
 
-Generate exactly 2 level-1 test cases for it — simple, realistic prompts a real user would ask.
-Each case must be solvable via PowerPoint Office JavaScript API + the available helpers (addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, getCurrentSlide, getSlideByIndex, findShapeByName, listSlides, insertImage). No animations, transitions, exports, charts, SmartArt, or slide reordering (those don't exist in the API).
+Generate exactly ${NEW_CAT_CASES_PER_GEN} level-1 test case(s) for it — simple, realistic prompts a real user would ask.
+Each case must be solvable via real PowerPoint Office JavaScript API + the available helpers.
+
+VALID PATTERNS for "requiredPatterns" (pick from this list):
+${PATTERN_WHITELIST_HINT.map(p => '  - ' + p).join('\n')}
+
+NEVER use these (DO NOT EXIST): presentation.theme, presentation.slides.add, slide.master,
+slide.transitions, slide.animations.add, slide.speakerNotes, slide.title.*, slide.body,
+slide.charts.add, shape.smartArt, Office.PowerPoint.TransitionType, workbook.*,
+worksheet.*, document.*, applyAnimation, applyTransition.
 
 Return ONLY a valid JSON object with this shape:
 {
@@ -254,7 +366,7 @@ Return ONLY a valid JSON object with this shape:
       "prompt": "...",
       "workbook": "Slide 1 (id=256): TITLE=\\"...\\" | BODY=\\"...\\" | NOTES=\\"\\"\\nSlide 2 ...",
       "mustHaveCode": true,
-      "requiredPatterns": ["someRealHelperOrApi"],
+      "requiredPatterns": ["one string from the VALID list above"],
       "forbiddenPatterns": []
     }
   ]
@@ -267,6 +379,17 @@ Return ONLY a valid JSON object with this shape:
     if (!jsonMatch) throw new Error('No JSON found');
     const parsed = JSON.parse(jsonMatch[0]);
     if (!parsed.category || !Array.isArray(parsed.cases)) throw new Error('Bad shape');
+    const validated = [];
+    for (const c of parsed.cases) {
+      const v = validateGeneratedCase(c);
+      if (v.ok) validated.push(c);
+      else console.warn(`  Rejected new-category case ${c?.id || '(no id)'}: ${v.reason}`);
+    }
+    if (!validated.length) {
+      console.warn(`  All ${parsed.cases.length} new-category cases referenced hallucinated APIs — skipping.`);
+      return null;
+    }
+    parsed.cases = validated.slice(0, NEW_CAT_CASES_PER_GEN);
     return parsed;
   } catch (err) {
     console.warn(`  Failed to parse new category: ${err.message}`);
@@ -320,22 +443,26 @@ async function generateHarderCases(category, currentLevel, existingCases, allCat
     .map(c => `  - [${c.id}] "${c.prompt}"`)
     .join('\n');
 
-  const isAllMastered = allCategories.every(cat => cat.mastered);
-  const newCatHint    = isAllMastered
-    ? `\nSince ALL categories are mastered, also include 1–2 cases for brand-new PowerPoint domains not yet tested.`
-    : '';
-
   const prompt = `You generate test cases for a PowerPoint AI assistant evaluation suite.
 
 The AI just scored 95+/100 on ALL these level ${currentLevel} "${category}" cases:
 ${masteredCases}
 
-Generate exactly 4 NEW test cases at level ${nextLevel} for the "${category}" category that are SIGNIFICANTLY HARDER. They must:
+Generate exactly ${HARDER_CASES_PER_GEN} NEW test cases at level ${nextLevel} for the "${category}" category that are SIGNIFICANTLY HARDER. They must:
 1. Be in the same category but test more complex, realistic, or edge-case scenarios
 2. Not repeat any existing test idea
-3. Be solvable via PowerPoint Office JavaScript API + helpers (addSlide, addTextBox, applyTheme, recolorDeck, addSpeakerNote, etc.) — NO animations, transitions, charts, SmartArt, exports, slideshow control, slide reordering
+3. Be solvable via real PowerPoint Office JavaScript APIs + the injected helpers
 4. Include realistic deck state
-${newCatHint}
+
+VALID PATTERNS for "requiredPatterns" (pick from this list — anything else is hallucinated):
+${PATTERN_WHITELIST_HINT.map(p => '  - ' + p).join('\n')}
+
+NEVER use these in requiredPatterns or in the prompt (they DO NOT EXIST):
+  presentation.theme, presentation.slides.add, presentation.exportToPdf,
+  presentation.runSlideShow, slide.master, slide.theme, slide.transitions,
+  slide.animations.add, slide.speakerNotes, slide.title.<x>, slide.body,
+  slide.charts.add, shape.smartArt, Office.PowerPoint.TransitionType,
+  workbook.*, worksheet.*, document.*, applyAnimation, applyTransition.
 
 Return ONLY a valid JSON array, no explanation. Each object must have:
 {
@@ -345,13 +472,13 @@ Return ONLY a valid JSON array, no explanation. Each object must have:
   "prompt": "...",
   "workbook": "Slide 1 (id=256): TITLE=\\"...\\" | BODY=\\"...\\" | NOTES=\\"\\"",
   "mustHaveCode": true,
-  "requiredPatterns": ["pattern1"],
+  "requiredPatterns": ["one or two strings from the VALID list above"],
   "forbiddenPatterns": []
 }`;
 
-  console.log(`\n  Generating level ${nextLevel} cases for "${category}"...`);
+  console.log(`\n  Generating up to ${HARDER_CASES_PER_GEN} level ${nextLevel} cases for "${category}"...`);
   const raw = await callLLM([
-    { role: 'system', content: 'You generate JSON test cases. Return only valid JSON arrays.' },
+    { role: 'system', content: 'You generate JSON test cases. Return only valid JSON arrays. Only use real PowerPoint Office.js APIs or the listed injected helpers — never invent APIs.' },
     { role: 'user',   content: prompt },
   ], MODEL, 2048);
 
@@ -359,8 +486,18 @@ Return ONLY a valid JSON array, no explanation. Each object must have:
     const jsonMatch = raw.match(/\[[\s\S]*\]/);
     if (!jsonMatch) throw new Error('No JSON array found in response');
     const newCases = JSON.parse(jsonMatch[0]);
-    console.log(`  Generated ${newCases.length} new cases for "${category}" at level ${nextLevel}`);
-    return newCases;
+    const validated = [];
+    for (const c of newCases) {
+      const v = validateGeneratedCase(c);
+      if (v.ok) validated.push(c);
+      else console.warn(`  Rejected ${c?.id || '(no id)'}: ${v.reason}`);
+    }
+    if (!validated.length) {
+      console.warn(`  All ${newCases.length} generated cases for "${category}" referenced hallucinated APIs — skipping promotion.`);
+      return [];
+    }
+    console.log(`  Accepted ${validated.length}/${newCases.length} generated cases for "${category}" at level ${nextLevel}`);
+    return validated.slice(0, HARDER_CASES_PER_GEN);
   } catch (err) {
     console.warn(`  Failed to parse generated cases for "${category}": ${err.message}`);
     return [];
@@ -379,11 +516,20 @@ The AI has been STUCK on level ${currentLevel} of the "${category}" category acr
 These are the current cases it keeps failing:
 ${stuckCases}
 
-Generate exactly 3 NEW test cases at level ${currentLevel} for "${category}" that are EASIER and more approachable. They must:
+Generate exactly ${EASIER_CASES_PER_GEN} NEW test cases at level ${currentLevel} for "${category}" that are EASIER and more approachable. They must:
 1. Test the same core category skill but with simpler scenarios
 2. Avoid the tricky edge-cases the AI is clearly struggling with
-3. Be solvable via PowerPoint Office JavaScript API + helpers
+3. Be solvable via real PowerPoint Office JavaScript APIs + injected helpers
 4. Include simple, realistic deck state
+
+VALID PATTERNS for "requiredPatterns" (pick from this list):
+${PATTERN_WHITELIST_HINT.map(p => '  - ' + p).join('\n')}
+
+NEVER use these (they DO NOT EXIST):
+  presentation.theme, presentation.slides.add, slide.master, slide.transitions,
+  slide.animations.add, slide.speakerNotes, slide.title.<x>, slide.body,
+  slide.charts.add, shape.smartArt, Office.PowerPoint.TransitionType,
+  workbook.*, worksheet.*, document.*, applyAnimation, applyTransition.
 
 Return ONLY a valid JSON array, no explanation. Each object must have:
 {
@@ -393,13 +539,13 @@ Return ONLY a valid JSON array, no explanation. Each object must have:
   "prompt": "...",
   "workbook": "Slide 1 (id=256): TITLE=\\"...\\" | BODY=\\"...\\" | NOTES=\\"\\"",
   "mustHaveCode": true,
-  "requiredPatterns": ["pattern1"],
+  "requiredPatterns": ["one string from the VALID list above"],
   "forbiddenPatterns": []
 }`;
 
-  console.log(`\n  Generating easier cases for stuck category "${category}" (level ${currentLevel})...`);
+  console.log(`\n  Generating up to ${EASIER_CASES_PER_GEN} easier cases for stuck category "${category}" (level ${currentLevel})...`);
   const raw = await callLLM([
-    { role: 'system', content: 'You generate JSON test cases. Return only valid JSON arrays.' },
+    { role: 'system', content: 'You generate JSON test cases. Return only valid JSON arrays. Only use real PowerPoint APIs or listed helpers.' },
     { role: 'user',   content: prompt },
   ], MODEL, 2048);
 
@@ -407,8 +553,14 @@ Return ONLY a valid JSON array, no explanation. Each object must have:
     const jsonMatch = raw.match(/\[[\s\S]*\]/);
     if (!jsonMatch) throw new Error('No JSON array found in response');
     const newCases = JSON.parse(jsonMatch[0]);
-    console.log(`  Generated ${newCases.length} easier cases for "${category}"`);
-    return newCases;
+    const validated = [];
+    for (const c of newCases) {
+      const v = validateGeneratedCase(c);
+      if (v.ok) validated.push(c);
+      else console.warn(`  Rejected ${c?.id || '(no id)'}: ${v.reason}`);
+    }
+    console.log(`  Accepted ${validated.length}/${newCases.length} easier cases for "${category}"`);
+    return validated.slice(0, EASIER_CASES_PER_GEN);
   } catch (err) {
     console.warn(`  Failed to parse easier cases for "${category}": ${err.message}`);
     return [];
@@ -566,18 +718,41 @@ async function main() {
     const avg          = currentItems.length ? currentItems.reduce((s, r) => s + r.score, 0) / currentItems.length : 0;
     return { cat, avg, currentLevel, mastered: avg >= MASTERY_THRESHOLD };
   });
+  // Promotion gate: only generate harder cases for a mastered category if
+  // EVERY OTHER category is also performing well (>= PROMOTION_GATE_OTHERS).
+  // Without this gate, a strong category balloons while weak ones stall —
+  // and the auto-generator was creating hallucinated cases that poisoned
+  // the suite.
+  function otherCategoriesPass(targetCat) {
+    const others = categoryStatus.filter(c => c.cat !== targetCat);
+    if (!others.length) return true;
+    const weakest = Math.min(...others.map(c => c.avg));
+    return weakest >= PROMOTION_GATE_OTHERS;
+  }
+
   for (const { cat, avg, currentLevel, mastered } of categoryStatus) {
     if (!progress[cat]) progress[cat] = { level: 1, masteredAt: null, runsAtLevel: 0 };
     progress[cat].lastScore  = Math.round(avg * 10) / 10;
     progress[cat].lastRun    = timestamp;
     if (mastered) {
-      console.log(`✓ "${cat}" mastered at level ${currentLevel} (avg ${avg.toFixed(1)}) — generating level ${currentLevel + 1} cases`);
+      if (!otherCategoriesPass(cat)) {
+        const others = categoryStatus.filter(c => c.cat !== cat);
+        const weakest = others.length ? Math.min(...others.map(c => c.avg)) : 0;
+        console.log(`✓ "${cat}" reached ${avg.toFixed(1)}/100 but holding promotion — other categories' weakest score is ${weakest.toFixed(1)} (need >= ${PROMOTION_GATE_OTHERS}).`);
+        // Still mark the mastery on this run, but don't promote yet.
+        continue;
+      }
+      console.log(`✓ "${cat}" mastered at level ${currentLevel} (avg ${avg.toFixed(1)}) and all other categories pass (>= ${PROMOTION_GATE_OTHERS}) — generating up to ${HARDER_CASES_PER_GEN} harder cases.`);
       try {
         const newCases = await generateHarderCases(cat, currentLevel, allCases, categoryStatus);
-        newCasesGenerated = [...newCasesGenerated, ...newCases];
-        progress[cat].level       = currentLevel + 1;
-        progress[cat].masteredAt  = timestamp;
-        progress[cat].runsAtLevel = 0;
+        if (newCases.length) {
+          newCasesGenerated = [...newCasesGenerated, ...newCases];
+          progress[cat].level       = currentLevel + 1;
+          progress[cat].masteredAt  = timestamp;
+          progress[cat].runsAtLevel = 0;
+        } else {
+          console.log(`  No valid harder cases produced — keeping "${cat}" at level ${currentLevel} for now.`);
+        }
       } catch (err) {
         if (err.message.startsWith('BUDGET_EXCEEDED')) { console.log('Budget hit — skipping.'); break; }
         console.warn(`Generation failed for "${cat}": ${err.message}`);
@@ -585,7 +760,7 @@ async function main() {
     } else {
       progress[cat].runsAtLevel = (progress[cat].runsAtLevel ?? 0) + 1;
       if (progress[cat].runsAtLevel >= STUCK_RUNS_THRESHOLD) {
-        console.log(`⚠ "${cat}" stuck at level ${currentLevel} for ${progress[cat].runsAtLevel} runs — generating easier cases`);
+        console.log(`⚠ "${cat}" stuck at level ${currentLevel} for ${progress[cat].runsAtLevel} runs — generating up to ${EASIER_CASES_PER_GEN} easier cases`);
         try {
           const easierCases = await generateEasierCases(cat, currentLevel, allCases);
           newCasesGenerated = [...newCasesGenerated, ...easierCases];
