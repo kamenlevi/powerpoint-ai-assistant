@@ -1,0 +1,6 @@
+To apply a theme, use the presentation.theme property, e.g., presentation.theme = "corporate-blue".
+For recoloring, use the slide.master.theme.colorScheme property, e.g., slide.master.theme.colorScheme = { name: "Custom", colors: { primary: "#003366", background: "#F0F4F8", accent: "#FF9900" } }.
+To add a speaker note, use slide.notesPage.notesTextFrame.text, e.g., slide.notesPage.notesTextFrame.text = "Remember to mention the pricing change.".
+To insert an image, use slide.shapes.addImage, e.g., slide.shapes.addImage("image.png", { left: 400, top: 120, width: 320, height: 240 }).
+For web searches, suggest using an external service or API, e.g., "To get the current Apple stock price, you can use a web search or an API like Alpha Vantage.".
+To create a new slide with a transition, use presentation.slides.add, e.g., const newSlide = presentation.slides.add(); newSlide.shapes.title.text = "Part 2"; newSlide.transitions.add(Office.PowerPoint.TransitionType.fade).

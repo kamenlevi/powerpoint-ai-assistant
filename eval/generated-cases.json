@@ -1,1 +1,104 @@
-[]
+[
+  {
+    "id": "gen-L2-slide-delete-003",
+    "level": 2,
+    "category": "slide-delete",
+    "prompt": "delete the slide with the title 'Introduction'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"This is the first slide\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "presentation.sildes.getItem"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-delete-004",
+    "level": 2,
+    "category": "slide-delete",
+    "prompt": "delete the slide with the most speaker notes",
+    "workbook": "Slide 1 (id=256): TITLE=\"Slide 1\" | BODY=\"Hello World\" | NOTES=\"This is a note\", Slide 2 (id=257): TITLE=\"Slide 2\" | BODY=\"Foo Bar\" | NOTES=\"Note 1, Note 2, Note 3\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.speakerNotes.getText"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-delete-005",
+    "level": 2,
+    "category": "slide-delete",
+    "prompt": "delete the slide with a title containing 'Summary'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"This is the first slide\", Slide 2 (id=257): TITLE=\"Summary and Conclusion\" | BODY=\"This is the last slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.title.includes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-slide-delete-006",
+    "level": 2,
+    "category": "slide-delete",
+    "prompt": "delete the first slide with a body containing a specific keyword 'JavaScript'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"This is the first slide\", Slide 2 (id=257): TITLE=\"Technical Details\" | BODY=\"This presentation is built using JavaScript\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.body.getText"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-animation-001",
+    "level": 2,
+    "category": "animation",
+    "prompt": "add a new slide with title 'Mission' and apply a fade-in animation on the first paragraph of the body, then add a new text box with the text 'Our Goal' and apply a slide-in animation from the left",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox",
+      "applyAnimation"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-animation-002",
+    "level": 2,
+    "category": "animation",
+    "prompt": "apply a pulse animation on all text boxes in the current slide, except the title, and then add a new speaker note with the text 'Important point'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Vision\" | BODY=\"Our vision is to...\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "applyAnimation",
+      "addSpeakerNote"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-animation-003",
+    "level": 2,
+    "category": "animation",
+    "prompt": "add a new slide with a title 'Values' and apply a wheel animation on the body, then add two new text boxes with the texts 'Value 1' and 'Value 2' and apply a fade-in animation on both",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox",
+      "applyAnimation"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L2-animation-004",
+    "level": 2,
+    "category": "animation",
+    "prompt": "apply a zoom animation on the first text box in the current slide, and then add a new text box with the text 'Summary' and apply a slide-in animation from the top",
+    "workbook": "Slide 1 (id=256): TITLE=\"Mission\" | BODY=\"Our mission is to...\" | NOTES=\"Important point\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "applyAnimation",
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  }
+]

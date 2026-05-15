@@ -1,1 +1,121 @@
-{}
+{
+  "slide-add": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 84.3,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "slide-delete": {
+    "level": 2,
+    "masteredAt": "2026-05-15T15-46-01",
+    "runsAtLevel": 0,
+    "lastScore": 97,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "text-format": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 85,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "text-edit": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 81,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "theme-apply": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 12.5,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "recolor": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 10,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "notes-write": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 46,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "shape-position": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 81,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "image-insert": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 17.5,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "web-search-needed": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 67,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "question-handling": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 84,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "animation": {
+    "level": 2,
+    "masteredAt": "2026-05-15T15-46-01",
+    "runsAtLevel": 0,
+    "lastScore": 100,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "transition": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 20,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "slide-reorder": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 83,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "refusal": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 79.3,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "deck-generate": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 83,
+    "lastRun": "2026-05-15T15-46-01"
+  },
+  "edge-cases": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 1,
+    "lastScore": 79,
+    "lastRun": "2026-05-15T15-46-01"
+  }
+}
