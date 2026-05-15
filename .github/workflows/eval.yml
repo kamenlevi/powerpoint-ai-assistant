@@ -15,28 +15,81 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Needed so we can push back with the GITHUB_TOKEN
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Check secrets (no values printed)
+        run: |
+          echo "OPENROUTER_KEY set: ${{ secrets.OPENROUTER_KEY != '' }}"
+          echo "GROQ_KEY        set: ${{ secrets.GROQ_KEY        != '' }}"
+          echo "GOOGLE_KEY      set: ${{ secrets.GOOGLE_KEY      != '' }}"
+          echo "GOOGLE_CX       set: ${{ secrets.GOOGLE_CX       != '' }}"
+          echo "BRAVE_KEY       set: ${{ secrets.BRAVE_KEY       != '' }}"
+          if [ -z "${{ secrets.OPENROUTER_KEY }}" ]; then
+            echo "::warning::OPENROUTER_KEY is not set in repository secrets. The eval cannot make any API calls and will exit with a diagnostic message. Set it at: Settings → Secrets and variables → Actions → New repository secret."
+          fi
+
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
       - name: Create .env
         run: |
-          echo "OPENROUTER_KEY=${{ secrets.OPENROUTER_KEY }}" > .env
-          echo "BRAVE_KEY=${{ secrets.BRAVE_KEY }}" >> .env
+          {
+            echo "OPENROUTER_KEY=${{ secrets.OPENROUTER_KEY }}"
+            echo "GROQ_KEY=${{ secrets.GROQ_KEY }}"
+            echo "GOOGLE_KEY=${{ secrets.GOOGLE_KEY }}"
+            echo "GOOGLE_CX=${{ secrets.GOOGLE_CX }}"
+            echo "BRAVE_KEY=${{ secrets.BRAVE_KEY }}"
+            echo "WEB_SEARCH_PROVIDER=google"
+          } > .env
 
       - name: Run eval
+        id: eval
+        continue-on-error: true
         run: npm run eval
 
-      - name: Commit and push changes
+      - name: Heartbeat (always)
+        if: always()
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p eval
           echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > eval/last-run.txt
-          git add server.js eval/improvements.txt eval/progress.json eval/generated-cases.json eval/RESULTS.md eval/last-run.txt
-          git diff --staged --quiet || git commit -m "eval: $(date -u +%Y-%m-%d) — auto-improvement run"
-          git push
+          if [ ! -f eval/RESULTS.md ]; then
+            echo "# PowerPoint AI — Eval Results" > eval/RESULTS.md
+            echo "" >> eval/RESULTS.md
+            echo "**Status:** no results generated this run (see Actions log)." >> eval/RESULTS.md
+          fi
+
+      - name: Commit and push changes
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add server.js eval/improvements.txt eval/progress.json eval/generated-cases.json eval/RESULTS.md eval/last-run.txt 2>/dev/null || true
+          if ! git diff --staged --quiet; then
+            git commit -m "eval: $(date -u +%Y-%m-%d) — auto-improvement run"
+            # Rebase on top of any concurrent changes to avoid non-fast-forward push errors
+            for i in 1 2 3 4; do
+              if git pull --rebase origin "${GITHUB_REF_NAME:-main}" && git push origin "HEAD:${GITHUB_REF_NAME:-main}"; then
+                echo "Pushed successfully on attempt $i"
+                break
+              else
+                echo "Push attempt $i failed; sleeping and retrying..."
+                sleep $((2 ** i))
+              fi
+            done
+          else
+            echo "No changes to commit this run."
+          fi
+
+      - name: Fail if eval errored
+        if: steps.eval.outcome == 'failure'
+        run: |
+          echo "::error::The eval step failed. See logs above. Diagnostic written to eval/RESULTS.md."
+          exit 1

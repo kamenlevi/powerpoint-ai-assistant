@@ -498,8 +498,27 @@ function printResults(results, prev) {
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
+function writeDiagnosticResults(title, body) {
+  try {
+    const ts = new Date().toISOString();
+    const md = `# PowerPoint AI — Eval Results\n**Last run:** ${ts}  \n**Status:** ${title}\n\n${body}\n`;
+    fs.writeFileSync(path.join(__dirname, 'RESULTS.md'), md);
+  } catch {}
+}
+
 async function main() {
-  if (!OPENROUTER_KEY) { console.error('OPENROUTER_KEY not set'); process.exit(1); }
+  if (!OPENROUTER_KEY) {
+    const body = [
+      'The OPENROUTER_KEY environment variable is not set, so the eval cannot run.',
+      '',
+      '**Fix:** in GitHub repo Settings → Secrets and variables → Actions, add a repository secret named `OPENROUTER_KEY` with your OpenRouter API key (https://openrouter.ai/keys).',
+      '',
+      'Optional (for the web-search test cases): also add `BRAVE_KEY` or `GOOGLE_KEY`/`GOOGLE_CX`.',
+    ].join('\n');
+    writeDiagnosticResults('missing OPENROUTER_KEY', body);
+    console.error('OPENROUTER_KEY not set — wrote diagnostic to eval/RESULTS.md');
+    process.exit(1);
+  }
   const allCases     = loadCases();
   const systemPrompt = loadSystemPrompt();
   const prev         = loadLastResults();
@@ -630,4 +649,23 @@ async function main() {
   console.log(`Total cost: $${totalCostUSD.toFixed(4)}\n`);
 }
 
-main().catch(err => { console.error(err.message); process.exit(1); });
+main().catch(err => {
+  console.error('FATAL:', err.message);
+  console.error(err.stack);
+  try {
+    const body = [
+      'The eval script crashed with an uncaught exception.',
+      '',
+      '```',
+      String(err.stack || err.message || err),
+      '```',
+      '',
+      'Check the GitHub Actions log for details. Common causes:',
+      '- API rate limit or transient network failure (try again next run)',
+      '- BUDGET_EXCEEDED — the $0.50 per-run cap was reached',
+      '- JSON parse error in cases.json or generated-cases.json',
+    ].join('\n');
+    writeDiagnosticResults('crashed', body);
+  } catch {}
+  process.exit(1);
+});
