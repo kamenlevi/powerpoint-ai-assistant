@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "gen-L1-hyperlink-001",
+    "level": 1,
+    "category": "hyperlink",
+    "prompt": "Add a hyperlink to the text 'Learn More' on the first slide that links to https://www.example.com",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Learn More\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"Conclusion\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange.font.hyperlink"
+    ],
+    "forbiddenPatterns": []
+  }
+]

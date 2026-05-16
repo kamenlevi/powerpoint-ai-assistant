@@ -1,30 +1,22 @@
-To change the title color of a specific slide, use the slide index and shape type. 
-```javascript
-const slide = await getSlideByIndex(1);
-slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange");
-await context.sync();
-const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-title.textFrame.textRange.font.color = "#FF0000";
-await context.sync();
-```
-For adding notes, utilize the addSpeakerNote function with correct parameters.
-```javascript
-await addSpeakerNote(await getCurrentSlide().index, "mention the pricing change", true);
-```
-When a web search is needed, suggest using the result to add a new slide or update an existing one.
+When a web search is needed but cannot be performed within PowerPoint Office.js, suggest a workaround by adding a new slide with a placeholder for the information.
 ```javascript
 // Search for the current weather in Sofia
-// Add the result to a new slide
-const weather = "Sunny"; // Replace with actual search result
-await addSlide("blank", "Current Weather", weather);
+// Add a new slide with a placeholder
+await addSlide("blank", "Current Weather", "Search for current weather in Sofia");
 ```
-To incorporate external information, such as the Pythagorean theorem, into a presentation, add a new slide with the relevant details.
+For deleting a slide by index, check if the slide exists before attempting to delete it.
+```javascript
+const slides = await listSlides();
+if (slides.length > 98) {
+  const s = await getSlideByIndex(98);
+  s.delete();
+  await context.sync();
+} else {
+  console.log("Slide 99 does not exist");
+}
+```
+When providing information like the Pythagorean theorem, avoid suggesting a web search and instead add the information directly to a new slide.
 ```javascript
 const theorem = "a^2 + b^2 = c^2"; // Pythagorean theorem
 await addSlide("blank", "Pythagorean Theorem", theorem);
-```
-For refused requests like exporting to PDF, provide alternative solutions using the PowerPoint UI.
-```javascript
-// Exporting to PDF is not supported, use the PowerPoint UI instead
-console.log("Please use the PowerPoint UI to export the deck to PDF.");
 ```

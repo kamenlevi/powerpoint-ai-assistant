@@ -4,7 +4,7 @@
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-16T02-56-27",
+    "lastRun": "2026-05-16T09-42-51",
     "note": "Reset 2026-05-15: was promoted to level 2 by old eval logic before the hallucination blacklist + promotion gate landed. The generated level-2 cases referenced fake APIs and have been removed."
   },
   "slide-delete": {
@@ -12,79 +12,79 @@
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-16T02-56-27",
+    "lastRun": "2026-05-16T09-42-51",
     "note": "Reset 2026-05-15: see slide-add note."
   },
   "text-format": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 68.3,
-    "lastRun": "2026-05-16T02-56-27"
+    "runsAtLevel": 2,
+    "lastScore": 92.3,
+    "lastRun": "2026-05-16T09-42-51"
   },
   "text-edit": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 84.5,
-    "lastRun": "2026-05-16T02-56-27"
+    "runsAtLevel": 2,
+    "lastScore": 87.5,
+    "lastRun": "2026-05-16T09-42-51"
   },
   "theme-apply": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-16T02-56-27",
+    "lastRun": "2026-05-16T09-42-51",
     "note": "Reset 2026-05-15: was illegitimately promoted to level 2 by old logic despite scoring 12.5/100 in the first run."
   },
   "recolor": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
+    "runsAtLevel": 2,
     "lastScore": 90,
-    "lastRun": "2026-05-16T02-56-27"
+    "lastRun": "2026-05-16T09-42-51"
   },
   "notes-write": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 1,
-    "lastScore": 45,
-    "lastRun": "2026-05-16T02-56-27"
+    "lastScore": 95,
+    "lastRun": "2026-05-16T09-42-51"
   },
   "shape-position": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 0,
-    "lastScore": 95,
-    "lastRun": "2026-05-16T02-56-27"
+    "runsAtLevel": 1,
+    "lastScore": 93.5,
+    "lastRun": "2026-05-16T09-42-51"
   },
   "image-insert": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
+    "runsAtLevel": 2,
     "lastScore": 90,
-    "lastRun": "2026-05-16T02-56-27"
+    "lastRun": "2026-05-16T09-42-51"
   },
   "web-search-needed": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 73,
-    "lastRun": "2026-05-16T02-56-27"
+    "runsAtLevel": 2,
+    "lastScore": 72.3,
+    "lastRun": "2026-05-16T09-42-51"
   },
   "question-handling": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 0,
-    "lastScore": 98.5,
-    "lastRun": "2026-05-16T02-56-27"
+    "lastScore": 97.5,
+    "lastRun": "2026-05-16T09-42-51"
   },
   "animation": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-16T02-56-27",
+    "lastRun": "2026-05-16T09-42-51",
     "note": "Reset 2026-05-15: was promoted to level 2 by old logic; generated cases required applyAnimation (not a real helper)."
   },
   "transition": {
@@ -92,34 +92,39 @@
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-16T02-56-27"
+    "lastRun": "2026-05-16T09-42-51"
   },
   "slide-reorder": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-16T02-56-27"
+    "lastRun": "2026-05-16T09-42-51"
   },
   "refusal": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 72,
-    "lastRun": "2026-05-16T02-56-27"
+    "runsAtLevel": 2,
+    "lastScore": 82,
+    "lastRun": "2026-05-16T09-42-51"
   },
   "deck-generate": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
+    "runsAtLevel": 2,
     "lastScore": 90,
-    "lastRun": "2026-05-16T02-56-27"
+    "lastRun": "2026-05-16T09-42-51"
   },
   "edge-cases": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 80,
-    "lastRun": "2026-05-16T02-56-27"
+    "runsAtLevel": 2,
+    "lastScore": 65,
+    "lastRun": "2026-05-16T09-42-51"
+  },
+  "hyperlink": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 0
   }
 }
