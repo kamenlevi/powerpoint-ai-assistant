@@ -11,5 +11,174 @@
       "shape.textFrame.textRange.font.hyperlink"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-format-easy-001",
+    "level": 1,
+    "category": "text-format",
+    "prompt": "make the title on the first slide 24pt",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.size"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-format-easy-002",
+    "level": 1,
+    "category": "text-format",
+    "prompt": "make the body text on the first slide use Calibri font",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a sample text\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.name"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-001",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "make the title of slide 1 bold",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.bold"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-002",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "change the font size of the title on slide 1 to 24",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"This is another test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.size"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-001",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "recolor the title of the first slide to blue",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.color"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-002",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "change the background color of the first slide to a light gray",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.fill.setSolidColor"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-001",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a simple logo image to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-002",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put a picture of a cat on the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Test Slide\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage",
+      "getSlideByIndex"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-web-search-needed-easy-001",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "add a slide with the definition of artificial intelligence",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to AI\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-web-search-needed-easy-002",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "create a new slide with information about the city of Paris",
+    "workbook": "Slide 1 (id=256): TITLE=\"Travel\" | BODY=\"Europe\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-001",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "add a new slide with a title",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-002",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "change the text color of the title on the first slide to red",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.color"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-edge-cases-easy-001",
+    "level": 1,
+    "category": "edge-cases",
+    "prompt": "delete the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.delete()"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-edge-cases-easy-002",
+    "level": 1,
+    "category": "edge-cases",
+    "prompt": "delete the only slide in the deck",
+    "workbook": "Slide 1 (id=256): TITLE=\"Single Slide\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.delete()"
+    ],
+    "forbiddenPatterns": []
   }
 ]

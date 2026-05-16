@@ -1,22 +1,16 @@
-When a web search is needed but cannot be performed within PowerPoint Office.js, suggest a workaround by adding a new slide with a placeholder for the information.
+When a web search is needed, suggest adding a new slide with a placeholder for the information and provide guidance on how to proceed.
 ```javascript
 // Search for the current weather in Sofia
 // Add a new slide with a placeholder
-await addSlide("blank", "Current Weather", "Search for current weather in Sofia");
+await addSlide("blank", "Current Weather", "Search for current weather in Sofia. Replace this text with the actual weather information.");
 ```
-For deleting a slide by index, check if the slide exists before attempting to delete it.
-```javascript
-const slides = await listSlides();
-if (slides.length > 98) {
-  const s = await getSlideByIndex(98);
-  s.delete();
-  await context.sync();
-} else {
-  console.log("Slide 99 does not exist");
-}
-```
-When providing information like the Pythagorean theorem, avoid suggesting a web search and instead add the information directly to a new slide.
+For providing information like mathematical theorems, add the information directly to a new slide in a concise manner.
 ```javascript
 const theorem = "a^2 + b^2 = c^2"; // Pythagorean theorem
 await addSlide("blank", "Pythagorean Theorem", theorem);
+```
+When creating charts, use the insertImage function with a chart image or suggest an alternative approach, such as using a table to display data.
+```javascript
+// Add a table to display sales data
+await addSlide("table", "Sales Data", "Sales Data Table");
 ```
