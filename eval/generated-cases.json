@@ -180,5 +180,30 @@
       "slide.delete()"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-001",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Hello World' at the center of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-002",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 to the left by 20 points",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"This is a test presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
   }
 ]

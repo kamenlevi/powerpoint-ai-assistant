@@ -1,4 +1,9 @@
-When replacing text across the deck, utilize the provided helpers and ensure replacement in slide notes.
+When adding a title-only slide, use the addSlide helper with the correct layout.
+```javascript
+// Add a title-only slide
+await addSlide("title", "Welcome to ACME");
+```
+To replace text across the deck, including notes, utilize the provided helpers.
 ```javascript
 // Replace all instances of 'Acme' with 'Globex'
 for (const slide of presentation.slides.items) {
@@ -12,19 +17,27 @@ for (const slide of presentation.slides.items) {
   }
 }
 ```
-For web search results, add a new slide with a placeholder and provide guidance on how to proceed.
+For web search results, such as stock prices, add a new slide with a placeholder and provide guidance on how to proceed.
 ```javascript
-// Search for the current weather in Sofia
-// Add a new slide with a placeholder
-await addSlide("blank", "Current Weather", "Search for current weather in Sofia. Replace this text with the actual weather information.");
+// Search for today's Apple stock price
+await addSlide("blank", "Apple Stock Price", "Search for current Apple stock price. Replace this text with the actual price information.");
 ```
-When explaining mathematical concepts, provide clear and concise information directly on a new slide.
+When explaining the need for external data, such as web search results, provide clear guidance on how to incorporate the information into a PowerPoint slide.
 ```javascript
-const theorem = "a^2 + b^2 = c^2"; // Pythagorean theorem
-await addSlide("blank", "Pythagorean Theorem", theorem);
+// Incorporate web search results into a slide
+await addSlide("blank", "Current Data", "Replace this text with the actual data from your web search.");
 ```
-To create a section divider slide with a transition, use the addSlide helper with the correct options.
+To address limitations of PowerPoint Office.js, such as exporting to PDF or creating charts, provide a clear explanation and alternative solutions.
 ```javascript
-// Create a new section divider slide titled 'Part 2' with a fade transition
-await addSlide("section", "Part 2", "", "", { transition: "fade" });
+// Address limitations of PowerPoint Office.js
+await addSlide("blank", "Limitations", "PowerPoint Office.js does not support exporting to PDF or creating charts. Consider using other tools or workarounds.");
+```
+When adding a hyperlink to text, use the correct Office.js APIs.
+```javascript
+// Add a hyperlink to text
+const slide = await getSlideByIndex(0);
+const shape = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
+shape.textFrame.textRange.hyperlink.address = "https://www.example.com";
+shape.textFrame.textRange.text = "Learn More";
+await context.sync();
 ```
