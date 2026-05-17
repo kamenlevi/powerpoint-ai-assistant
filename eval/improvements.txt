@@ -1,16 +1,30 @@
-When a web search is needed, suggest adding a new slide with a placeholder for the information and provide guidance on how to proceed.
+When replacing text across the deck, utilize the provided helpers and ensure replacement in slide notes.
+```javascript
+// Replace all instances of 'Acme' with 'Globex'
+for (const slide of presentation.slides.items) {
+  for (const shape of slide.shapes.items) {
+    try {
+      shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(/Acme/g, "Globex");
+    } catch (e) {}
+    try {
+      slide.notesPage.notesTextFrame.textRange.text = slide.notesPage.notesTextFrame.textRange.text.replace(/Acme/g, "Globex");
+    } catch (e) {}
+  }
+}
+```
+For web search results, add a new slide with a placeholder and provide guidance on how to proceed.
 ```javascript
 // Search for the current weather in Sofia
 // Add a new slide with a placeholder
 await addSlide("blank", "Current Weather", "Search for current weather in Sofia. Replace this text with the actual weather information.");
 ```
-For providing information like mathematical theorems, add the information directly to a new slide in a concise manner.
+When explaining mathematical concepts, provide clear and concise information directly on a new slide.
 ```javascript
 const theorem = "a^2 + b^2 = c^2"; // Pythagorean theorem
 await addSlide("blank", "Pythagorean Theorem", theorem);
 ```
-When creating charts, use the insertImage function with a chart image or suggest an alternative approach, such as using a table to display data.
+To create a section divider slide with a transition, use the addSlide helper with the correct options.
 ```javascript
-// Add a table to display sales data
-await addSlide("table", "Sales Data", "Sales Data Table");
+// Create a new section divider slide titled 'Part 2' with a fade transition
+await addSlide("section", "Part 2", "", "", { transition: "fade" });
 ```
