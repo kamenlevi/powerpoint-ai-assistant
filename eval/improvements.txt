@@ -1,43 +1,10 @@
-When adding a title-only slide, use the addSlide helper with the correct layout.
-```javascript
-// Add a title-only slide
-await addSlide("title", "Welcome to ACME");
-```
-To replace text across the deck, including notes, utilize the provided helpers.
+To replace text across the deck, ensure all text elements are updated.
 ```javascript
 // Replace all instances of 'Acme' with 'Globex'
+presentation.slides.load("items/id, items/shapes");
+await context.sync();
 for (const slide of presentation.slides.items) {
   for (const shape of slide.shapes.items) {
     try {
       shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(/Acme/g, "Globex");
-    } catch (e) {}
-    try {
-      slide.notesPage.notesTextFrame.textRange.text = slide.notesPage.notesTextFrame.textRange.text.replace(/Acme/g, "Globex");
-    } catch (e) {}
-  }
-}
-```
-For web search results, such as stock prices, add a new slide with a placeholder and provide guidance on how to proceed.
-```javascript
-// Search for today's Apple stock price
-await addSlide("blank", "Apple Stock Price", "Search for current Apple stock price. Replace this text with the actual price information.");
-```
-When explaining the need for external data, such as web search results, provide clear guidance on how to incorporate the information into a PowerPoint slide.
-```javascript
-// Incorporate web search results into a slide
-await addSlide("blank", "Current Data", "Replace this text with the actual data from your web search.");
-```
-To address limitations of PowerPoint Office.js, such as exporting to PDF or creating charts, provide a clear explanation and alternative solutions.
-```javascript
-// Address limitations of PowerPoint Office.js
-await addSlide("blank", "Limitations", "PowerPoint Office.js does not support exporting to PDF or creating charts. Consider using other tools or workarounds.");
-```
-When adding a hyperlink to text, use the correct Office.js APIs.
-```javascript
-// Add a hyperlink to text
-const slide = await getSlideByIndex(0);
-const shape = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
-shape.textFrame.textRange.hyperlink.address = "https://www.example.com";
-shape.textFrame.textRange.text = "Learn More";
-await context.sync();
-```
+    } catch (e)
