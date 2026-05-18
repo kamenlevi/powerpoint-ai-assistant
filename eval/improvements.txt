@@ -1,10 +1,47 @@
-To replace text across the deck, ensure all text elements are updated.
+To design a theme, use the applyTheme function.
 ```javascript
-// Replace all instances of 'Acme' with 'Globex'
-presentation.slides.load("items/id, items/shapes");
+// Apply a built-in theme
+await applyTheme("Theme1");
+```
+To add a note to the current slide, use the addSpeakerNote function with the current slide index.
+```javascript
+// Add a speaker note to the current slide
+const currentSlide = await getCurrentSlide();
+await addSpeakerNote(currentSlide.index, "Mention the pricing change.");
+```
+To insert an image, use the insertImage function with the slide index and image details.
+```javascript
+// Insert an image on the first slide
+await insertImage(0, "technology", ["background", "abstract"], { left: 0, top: 0, width: 960, height: 540 });
+```
+When a web search is needed, inform the user and provide alternative solutions within PowerPoint.
+```javascript
+// Handle web search requests
+console.log("Web search needed. Please use the internet to find the required information.");
+```
+For well-known formulas, provide the formula directly without requesting a web search.
+```javascript
+// Provide the Pythagorean theorem formula
+console.log("The Pythagorean theorem is: a^2 + b^2 = c^2");
+```
+To delete a slide, use the slide.delete function after verifying the slide index.
+```javascript
+// Delete the second slide
+const slides = await listSlides();
+if (slides.length > 1) {
+  const slide = await getSlideByIndex(1);
+  slide.delete();
+}
+```
+To add a hyperlink, use the shape.textFrame.textRange.hyperlink.address property.
+```javascript
+// Add a hyperlink to the text 'Click Here' on the first slide
+const slide = await getSlideByIndex(0);
+slide.shapes.load("items/textFrame/hyperlink");
 await context.sync();
-for (const slide of presentation.slides.items) {
-  for (const shape of slide.shapes.items) {
-    try {
-      shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(/Acme/g, "Globex");
-    } catch (e)
+const shape = slide.shapes.items.find(s => s.textFrame.textRange.text === "Click Here");
+if (shape) {
+  shape.textFrame.textRange.hyperlink.address = "https://www.example.com";
+  await context.sync();
+}
+```

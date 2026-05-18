@@ -402,5 +402,54 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-notes-write-easy-001",
+    "level": 1,
+    "category": "notes-write",
+    "prompt": "add a note to the current slide saying hello world",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSpeakerNote"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-notes-write-easy-002",
+    "level": 1,
+    "category": "notes-write",
+    "prompt": "write a note on the first slide with the text 'this is a test'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Test Slide\" | BODY=\"This is a test slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.notesPage.notesTextFrame.textRange.text"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-003",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a default image to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-004",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put an image on the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Image Test\" | BODY=\"Add an image here\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage",
+      "getCurrentSlide"
+    ],
+    "forbiddenPatterns": []
   }
 ]
