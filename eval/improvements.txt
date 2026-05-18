@@ -1,47 +1,48 @@
-To design a theme, use the applyTheme function.
+To replace text across the deck, iterate through all shapes and notes pages.
 ```javascript
-// Apply a built-in theme
-await applyTheme("Theme1");
+// Replace all instances of 'old' with 'new' across the deck
+presentation.slides.load("items/id, items/shapes/items/textFrame/textRange/text, items/notesPage/notesTextFrame/textRange/text");
+await context.sync();
+for (const slide of presentation.slides.items) {
+  for (const shape of slide.shapes.items) {
+    try {
+      shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(/old/g, "new");
+    } catch (e) {}
+  }
+  try {
+    slide.notesPage.notesTextFrame.textRange.text = slide.notesPage.notesTextFrame.textRange.text.replace(/old/g, "new");
+  } catch (e) {}
+}
+await context.sync();
 ```
-To add a note to the current slide, use the addSpeakerNote function with the current slide index.
+
+When inserting an image, specify the target slide index.
 ```javascript
-// Add a speaker note to the current slide
-const currentSlide = await getCurrentSlide();
-await addSpeakerNote(currentSlide.index, "Mention the pricing change.");
+// Insert an image on a specific slide
+await insertImage(0, "image", ["tag1", "tag2"], { left: 0, top: 0, width: 100, height: 100 });
 ```
-To insert an image, use the insertImage function with the slide index and image details.
+
+To add a hyperlink to specific text, find the shape containing the text and update its hyperlink.
 ```javascript
-// Insert an image on the first slide
-await insertImage(0, "technology", ["background", "abstract"], { left: 0, top: 0, width: 960, height: 540 });
+// Add a hyperlink to specific text on a slide
+const slide = await getSlideByIndex(0);
+slide.shapes.load("items/textFrame/hyperlink, items/textFrame/textRange/text");
+await context.sync();
+const shape = slide.shapes.items.find(s => s.textFrame.textRange.text.includes("specific text"));
+if (shape) {
+  const textRange = shape.textFrame.getTextRange("specific text");
+  textRange.hyperlink.address = "https://www.example.com";
+  await context.sync();
+}
 ```
-When a web search is needed, inform the user and provide alternative solutions within PowerPoint.
+
+To delete a slide, verify its existence and use the slide.delete function.
 ```javascript
-// Handle web search requests
-console.log("Web search needed. Please use the internet to find the required information.");
-```
-For well-known formulas, provide the formula directly without requesting a web search.
-```javascript
-// Provide the Pythagorean theorem formula
-console.log("The Pythagorean theorem is: a^2 + b^2 = c^2");
-```
-To delete a slide, use the slide.delete function after verifying the slide index.
-```javascript
-// Delete the second slide
+// Delete a slide by index
 const slides = await listSlides();
 if (slides.length > 1) {
   const slide = await getSlideByIndex(1);
   slide.delete();
-}
-```
-To add a hyperlink, use the shape.textFrame.textRange.hyperlink.address property.
-```javascript
-// Add a hyperlink to the text 'Click Here' on the first slide
-const slide = await getSlideByIndex(0);
-slide.shapes.load("items/textFrame/hyperlink");
-await context.sync();
-const shape = slide.shapes.items.find(s => s.textFrame.textRange.text === "Click Here");
-if (shape) {
-  shape.textFrame.textRange.hyperlink.address = "https://www.example.com";
   await context.sync();
 }
 ```

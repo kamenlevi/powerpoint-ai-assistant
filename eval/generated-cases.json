@@ -451,5 +451,42 @@
       "getCurrentSlide"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-003",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Test' at the top left of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-004",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 to the right by 10 points",
+    "workbook": "Slide 1 (id=256): TITLE=\"PowerPoint Test\" | BODY=\"This is a sample deck\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-footer-001",
+    "level": 1,
+    "category": "footer",
+    "prompt": "Add a footer to the first slide with the text 'Confidential'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"Agenda\" | BODY=\"Item 1, Item 2\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange.text"
+    ],
+    "forbiddenPatterns": []
   }
 ]
