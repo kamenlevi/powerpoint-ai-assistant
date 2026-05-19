@@ -1,11 +1,11 @@
-To add a watermark text box, use the addTextBox helper.
-```javascript
-// Add a watermark text box
-addTextBox("CONFIDENTIAL", { left: 0, top: 0, width: 100, height: 20 });
-```
+When a web search is needed, suggest a workaround or provide additional information relevant to the PowerPoint context.
+If a user requests information outside the scope of PowerPoint, provide a clear and concise answer and suggest alternatives for adding content to a slide.
 
-When searching for a mathematical formula, provide the formula directly.
-The Pythagorean theorem is a^2 + b^2 = c^2.
+To handle cases where a specific chart creation capability is requested, explain the limitations of the current API and suggest using the insertImage function with a charts-diagrams category as a potential workaround.
+```javascript
+// Add a chart using insertImage
+await insertImage(1, "charts-diagrams", ["bar", "chart", "sales"], { left: 100, top: 100, width: 400, height: 300 });
+```
 
 To delete a slide by index, verify its existence and use the slide.delete function, handling out-of-range indices.
 ```javascript
@@ -34,25 +34,20 @@ if (shape) {
 }
 ```
 
-To move a shape, update its left property.
+To change the font of the body text on a slide, find the shape containing the body text and update its font.
 ```javascript
-// Move a shape to the left
+// Change the font of the body text
 const slide = await getSlideByIndex(0);
-slide.shapes.load("items/placeholderFormat/type, items/left");
+slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
 await context.sync();
-const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-if (title) {
-  title.left -= 20;
+const body = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
+if (body) {
+  body.textFrame.textRange.font.name = "Calibri";
   await context.sync();
 }
 ```
 
-To create a new slide with a hyperlink, use the addSlide helper and then add a hyperlink to the text.
+To insert an image, use the insertImage helper.
 ```javascript
-// Create a new slide with a hyperlink
-const newSlide = await addSlide("title-content", "Call to Action", "Visit Website");
-newSlide.shapes.load("items/textFrame/hyperlink, items/textFrame/textRange/text");
-await context.sync();
-const bodyShape = newSlide.shapes.items.find(s => s.placeholderFormat.type === "body");
-if (bodyShape) {
-  const textRange = bodyShape.textFrame
+// Insert an image
+await insertImage(-1, "people", ["cat"], { left

@@ -618,5 +618,54 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-005",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "change the text color of the title on the first slide to black",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.color"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-006",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "set the background color of the first slide to white",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.fill.setSolidColor"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-005",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a default image to the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-006",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put a picture on the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to the presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage",
+      "getSlideByIndex"
+    ],
+    "forbiddenPatterns": []
   }
 ]
