@@ -1,55 +1,65 @@
-To replace text across the entire deck, including notes and all shapes, use a comprehensive approach.
+To handle web search limitations, suggest using addTextBox for static messages.
 ```javascript
-// Replace text across the deck
-presentation.slides.load("items/shapes/items/textFrame/textRange/text, items/notesPage/notesTextFrame/textRange/text");
+// Add static message when web search is not possible
+const message = "Current weather not available.";
+const slide = await getCurrentSlide();
+await addTextBox(slide.id, message, { left: 100, top: 100, width: 300, height: 50 });
+```
+
+For font changes, ensure the shape is loaded with the correct properties.
+```javascript
+// Change font of body text
+const slide = await getSlideByIndex(0);
+slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
 await context.sync();
-for (const slide of presentation.slides.items) {
-  for (const shape of slide.shapes.items) {
-    try {
-      shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(/Acme/g, "Globex");
-    } catch (e) {}
-  }
-  try {
-    slide.notesPage.notesTextFrame.textRange.text = slide.notesPage.notesTextFrame.textRange.text.replace(/Acme/g, "Globex");
-  } catch (e) {}
+const body = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
+if (body) {
+  body.textFrame.textRange.font.name = "Calibri";
   await context.sync();
 }
 ```
 
-For a calm and trustworthy theme, suggest applying a suitable theme and recoloring the deck.
+To insert images, use the insertImage helper with correct parameters.
 ```javascript
-// Apply a calm and trustworthy theme
-await applyTheme("Theme Name");
-await recolorDeck([{ color: "calm color", type: "text" }, { color: "trustworthy color", type: "background" }]);
+// Insert a picture of a cat
+await insertImage(-1, "animals", ["cat"], { left: 100, top: 100, width: 200, height: 200 });
+await context.sync();
 ```
 
-When adding current weather to a slide, suggest using a web search and then inserting the result as a text box.
+For single-slide presentations, apply a default theme after adding the slide.
 ```javascript
-// Add current weather to a slide
-const weather = await getWeather("Sofia"); // Assume getWeather is a web search function
-const slide = await getCurrentSlide();
-await addTextBox(slide.id, weather, { left: 100, top: 100, width: 300, height: 50 });
+// Generate a single-slide presentation
+await addSlide("title", "Hello World", "", "");
+await applyTheme("Default Theme");
 ```
 
-To delete a slide by its position, verify the slide exists and then delete it.
+To delete a slide, verify its existence and use the delete method.
 ```javascript
-// Delete a slide by position
-const index = 1; // Second slide
+// Delete the second slide
+const index = 1;
 const slides = await listSlides();
 if (index >= 0 && index < slides.length) {
   const slide = await getSlideByIndex(index);
   slide.delete();
   await context.sync();
-} else {
-  throw new Error(`Slide ${index} does not exist.`);
 }
 ```
 
-To add a hyperlink to specific text, find the shape with the text and update its hyperlink.
+For hyperlinks to specific text, find the shape and update its hyperlink.
 ```javascript
-// Add a hyperlink to specific text
+// Add hyperlink to specific text
 const slide = await getSlideByIndex(0);
 slide.shapes.load("items/textFrame/hyperlink, items/textFrame/textRange/text");
 await context.sync();
 const shape = slide.shapes.items.find(s => s.textFrame.textRange.text.includes("Home"));
-if (shape
+if (shape) {
+  shape.textFrame.textRange.hyperlink.address = "https://www.example.com";
+  await context.sync();
+}
+```
+
+To create a new slide with a hyperlink, add the slide and then the hyperlink.
+```javascript
+// Create a new slide with a hyperlink
+await addSlide("title-content", "Link", "", "");
+const slide = await getSlideByIndex(
