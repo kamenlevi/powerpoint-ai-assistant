@@ -1,15 +1,40 @@
-When a web search is needed, suggest a workaround or provide additional information relevant to the PowerPoint context.
-If a user requests information outside the scope of PowerPoint, provide a clear and concise answer and suggest alternatives for adding content to a slide.
-
-To handle cases where a specific chart creation capability is requested, explain the limitations of the current API and suggest using the insertImage function with a charts-diagrams category as a potential workaround.
+To replace text across the entire deck, including notes and all shapes, use a comprehensive approach.
 ```javascript
-// Add a chart using insertImage
-await insertImage(1, "charts-diagrams", ["bar", "chart", "sales"], { left: 100, top: 100, width: 400, height: 300 });
+// Replace text across the deck
+presentation.slides.load("items/shapes/items/textFrame/textRange/text, items/notesPage/notesTextFrame/textRange/text");
+await context.sync();
+for (const slide of presentation.slides.items) {
+  for (const shape of slide.shapes.items) {
+    try {
+      shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(/Acme/g, "Globex");
+    } catch (e) {}
+  }
+  try {
+    slide.notesPage.notesTextFrame.textRange.text = slide.notesPage.notesTextFrame.textRange.text.replace(/Acme/g, "Globex");
+  } catch (e) {}
+  await context.sync();
+}
 ```
 
-To delete a slide by index, verify its existence and use the slide.delete function, handling out-of-range indices.
+For a calm and trustworthy theme, suggest applying a suitable theme and recoloring the deck.
 ```javascript
-// Delete a slide by index, handling out-of-range indices
+// Apply a calm and trustworthy theme
+await applyTheme("Theme Name");
+await recolorDeck([{ color: "calm color", type: "text" }, { color: "trustworthy color", type: "background" }]);
+```
+
+When adding current weather to a slide, suggest using a web search and then inserting the result as a text box.
+```javascript
+// Add current weather to a slide
+const weather = await getWeather("Sofia"); // Assume getWeather is a web search function
+const slide = await getCurrentSlide();
+await addTextBox(slide.id, weather, { left: 100, top: 100, width: 300, height: 50 });
+```
+
+To delete a slide by its position, verify the slide exists and then delete it.
+```javascript
+// Delete a slide by position
+const index = 1; // Second slide
 const slides = await listSlides();
 if (index >= 0 && index < slides.length) {
   const slide = await getSlideByIndex(index);
@@ -20,34 +45,11 @@ if (index >= 0 && index < slides.length) {
 }
 ```
 
-To add a hyperlink to specific text, find the shape containing the text and update its hyperlink, preserving existing text.
+To add a hyperlink to specific text, find the shape with the text and update its hyperlink.
 ```javascript
-// Add a hyperlink to specific text, preserving existing text
+// Add a hyperlink to specific text
 const slide = await getSlideByIndex(0);
 slide.shapes.load("items/textFrame/hyperlink, items/textFrame/textRange/text");
 await context.sync();
-const shape = slide.shapes.items.find(s => s.textFrame.textRange.text.includes("Learn More"));
-if (shape) {
-  const textRange = shape.textFrame.getTextRange("Learn More");
-  textRange.hyperlink.address = "https://www.example.com";
-  await context.sync();
-}
-```
-
-To change the font of the body text on a slide, find the shape containing the body text and update its font.
-```javascript
-// Change the font of the body text
-const slide = await getSlideByIndex(0);
-slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
-await context.sync();
-const body = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
-if (body) {
-  body.textFrame.textRange.font.name = "Calibri";
-  await context.sync();
-}
-```
-
-To insert an image, use the insertImage helper.
-```javascript
-// Insert an image
-await insertImage(-1, "people", ["cat"], { left
+const shape = slide.shapes.items.find(s => s.textFrame.textRange.text.includes("Home"));
+if (shape

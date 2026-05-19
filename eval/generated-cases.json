@@ -667,5 +667,69 @@
       "getSlideByIndex"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-005",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "change the title of slide 1 to 'Introduction'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-006",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "make the title of slide 1 italic",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"This is a sample slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-005",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Introduction' at the center of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-006",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 down by 10 points",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-table-add-001",
+    "level": 1,
+    "category": "table-add",
+    "prompt": "Add a table with 3 rows and 2 columns to the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "shape.textFrame.textRange",
+      "PowerPoint.run",
+      "context.sync"
+    ],
+    "forbiddenPatterns": []
   }
 ]
