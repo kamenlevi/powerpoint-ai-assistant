@@ -1,13 +1,34 @@
-To handle recoloring, use the recolorDeck helper with the specified colors.
+To handle requests for static knowledge, provide the information directly and suggest alternatives within PowerPoint Office.js capabilities.
 ```javascript
-// Recolor the deck with primary, background, and accent colors
-await recolorDeck({ primary: "#003366", bg: "#F0F4F8", accent: "#FF9900" });
+// Provide static knowledge directly and suggest alternatives
+if (prompt.includes("Pythagorean theorem")) {
+  return "a^2 + b^2 = c^2. You can also use PowerPoint shapes to illustrate this concept.";
+}
 ```
 
-For deleting slides, check if the slide index is valid before attempting to delete.
+For requests that require a web search, suggest potential workarounds or alternatives within PowerPoint Office.js capabilities.
 ```javascript
-// Delete a slide by index with error handling
-const index = 99;
+// Suggest workarounds for web search requests
+if (prompt.includes("current weather")) {
+  return "You can add a text box with a placeholder for the weather and update it manually. Alternatively, consider using a static image or shape to represent the weather.";
+}
+```
+
+To get the title of a specific slide, use the getSlideByIndex method and load the shapes with the placeholderFormat and textRange properties.
+```javascript
+// Get the title of a specific slide
+const slideIndex = 1;
+const slide = await getSlideByIndex(slideIndex);
+slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/text");
+await context.sync();
+const titleShape = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
+return `Slide ${slideIndex + 1} title: ${titleShape.textFrame.textRange.text}`;
+```
+
+To delete a specific slide, check if the slide index is valid and use the delete method.
+```javascript
+// Delete a specific slide
+const index = 1;
 const slides = await listSlides();
 if (index >= 0 && index < slides.length) {
   const slide = await getSlideByIndex(index);
@@ -18,44 +39,16 @@ if (index >= 0 && index < slides.length) {
 }
 ```
 
-To add hyperlinks to specific text, find the shape with the matching text and set the hyperlink.
+To insert an image on the current slide, use the insertImage helper with a valid image type and position.
 ```javascript
-// Add a hyperlink to specific text on the first slide
+// Insert an image on the current slide
+await insertImage(0, "abstract-backgrounds", ["background", "texture"], { left: 100, top: 100, width: 400, height: 300 });
+await context.sync();
+```
+
+To add a hyperlink to specific text on a slide, find the shape with the matching text and set the hyperlink.
+```javascript
+// Add a hyperlink to specific text on a slide
 const slide = await getSlideByIndex(0);
 slide.shapes.load("items/textFrame/hyperlink, items/textFrame/textRange/text");
-await context.sync();
-const shape = slide.shapes.items.find(s => s.textFrame.textRange.text === "Learn More");
-if (shape) {
-  shape.textFrame.textRange.hyperlink.address = "https://www.example.com";
-  await context.sync();
-}
-```
-
-For inserting images, use the insertImage helper with a valid image type and position.
-```javascript
-// Insert a picture of a cat on the current slide
-await insertImage(0, "animals", ["cat"], { left: 100, top: 100, width: 300, height: 200 });
-await context.sync();
-```
-
-To set the background color of a slide, use the background.fill.setSolidColor method.
-```javascript
-// Set the background color of the first slide to yellow
-const slide = await getSlideByIndex(0);
-slide.background.fill.setSolidColor("#FFFF00");
-await context.sync();
-```
-
-For generating a single-slide presentation, use the addSlide helper with a title and apply a theme.
-```javascript
-// Generate a single-slide presentation with a title and default theme
-await addSlide("title", "Hello World", "", "");
-await applyTheme("corporate-blue");
-```
-
-To delete the last slide, get the last slide index and use the delete method.
-```javascript
-// Delete the last slide
-const slides = await listSlides();
-if (slides.length > 0) {
-  const lastSlide
+await

@@ -1006,5 +1006,173 @@
       "slide.shapes"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-web-search-needed-easy-009",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "add a slide with the definition of a computer",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-web-search-needed-easy-010",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "create a new slide with information about the sun",
+    "workbook": "Slide 1 (id=256): TITLE=\"Our Solar System\" | BODY=\"The sun is at the center\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-009",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "add a new text box to the first slide with the text 'Hello'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-010",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "change the font size of the title on the first slide to 20",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.size"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-deck-generate-easy-007",
+    "level": 1,
+    "category": "deck-generate",
+    "prompt": "create a single-slide presentation with a title slide and a default font size",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "shape.textFrame.textRange.font.size"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-deck-generate-easy-008",
+    "level": 1,
+    "category": "deck-generate",
+    "prompt": "generate a 1-slide presentation with a title and a solid black background",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "shape.fill.setSolidColor"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-edge-cases-easy-009",
+    "level": 1,
+    "category": "edge-cases",
+    "prompt": "delete the only slide in a new presentation with one shape",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.delete()"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-edge-cases-easy-010",
+    "level": 1,
+    "category": "edge-cases",
+    "prompt": "delete the first slide in a presentation with one slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Test Slide\" | BODY=\"This is a test slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "slide.delete()"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-hyperlink-easy-007",
+    "level": 1,
+    "category": "hyperlink",
+    "prompt": "Add a hyperlink to the text 'Link' on the first slide that links to https://www.example.com",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"Link\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-hyperlink-easy-008",
+    "level": 1,
+    "category": "hyperlink",
+    "prompt": "Create a new slide with the text 'Click' and add a hyperlink to https://www.example.com",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-footer-easy-003",
+    "level": 1,
+    "category": "footer",
+    "prompt": "Add a footer with the text 'Example' to a new slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-footer-easy-004",
+    "level": 1,
+    "category": "footer",
+    "prompt": "Insert a footer with the text 'Footer Text' at the bottom of the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to the presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-001",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Align the title text to the center of the slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"Another Slide\" | BODY=\"More content\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
   }
 ]

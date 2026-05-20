@@ -4,7 +4,7 @@
     "masteredAt": null,
     "runsAtLevel": 1,
     "lastScore": 100,
-    "lastRun": "2026-05-20T11-02-24",
+    "lastRun": "2026-05-20T18-33-19",
     "note": "Reset 2026-05-15: was promoted to level 2 by old eval logic before the hallucination blacklist + promotion gate landed. The generated level-2 cases referenced fake APIs and have been removed."
   },
   "slide-delete": {
@@ -12,79 +12,79 @@
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-20T11-02-24",
+    "lastRun": "2026-05-20T18-33-19",
     "note": "Reset 2026-05-15: see slide-add note."
   },
   "text-format": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 0,
-    "lastScore": 96.3,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 1,
+    "lastScore": 94.9,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "text-edit": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 95.6,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 2,
+    "lastScore": 94.1,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "theme-apply": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 1,
     "lastScore": 100,
-    "lastRun": "2026-05-20T11-02-24",
+    "lastRun": "2026-05-20T18-33-19",
     "note": "Reset 2026-05-15: was illegitimately promoted to level 2 by old logic despite scoring 12.5/100 in the first run."
   },
   "recolor": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 1,
-    "lastScore": 76.2,
-    "lastRun": "2026-05-20T11-02-24"
+    "lastScore": 95.4,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "notes-write": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 0,
-    "lastScore": 95,
-    "lastRun": "2026-05-20T11-02-24"
+    "lastScore": 97.5,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "shape-position": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 0,
-    "lastScore": 79.6,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 1,
+    "lastScore": 93.7,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "image-insert": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 81.7,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 2,
+    "lastScore": 82.5,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "web-search-needed": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 2,
-    "lastScore": 81.5,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 0,
+    "lastScore": 89.1,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "question-handling": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 0,
-    "lastScore": 96.8,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 1,
+    "lastScore": 73.8,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "animation": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 1,
     "lastScore": 100,
-    "lastRun": "2026-05-20T11-02-24",
+    "lastRun": "2026-05-20T18-33-19",
     "note": "Reset 2026-05-15: was promoted to level 2 by old logic; generated cases required applyAnimation (not a real helper)."
   },
   "transition": {
@@ -92,55 +92,60 @@
     "masteredAt": null,
     "runsAtLevel": 1,
     "lastScore": 100,
-    "lastRun": "2026-05-20T11-02-24"
+    "lastRun": "2026-05-20T18-33-19"
   },
   "slide-reorder": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 100,
-    "lastRun": "2026-05-20T11-02-24"
+    "lastRun": "2026-05-20T18-33-19"
   },
   "refusal": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 2,
-    "lastScore": 94,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 0,
+    "lastScore": 94.1,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "deck-generate": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 2,
-    "lastScore": 85.7,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 0,
+    "lastScore": 84.6,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "edge-cases": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 2,
-    "lastScore": 76.7,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 0,
+    "lastScore": 88.9,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "hyperlink": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 2,
-    "lastScore": 75.1,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 0,
+    "lastScore": 80.4,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "footer": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 2,
-    "lastScore": 92.3,
-    "lastRun": "2026-05-20T11-02-24"
+    "runsAtLevel": 0,
+    "lastScore": 90.7,
+    "lastRun": "2026-05-20T18-33-19"
   },
   "table-add": {
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 0,
     "lastScore": 95,
-    "lastRun": "2026-05-20T11-02-24"
+    "lastRun": "2026-05-20T18-33-19"
+  },
+  "alignment": {
+    "level": 1,
+    "masteredAt": null,
+    "runsAtLevel": 0
   }
 }
