@@ -1,41 +1,14 @@
-To handle web search limitations, suggest using addTextBox for static messages.
+To handle informational responses, suggest using addTextBox for static messages when no code changes are needed.
 ```javascript
-// Add static message when web search is not possible
-const message = "Current weather not available.";
+// Add static message when no code changes are needed
+const message = "The Pythagorean theorem is a fundamental concept in geometry.";
 const slide = await getCurrentSlide();
 await addTextBox(slide.id, message, { left: 100, top: 100, width: 300, height: 50 });
 ```
 
-For font changes, ensure the shape is loaded with the correct properties.
+For deleting slides, ensure the slide index is valid and use the delete method.
 ```javascript
-// Change font of body text
-const slide = await getSlideByIndex(0);
-slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
-await context.sync();
-const body = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
-if (body) {
-  body.textFrame.textRange.font.name = "Calibri";
-  await context.sync();
-}
-```
-
-To insert images, use the insertImage helper with correct parameters.
-```javascript
-// Insert a picture of a cat
-await insertImage(-1, "animals", ["cat"], { left: 100, top: 100, width: 200, height: 200 });
-await context.sync();
-```
-
-For single-slide presentations, apply a default theme after adding the slide.
-```javascript
-// Generate a single-slide presentation
-await addSlide("title", "Hello World", "", "");
-await applyTheme("Default Theme");
-```
-
-To delete a slide, verify its existence and use the delete method.
-```javascript
-// Delete the second slide
+// Delete a slide by index
 const index = 1;
 const slides = await listSlides();
 if (index >= 0 && index < slides.length) {
@@ -45,21 +18,23 @@ if (index >= 0 && index < slides.length) {
 }
 ```
 
-For hyperlinks to specific text, find the shape and update its hyperlink.
+To add footers, use addTextBox with a specific position and text.
 ```javascript
-// Add hyperlink to specific text
+// Add a footer to the first slide
 const slide = await getSlideByIndex(0);
+await addTextBox(slide.id, "Confidential", { left: 100, top: 500, width: 200, height: 20 });
+```
+
+For adding hyperlinks to new slides, directly add the hyperlink to the text.
+```javascript
+// Create a new slide with a hyperlink
+await addSlide("title-content", "Link", "", "");
+const slide = await getSlideByIndex(1);
 slide.shapes.load("items/textFrame/hyperlink, items/textFrame/textRange/text");
 await context.sync();
-const shape = slide.shapes.items.find(s => s.textFrame.textRange.text.includes("Home"));
+const shape = slide.shapes.items.find(s => s.textFrame.textRange.text === "Link");
 if (shape) {
   shape.textFrame.textRange.hyperlink.address = "https://www.example.com";
   await context.sync();
 }
 ```
-
-To create a new slide with a hyperlink, add the slide and then the hyperlink.
-```javascript
-// Create a new slide with a hyperlink
-await addSlide("title-content", "Link", "", "");
-const slide = await getSlideByIndex(
