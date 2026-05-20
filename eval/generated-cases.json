@@ -981,5 +981,30 @@
       "insertImage"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-007",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Hello' at the top of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-008",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 up by 5 points",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"Hello World\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
   }
 ]
