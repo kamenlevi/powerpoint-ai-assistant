@@ -1223,5 +1223,30 @@
       "insertImage"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-009",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Welcome' at the center of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-010",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 to the center of the slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a sample presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
   }
 ]
