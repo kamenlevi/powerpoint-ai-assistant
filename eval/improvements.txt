@@ -1,33 +1,36 @@
-To handle requests for changing a slide's title, load the slide's shapes and set the title text.
+To handle requests for changing the text color of a title on a slide, load the slide's shapes and set the title text color.
 ```javascript
-// Change a slide's title
-if (prompt.includes("change slide")) {
+// Change a title's text color
+if (prompt.includes("change the text color of the title")) {
   const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
-  const title = prompt.match(/'([^']+)'/)[1];
+  const color = prompt.match(/to (\w+)/)[1];
   const slide = await getSlideByIndex(index);
-  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange");
+  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
   await context.sync();
-  const titleShape = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-  if (!titleShape) throw new Error(`No title shape on slide ${index + 1}.`);
-  titleShape.textFrame.textRange.text = title;
+  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
+  if (!title) throw new Error(`No title shape on slide ${index + 1}.`);
+  title.textFrame.textRange.font.color = color;
   await context.sync();
 }
 ```
 
-To handle requests for moving a slide, use the moveSlide helper.
+To handle requests for adding a text box with specific text at the center of a slide, use the addTextBox helper with calculated left and top positions.
 ```javascript
-// Move a slide
-if (prompt.includes("move slide")) {
+// Add a text box at the center of a slide
+if (prompt.includes("add a text box with the text")) {
   const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
-  const position = parseInt(prompt.match(/position (\d+)/)[1]) - 1;
-  await moveSlide(index, position);
+  const text = prompt.match(/'([^']+)'/)[1];
+  const slide = await getSlideByIndex(index);
+  const left = slide.width / 2;
+  const top = slide.height / 2;
+  await addTextBox(text, left, top, { width: 100, height: 20 });
 }
 ```
 
-To handle requests for deleting a slide by index, check if the slide index is valid and use the delete method.
+To handle requests for deleting a non-existent slide, check the slide index and provide a message if it does not exist.
 ```javascript
-// Delete a slide by index
-if (prompt.includes("delete slide")) {
+// Delete a slide by index with error handling
+if (prompt.includes("delete the")) {
   const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
   const slides = await listSlides();
   if (index >= 0 && index < slides.length) {
@@ -40,14 +43,7 @@ if (prompt.includes("delete slide")) {
 }
 ```
 
-To handle requests for adding a hyperlink to specific text on a slide, find the shape with the matching text and set the hyperlink.
+To handle requests for adding a hyperlink to specific text on a slide without overwriting existing text, find the shape with the matching text and set the hyperlink.
 ```javascript
-// Add a hyperlink to specific text on a slide
-if (prompt.includes("Add a hyperlink")) {
-  const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
-  const text = prompt.match(/'([^']+)'/)[1];
-  const url = prompt.match(/https?:\/\/([^']+)/)[1];
-  const slide = await getSlideByIndex(index);
-  slide.shapes.load("items/textFrame/textRange");
-  await context.sync();
-  const shape = slide.shapes.items.find(s => s
+// Add a hyperlink to specific text on a slide without overwriting
+if (prompt.includes("Add a hyperlink
