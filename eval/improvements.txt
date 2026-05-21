@@ -1,54 +1,52 @@
-To handle requests for static knowledge, provide the information directly and suggest alternatives within PowerPoint Office.js capabilities.
+To handle requests for adding a new slide with title and bullets, use the addSlide helper.
 ```javascript
-// Provide static knowledge directly and suggest alternatives
-if (prompt.includes("Pythagorean theorem")) {
-  return "a^2 + b^2 = c^2. You can also use PowerPoint shapes to illustrate this concept.";
+// Add a new slide with title and bullets
+if (prompt.includes("add a new slide")) {
+  const title = prompt.match(/title '([^']+)'/)[1];
+  const bullets = prompt.match(/bullets '([^']+)'/)[1].split("\\n");
+  await addSlide("title-content", title, bullets.join("\\n"));
 }
 ```
 
-For requests that require a web search, suggest potential workarounds or alternatives within PowerPoint Office.js capabilities.
+To handle requests for making a slide's title a specific color, load the slide's shapes and set the font color.
 ```javascript
-// Suggest workarounds for web search requests
-if (prompt.includes("current weather")) {
-  return "You can add a text box with a placeholder for the weather and update it manually. Alternatively, consider using a static image or shape to represent the weather.";
-}
-```
-
-To get the title of a specific slide, use the getSlideByIndex method and load the shapes with the placeholderFormat and textRange properties.
-```javascript
-// Get the title of a specific slide
-const slideIndex = 1;
-const slide = await getSlideByIndex(slideIndex);
-slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/text");
-await context.sync();
-const titleShape = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-return `Slide ${slideIndex + 1} title: ${titleShape.textFrame.textRange.text}`;
-```
-
-To delete a specific slide, check if the slide index is valid and use the delete method.
-```javascript
-// Delete a specific slide
-const index = 1;
-const slides = await listSlides();
-if (index >= 0 && index < slides.length) {
+// Make a slide's title a specific color
+if (prompt.includes("make slide")) {
+  const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
+  const color = prompt.match(/#([A-Fa-f0-9]+)/)[1];
   const slide = await getSlideByIndex(index);
-  slide.delete();
+  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
   await context.sync();
-} else {
-  console.log(`Slide ${index} does not exist.`);
+  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
+  title.textFrame.textRange.font.color = color;
+  await context.sync();
 }
 ```
 
-To insert an image on the current slide, use the insertImage helper with a valid image type and position.
+To handle requests for creating a slide with dynamic information, suggest potential workarounds or alternatives within PowerPoint Office.js capabilities.
 ```javascript
-// Insert an image on the current slide
-await insertImage(0, "abstract-backgrounds", ["background", "texture"], { left: 100, top: 100, width: 400, height: 300 });
-await context.sync();
+// Suggest workarounds for dynamic information requests
+if (prompt.includes("today's") || prompt.includes("current")) {
+  return "You can add a text box with a placeholder for the information and update it manually. Alternatively, consider using a static image or shape to represent the information.";
+}
 ```
 
-To add a hyperlink to specific text on a slide, find the shape with the matching text and set the hyperlink.
+To handle requests for deleting a specific slide, check if the slide index is valid and use the delete method.
 ```javascript
-// Add a hyperlink to specific text on a slide
-const slide = await getSlideByIndex(0);
-slide.shapes.load("items/textFrame/hyperlink, items/textFrame/textRange/text");
-await
+// Delete a specific slide by name
+if (prompt.includes("delete the")) {
+  const index = parseInt(prompt.match(/(\d+)/)[1]) - 1;
+  const slides = await listSlides();
+  if (index >= 0 && index < slides.length) {
+    const slide = await getSlideByIndex(index);
+    slide.delete();
+    await context.sync();
+  } else {
+    console.log(`Slide ${index + 1} does not exist.`);
+  }
+}
+```
+
+To handle requests for adding a hyperlink to specific text on a slide, find the shape with the matching text and set the hyperlink.
+```javascript
+// Add a hyperlink to specific text on a slide without overwriting

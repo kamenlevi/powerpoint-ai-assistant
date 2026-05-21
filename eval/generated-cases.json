@@ -1174,5 +1174,54 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-007",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "change the title of slide 1 to 'Welcome'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.text"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-008",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "make the title of slide 1 underlined",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-009",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a default image to the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-010",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put a picture on the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
   }
 ]
