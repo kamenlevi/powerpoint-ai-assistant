@@ -1503,5 +1503,171 @@
       "insertImage"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-web-search-needed-easy-013",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "add a slide with the definition of a website",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Hello World\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-web-search-needed-easy-014",
+    "level": 1,
+    "category": "web-search-needed",
+    "prompt": "create a new slide with information about the history of the internet",
+    "workbook": "Slide 1 (id=256): TITLE=\"History\" | BODY=\"The internet was invented...\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-deck-generate-easy-011",
+    "level": 1,
+    "category": "deck-generate",
+    "prompt": "create a single-slide presentation with a title slide and a default font size of 18 using the addTextBox API",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange.font.size"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-deck-generate-easy-012",
+    "level": 1,
+    "category": "deck-generate",
+    "prompt": "generate a 1-slide presentation with a title and a solid white background using the shape.fill.setSolidColor API",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "shape.fill.setSolidColor"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-edge-cases-easy-013",
+    "level": 1,
+    "category": "edge-cases",
+    "prompt": "delete the only slide in a new presentation with a title",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.delete()"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-edge-cases-easy-014",
+    "level": 1,
+    "category": "edge-cases",
+    "prompt": "delete the first slide in a presentation with one slide and a text box",
+    "workbook": "Slide 1 (id=256): TITLE=\"\" | BODY=\"Hello World\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "slide.delete()"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-hyperlink-easy-011",
+    "level": 1,
+    "category": "hyperlink",
+    "prompt": "Add a hyperlink to the text 'Link' on the first slide that links to https://www.example.com",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"Link\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-hyperlink-easy-012",
+    "level": 1,
+    "category": "hyperlink",
+    "prompt": "Create a new slide with the text 'Click Here' and add a hyperlink to https://www.example.com",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-footer-easy-007",
+    "level": 1,
+    "category": "footer",
+    "prompt": "Add a footer with the text 'Default' to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-footer-easy-008",
+    "level": 1,
+    "category": "footer",
+    "prompt": "Insert a footer with the text 'Sample' at the bottom of the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to the presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-table-add-easy-001",
+    "level": 1,
+    "category": "table-add",
+    "prompt": "Add a table with 1 row and 1 column to the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-table-add-easy-002",
+    "level": 1,
+    "category": "table-add",
+    "prompt": "Add a table with 2 rows and 1 column to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to the presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-gradient-fill-001",
+    "level": 1,
+    "category": "gradient-fill",
+    "prompt": "Add a gradient fill to the title shape on the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.fill.setSolidColor",
+      "PowerPoint.run",
+      "context.sync"
+    ],
+    "forbiddenPatterns": []
   }
 ]
