@@ -1429,5 +1429,42 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-011",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a picture to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-012",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put an image on the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to the presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage",
+      "getCurrentSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-font-pairing-001",
+    "level": 1,
+    "category": "font-pairing",
+    "prompt": "Change the font of the title on the first slide to Arial and the font of the body text to Calibri.",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.name"
+    ],
+    "forbiddenPatterns": []
   }
 ]

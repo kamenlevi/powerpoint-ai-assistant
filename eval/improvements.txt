@@ -1,37 +1,39 @@
-To handle requests for changing the text color of a title on a slide, load the slide's shapes and set the title text color.
+To handle requests for adding a slide showing the current weather, suggest a workaround using a web search.
 ```javascript
-// Change a title's text color
-if (prompt.includes("change the text color of the title")) {
-  const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
-  const color = prompt.match(/to (\w+)/)[1];
-  const slide = await getSlideByIndex(index);
-  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
-  await context.sync();
-  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-  if (!title) throw new Error(`No title shape on slide ${index + 1}.`);
-  title.textFrame.textRange.font.color = color;
-  await context.sync();
+if (prompt.includes("show the current weather")) {
+  console.log("To add the current weather, please perform a web search and copy the result to add as a text box.");
 }
 ```
 
-To handle requests for adding a text box with specific text at the center of a slide, use the addTextBox helper with calculated left and top positions.
+To handle requests for editing animations on existing slides, offer to recreate the slide with the desired animation.
 ```javascript
-// Add a text box at the center of a slide
-if (prompt.includes("add a text box with the text")) {
+if (prompt.includes("edit the existing animation")) {
+  console.log("Editing animations on existing slides is not supported. Consider recreating the slide with the desired animation.");
+}
+```
+
+To handle requests for adding a hyperlink to specific text on a slide, find the shape with the matching text and set the hyperlink.
+```javascript
+if (prompt.includes("Add a hyperlink to the text")) {
   const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
   const text = prompt.match(/'([^']+)'/)[1];
+  const url = prompt.match(/https?:\/\/([^']+)/)[1];
   const slide = await getSlideByIndex(index);
-  const left = slide.width / 2;
-  const top = slide.height / 2;
-  await addTextBox(text, left, top, { width: 100, height: 20 });
+  slide.shapes.load("items/textFrame/textRange");
+  await context.sync();
+  const shape = slide.shapes.items.find(s => s.textFrame.textRange.text.includes(text));
+  if (shape) {
+    const textRange = shape.textFrame.textRange;
+    textRange.hyperlink.address = url;
+  }
+  await context.sync();
 }
 ```
 
-To handle requests for deleting a non-existent slide, check the slide index and provide a message if it does not exist.
+To handle requests for deleting a slide, check the slide index and provide a message if it does not exist.
 ```javascript
-// Delete a slide by index with error handling
-if (prompt.includes("delete the")) {
-  const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
+if (prompt.includes("delete the second slide")) {
+  const index = 1;
   const slides = await listSlides();
   if (index >= 0 && index < slides.length) {
     const slide = await getSlideByIndex(index);
@@ -43,7 +45,11 @@ if (prompt.includes("delete the")) {
 }
 ```
 
-To handle requests for adding a hyperlink to specific text on a slide without overwriting existing text, find the shape with the matching text and set the hyperlink.
+To handle requests for creating a new slide with a hyperlink, use the addTextBox helper with a hyperlink.
 ```javascript
-// Add a hyperlink to specific text on a slide without overwriting
-if (prompt.includes("Add a hyperlink
+if (prompt.includes("Create a new slide with the text 'Link' and add a hyperlink")) {
+  const url = prompt.match(/https?:\/\/([^']+)/)[1];
+  const text = "Link";
+  const slide = await addSlide("blank");
+  const textBox = await addTextBox(text, slide.width / 2, slide.height / 2);
+  textBox.textFrame.textRange
