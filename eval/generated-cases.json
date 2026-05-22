@@ -1466,5 +1466,42 @@
       "shape.textFrame.textRange.font.name"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-011",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'New Text' at the bottom of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-012",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 to the top of the slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-grid-001",
+    "level": 1,
+    "category": "image-grid",
+    "prompt": "Create a 2x2 image grid on the first slide with pictures of nature",
+    "workbook": "Slide 1 (id=256): TITLE=\"Nature Images\" | BODY=\"\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
   }
 ]

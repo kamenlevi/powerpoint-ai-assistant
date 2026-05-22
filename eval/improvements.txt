@@ -1,39 +1,44 @@
-To handle requests for adding a slide showing the current weather, suggest a workaround using a web search.
+To handle requests for replacing text across the deck, utilize the provided helpers for a more comprehensive solution.
 ```javascript
-if (prompt.includes("show the current weather")) {
-  console.log("To add the current weather, please perform a web search and copy the result to add as a text box.");
-}
-```
-
-To handle requests for editing animations on existing slides, offer to recreate the slide with the desired animation.
-```javascript
-if (prompt.includes("edit the existing animation")) {
-  console.log("Editing animations on existing slides is not supported. Consider recreating the slide with the desired animation.");
-}
-```
-
-To handle requests for adding a hyperlink to specific text on a slide, find the shape with the matching text and set the hyperlink.
-```javascript
-if (prompt.includes("Add a hyperlink to the text")) {
-  const index = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
-  const text = prompt.match(/'([^']+)'/)[1];
-  const url = prompt.match(/https?:\/\/([^']+)/)[1];
-  const slide = await getSlideByIndex(index);
-  slide.shapes.load("items/textFrame/textRange");
-  await context.sync();
-  const shape = slide.shapes.items.find(s => s.textFrame.textRange.text.includes(text));
-  if (shape) {
-    const textRange = shape.textFrame.textRange;
-    textRange.hyperlink.address = url;
+if (prompt.includes("replace all instances of")) {
+  const oldText = prompt.match(/'([^']+)'/)[1];
+  const newText = prompt.match(/with '([^']+)'/)[1];
+  for (const slide of presentation.slides.items) {
+    for (const shape of slide.shapes.items) {
+      try {
+        shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(new RegExp(oldText, "g"), newText);
+      } catch (e) {}
+      try {
+        slide.notesPage.notesTextFrame.textRange.text = slide.notesPage.notesTextFrame.textRange.text.replace(new RegExp(oldText, "g"), newText);
+      } catch (e) {}
+    }
   }
   await context.sync();
 }
 ```
 
-To handle requests for deleting a slide, check the slide index and provide a message if it does not exist.
+To handle requests for adding information that requires a web search, suggest a workaround.
 ```javascript
-if (prompt.includes("delete the second slide")) {
-  const index = 1;
+if (prompt.includes("what is the")) {
+  console.log("To answer this question, please perform a web search and copy the result to add as a text box.");
+}
+```
+
+To handle requests for creating a pitch deck, use the addSlide helper to create multiple slides.
+```javascript
+if (prompt.includes("create a pitch deck")) {
+  const numSlides = parseInt(prompt.match(/(\d+)-slide/)[1]);
+  const topic = prompt.match(/about (.*)/)[1];
+  for (let i = 0; i < numSlides; i++) {
+    await addSlide("title-content", `Slide ${i+1}: ${topic}`, "", "");
+  }
+}
+```
+
+To handle requests for deleting a specific slide, check the slide index and provide a message if it does not exist.
+```javascript
+if (prompt.includes("delete the")) {
+  const index = parseInt(prompt.match(/delete the (\d+)/)[1]) - 1;
   const slides = await listSlides();
   if (index >= 0 && index < slides.length) {
     const slide = await getSlideByIndex(index);
@@ -45,11 +50,7 @@ if (prompt.includes("delete the second slide")) {
 }
 ```
 
-To handle requests for creating a new slide with a hyperlink, use the addTextBox helper with a hyperlink.
+To handle requests for adding a hyperlink to specific text on a slide without overwriting existing text, find the shape with the matching text and set the hyperlink.
 ```javascript
-if (prompt.includes("Create a new slide with the text 'Link' and add a hyperlink")) {
-  const url = prompt.match(/https?:\/\/([^']+)/)[1];
-  const text = "Link";
-  const slide = await addSlide("blank");
-  const textBox = await addTextBox(text, slide.width / 2, slide.height / 2);
-  textBox.textFrame.textRange
+if (prompt.includes("Add a hyperlink to the text")) {
+  const index =
