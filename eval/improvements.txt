@@ -1,34 +1,40 @@
-To handle requests for adding images to a specific slide, use the insertImage helper with the correct slide index and image details.
+To handle requests for applying a theme, use the applyTheme helper.
 ```javascript
-if (prompt.includes("add a") && prompt.includes("image to slide")) {
-  const slideIndex = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
-  const imageType = prompt.match(/add a (\w+) image/)[1];
-  const details = prompt.match(/(\w+) (\w+)/);
-  await insertImage(slideIndex, imageType, [details[1], details[2]], { left: 100, top: 100, width: 200, height: 150 });
+if (prompt.includes("use the") && prompt.includes("theme")) {
+  const themeName = prompt.match(/use the (\w+) theme/)[1];
+  await applyTheme(themeName);
 }
 ```
 
 To handle requests for adding information that requires a web search, suggest a workaround and provide an example of how to add the result as a text box.
 ```javascript
-if (prompt.includes("add a slide showing the")) {
+if (prompt.includes("make a slide about")) {
   console.log("To answer this question, please perform a web search, copy the result, and use the addTextBox helper to add it to the slide.");
   // Example: await addTextBox("Search result", { left: 100, top: 100, width: 300, height: 50 });
 }
 ```
 
-To handle requests for creating charts, use the insertImage helper with a chart type.
+To handle requests for adding a text box at a specific position, use the addTextBox helper with position details.
 ```javascript
-if (prompt.includes("add a") && prompt.includes("chart")) {
-  const slideIndex = parseInt(prompt.match(/slide (\d+)/)[1]) - 1;
-  const chartType = prompt.match(/add a (\w+) chart/)[1];
-  await insertImage(slideIndex, "charts-diagrams", [chartType, "chart"], { left: 100, top: 100, width: 400, height: 300 });
+if (prompt.includes("add a text box with") && prompt.includes("at the")) {
+  const text = prompt.match(/add a text box with '([^']+)'/)[1];
+  const position = prompt.match(/at the (\w+) of/)[1];
+  const slideIndex = prompt.match(/of slide (\d+)/)[1] - 1;
+  const slide = await getSlideByIndex(slideIndex);
+  const shape = slide.shapes.addTextBox(text, {
+    left: position === "center" ? 2.5 : 0,
+    top: position === "center" ? 2.5 : 0,
+    width: 5,
+    height: 1
+  });
+  await context.sync();
 }
 ```
 
-To handle requests for deleting a slide by index, handle the case where the slide does not exist.
+To handle requests for deleting a slide, handle the case where the slide does not exist.
 ```javascript
-if (prompt.includes("delete slide")) {
-  const index = parseInt(prompt.match(/delete slide (\d+)/)[1]);
+if (prompt.includes("delete the") && prompt.includes("slide")) {
+  const index = prompt.match(/delete the (\d+) slide/)[1];
   try {
     const slide = await getSlideByIndex(index - 1);
     slide.delete();
@@ -39,7 +45,7 @@ if (prompt.includes("delete slide")) {
 }
 ```
 
-To handle requests for making text bold, target the correct shape and text range.
+To handle requests for adding a hyperlink to specific text, target the correct shape and text range.
 ```javascript
-if (prompt.includes("make the") && prompt.includes("bold")) {
-  const slideIndex = prompt.match(/on the
+if (prompt.includes("add a hyperlink to") && prompt.includes("that links to")) {
+  const text = prompt.match(/add a hyperlink to '([^']+)'/
