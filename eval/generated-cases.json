@@ -1758,5 +1758,68 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-011",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "change the text color of the title on the first slide to blue",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.color"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-012",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "set the background color of the first slide to light gray",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.fill.setSolidColor"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-013",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Example' at the center of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-014",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 to the left by 5 points",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-chart-add-001",
+    "level": 1,
+    "category": "chart-add",
+    "prompt": "Add a bar chart to the first slide with the title 'Sales Data' and the data [10, 20, 30, 40, 50]",
+    "workbook": "Slide 1 (id=256): TITLE=\"Sales Presentation\" | BODY=\"Introduction to sales data\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"Sales Data\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "findShapeByName",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
   }
 ]
