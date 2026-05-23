@@ -1669,5 +1669,94 @@
       "context.sync"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-013",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a picture to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-014",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put an image on the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage",
+      "getCurrentSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-013",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "add a new slide with the title 'Hello'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-014",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "change the title of the first slide to 'Welcome to our presentation'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "shape.textFrame.textRange.text"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-001",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Add a text box to the slide and align its text to the left",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-002",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Change the alignment of the title text to the right",
+    "workbook": "Slide 1 (id=256): TITLE=\"Centered Title\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-slide-number-001",
+    "level": 1,
+    "category": "slide-number",
+    "prompt": "Add slide numbers to all slides in the presentation",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to the presentation\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"Agenda\" | BODY=\"Topics to cover\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
   }
 ]

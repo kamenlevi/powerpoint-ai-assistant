@@ -1,17 +1,34 @@
+To handle requests for deleting a slide by index, use the getSlideByIndex helper and check for null before calling delete.
+```javascript
+if (prompt.includes("delete slide")) {
+  const index = parseInt(prompt.match(/delete slide (\d+)/)[1]);
+  const slide = await getSlideByIndex(index - 1);
+  if (slide) {
+    slide.delete();
+    await context.sync();
+  } else {
+    console.log(`Slide ${index} does not exist.`);
+  }
+}
+```
+
 To handle requests for adding information that requires a web search, suggest a workaround and provide an example of how to add the result as a text box.
 ```javascript
-if (prompt.includes("make a slide about") || prompt.includes("add a slide showing")) {
+if (prompt.includes("add a slide with the definition of")) {
   console.log("To answer this question, please perform a web search, copy the result, and use the addTextBox helper to add it to the slide.");
   // Example: await addTextBox("Search result", { left: 100, top: 100, width: 300, height: 50 });
 }
 ```
 
-To handle requests for creating a section divider slide with a transition, use the addSlide helper with the transition option.
+To handle requests for generating a presentation with a title and background, use the addSlide helper and set the background fill.
 ```javascript
-if (prompt.includes("create a new section divider slide")) {
-  const title = prompt.match(/titled '([^']+)'/)[1];
-  const transition = prompt.match(/with a (.+) transition/)[1];
-  await addSlide("section", title, "", "", { transition: transition });
+if (prompt.includes("generate a")) {
+  if (prompt.includes("1-slide presentation with a title and a solid color background")) {
+    await addSlide("title", "New Presentation", "", "");
+    const slide = await getSlideByIndex(0);
+    slide.background.fill.setSolidColor("#ffffff");
+    await context.sync();
+  }
 }
 ```
 
@@ -20,7 +37,8 @@ To handle requests for adding a hyperlink to specific text on a slide without ov
 if (prompt.includes("Add a hyperlink to the text")) {
   const text = prompt.match(/'([^']+)'/)[1];
   const url = prompt.match(/https?:\/\/([^']+)/)[1];
-  const slide = await getSlideByIndex(0);
+  const slideIndex = prompt.match(/on the (\w+) slide/)[1] === "first" ? 0 : parseInt(prompt.match(/on the (\d+) slide/)[1]) - 1;
+  const slide = await getSlideByIndex(slideIndex);
   for (const shape of slide.shapes.items) {
     try {
       const textRange = shape.textFrame.textRange;
@@ -29,26 +47,3 @@ if (prompt.includes("Add a hyperlink to the text")) {
         await context.sync();
       }
     } catch (e) {}
-  }
-}
-```
-
-To handle requests for deleting a specific slide, check the slide index and provide a message if it does not exist.
-```javascript
-if (prompt.includes("delete the second slide")) {
-  const index = 1;
-  const slides = await listSlides();
-  if (index >= 0 && index < slides.length) {
-    const slide = await getSlideByIndex(index);
-    slide.delete();
-    await context.sync();
-  } else {
-    console.log(`Slide ${index + 1} does not exist.`);
-  }
-}
-```
-
-To handle requests for inserting a footer, use the addTextBox helper.
-```javascript
-if (prompt.includes("Insert a footer")) {
-  const text = prompt.match(/'([^']
