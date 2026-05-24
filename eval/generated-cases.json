@@ -1987,5 +1987,55 @@
       "shape.textFrame.textRange.text"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-question-handling-easy-003",
+    "level": 1,
+    "category": "question-handling",
+    "prompt": "what is the title of the current slide?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getCurrentSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-question-handling-easy-004",
+    "level": 1,
+    "category": "question-handling",
+    "prompt": "how many slides are there in total?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\" | Slide 2 (id=257): TITLE=\"Conclusion\" | BODY=\"Thank you for listening\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "listSlides"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-slide-number-easy-001",
+    "level": 1,
+    "category": "slide-number",
+    "prompt": "Add a slide number to the first slide in the presentation",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-slide-number-easy-002",
+    "level": 1,
+    "category": "slide-number",
+    "prompt": "Insert a new slide and add a slide number to it",
+    "workbook": "Slide 1 (id=256): TITLE=\"Title\" | BODY=\"Body\" | NOTES=\"\" | Slide 2 (id=257): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
   }
 ]

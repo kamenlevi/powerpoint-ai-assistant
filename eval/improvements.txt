@@ -1,51 +1,47 @@
-To handle requests for applying a theme, use the applyTheme helper.
+To handle requests for exporting a deck to PDF, provide an explanation that it's not possible in PowerPoint Office.js and suggest a workaround.
 ```javascript
-if (prompt.includes("use the") && prompt.includes("theme")) {
-  const themeName = prompt.match(/use the (\w+) theme/)[1];
-  await applyTheme(themeName);
+if (prompt.includes("export this deck to PDF")) {
+  console.log("Exporting to PDF is not supported in PowerPoint Office.js. Please use the PowerPoint desktop application or other tools to achieve this.");
 }
 ```
 
-To handle requests for adding information that requires a web search, suggest a workaround and provide an example of how to add the result as a text box.
+To handle requests for adding a bar chart, use the insertImage helper with a chart type.
 ```javascript
-if (prompt.includes("make a slide about")) {
-  console.log("To answer this question, please perform a web search, copy the result, and use the addTextBox helper to add it to the slide.");
-  // Example: await addTextBox("Search result", { left: 100, top: 100, width: 300, height: 50 });
-}
-```
-
-To handle requests for adding a text box at a specific position, use the addTextBox helper with position details.
-```javascript
-if (prompt.includes("add a text box with") && prompt.includes("at the")) {
-  const text = prompt.match(/add a text box with '([^']+)'/)[1];
-  const position = prompt.match(/at the (\w+) of/)[1];
-  const slideIndex = prompt.match(/of slide (\d+)/)[1] - 1;
+if (prompt.includes("add a bar chart")) {
+  const slideIndex = prompt.match(/to slide (\d+)/)[1] - 1;
   const slide = await getSlideByIndex(slideIndex);
-  const shape = slide.shapes.addTextBox(text, {
-    left: position === "center" ? 2.5 : 0,
-    top: position === "center" ? 2.5 : 0,
-    width: 5,
-    height: 1
-  });
+  await insertImage(slideIndex, "charts-diagrams", ["bar", "chart"], { left: 100, top: 100, width: 400, height: 300 });
   await context.sync();
 }
 ```
 
-To handle requests for deleting a slide, handle the case where the slide does not exist.
+To handle requests for changing the background color of a slide, use the slide.background.fill.setSolidColor method.
 ```javascript
-if (prompt.includes("delete the") && prompt.includes("slide")) {
-  const index = prompt.match(/delete the (\d+) slide/)[1];
-  try {
-    const slide = await getSlideByIndex(index - 1);
-    slide.delete();
-    await context.sync();
-  } catch (e) {
-    console.log(`Slide ${index} does not exist.`);
-  }
+if (prompt.includes("change the background color of the") && prompt.includes("slide to")) {
+  const color = prompt.match(/to (\w+)/)[1];
+  const hexColor = {
+    "light gray": "#F7F7F7",
+    "yellow": "#FFFF00"
+  }[color];
+  const slideIndex = prompt.match(/of the (\d+) slide/)[1] - 1;
+  const slide = await getSlideByIndex(slideIndex);
+  slide.background.fill.setSolidColor(hexColor);
+  await context.sync();
 }
 ```
 
-To handle requests for adding a hyperlink to specific text, target the correct shape and text range.
+To handle requests for adding a note to the current slide, use the addSpeakerNote helper.
 ```javascript
-if (prompt.includes("add a hyperlink to") && prompt.includes("that links to")) {
-  const text = prompt.match(/add a hyperlink to '([^']+)'/
+if (prompt.includes("add a note to the current slide")) {
+  const note = prompt.match(/reminding me to (.+)/)[1];
+  await addSpeakerNote(getCurrentSlide().id, note);
+}
+```
+
+To handle requests for moving a shape on a slide, use the shape.top and shape.left properties.
+```javascript
+if (prompt.includes("move the") && prompt.includes("on slide")) {
+  const shapeName = prompt.match(/move the (\w+) on/)[1];
+  const slideIndex = prompt.match(/on slide (\d+)/)[1] - 1;
+  const direction = prompt.match(/(up|down|left|right) by (\d+) points/);
+  const slide = await getSlideByIndex(slideIndex
