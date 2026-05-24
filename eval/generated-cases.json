@@ -2037,5 +2037,128 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-009",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "change the title of slide 1 to 'New Title'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Old Title\" | BODY=\"This is a sample slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.text"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-text-edit-easy-010",
+    "level": 1,
+    "category": "text-edit",
+    "prompt": "make the title of slide 1 font size 18",
+    "workbook": "Slide 1 (id=256): TITLE=\"Sample Title\" | BODY=\"This is a sample slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.size"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-015",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Sample Text' at the center of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a sample slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-016",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 to the top left of the slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a sample slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-015",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a picture to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-016",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put an image on the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Test Slide\" | BODY=\"Insert image here\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-015",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "change the title of the first slide to 'Hello'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.text"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-refusal-easy-016",
+    "level": 1,
+    "category": "refusal",
+    "prompt": "add a new text box to the first slide with the text 'World'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-chart-add-easy-001",
+    "level": 1,
+    "category": "chart-add",
+    "prompt": "Add a chart to the first slide with the title 'Simple Chart' and the data [5, 10, 15]",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-chart-add-easy-002",
+    "level": 1,
+    "category": "chart-add",
+    "prompt": "Insert a chart on the first slide with the title 'Example Data' and two data points: [20, 30]",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "PowerPoint.run",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
   }
 ]
