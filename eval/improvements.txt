@@ -1,52 +1,52 @@
-To handle requests for web searches, provide an explanation and suggest a workaround.
+To handle requests for web searches, provide an explanation and suggest a workaround, including potential alternatives within PowerPoint Office.js capabilities.
 ```javascript
 if (prompt.includes("today's") || prompt.includes("current")) {
-  console.log("This information is not available in PowerPoint Office.js. Please use a web search or other tools to find the answer.");
+  console.log("This information is not available in PowerPoint Office.js. Please use a web search or other tools to find the answer. Alternatively, you can add a text box with a placeholder and update it manually.");
 }
 ```
 
-To handle requests for deleting a slide, use the slide.delete method.
+To handle requests for deleting a slide, use the slide.delete method and check if the slide exists.
 ```javascript
 if (prompt.includes("delete the") && prompt.includes("slide")) {
   const slideIndex = prompt.match(/delete the (\d+) slide/)[1] - 1;
   const slide = await getSlideByIndex(slideIndex);
-  slide.delete();
-  await context.sync();
+  if (slide) {
+    slide.delete();
+    await context.sync();
+  } else {
+    console.log("Slide not found.");
+  }
 }
 ```
 
-To handle requests for editing text, use the shape.textFrame.textRange.font property.
+To handle requests for adding a footer, use the addTextBox helper function.
 ```javascript
-if (prompt.includes("make the title") && prompt.includes("bold")) {
+if (prompt.includes("add a footer")) {
   const slideIndex = 0;
   const slide = await getSlideByIndex(slideIndex);
-  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
-  await context.sync();
-  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-  if (!title) throw new Error("No title shape on slide 1.");
-  title.textFrame.textRange.font.bold = true;
-  await context.sync();
-}
-
-if (prompt.includes("make the title") && prompt.includes("underlined")) {
-  const slideIndex = 0;
-  const slide = await getSlideByIndex(slideIndex);
-  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
-  await context.sync();
-  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-  if (!title) throw new Error("No title shape on slide 1.");
-  title.textFrame.textRange.font.underline = true;
-  await context.sync();
+  const footerText = prompt.match(/add a footer with the text '(.+)'/)[1];
+  await addTextBox(slide, footerText, { left: 100, top: 500, width: 300, height: 50 });
 }
 ```
 
-To handle requests for adding a hyperlink, use the shape.textFrame.textRange.hyperlink property.
+To handle requests for adding a text box at a specific position, use the addTextBox helper function.
+```javascript
+if (prompt.includes("add a text box at the")) {
+  const slideIndex = 0;
+  const slide = await getSlideByIndex(slideIndex);
+  const text = prompt.match(/add a text box with the text '(.+)'/)[1];
+  const position = prompt.match(/at the (.+)/)[1];
+  let left, top;
+  if (position === "center") {
+    left = 250;
+    top = 200;
+  }
+  await addTextBox(slide, text, { left, top, width: 300, height: 50 });
+}
+```
+
+To handle requests for adding a hyperlink to specific text, use the shape.textFrame.textRange.hyperlink property and find the shape with the matching text.
 ```javascript
 if (prompt.includes("add a hyperlink to the text") && prompt.includes("that links to")) {
   const slideIndex = 0;
-  const slide = await getSlideByIndex(slideIndex);
-  slide.shapes.load("items/textFrame/hyperlink");
-  await context.sync();
-  const shape = slide.shapes.items.find(s => s.textFrame.textRange.text === prompt.match(/to the text '(.+)'/)[1]);
-  if (shape) {
-    const textRange
+  const slide =
