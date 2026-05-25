@@ -1,44 +1,31 @@
-To handle requests for web searches, provide an explanation and suggest a workaround.
+To handle requests for adding notes to the current slide, use the addSpeakerNote helper function.
 ```javascript
-if (prompt.includes("current weather")) {
-  console.log("This information is not available in PowerPoint Office.js. Please use a web search to find the answer.");
+if (prompt.includes("add a note to the current slide")) {
+  const noteText = prompt.match(/add a note to the current slide (.+)/)[1];
+  await addSpeakerNote(-1, noteText);
 }
 ```
 
-To handle requests for editing animations, offer to recreate the slide with the desired animation.
+To handle requests for making a slide about a specific topic that requires a web search, provide an explanation and suggest a workaround.
 ```javascript
-if (prompt.includes("edit the existing fade animation")) {
-  console.log("Editing animations is not supported. Consider recreating the slide with the desired animation.");
+if (prompt.includes("make a slide about")) {
+  console.log("This information is not available in PowerPoint Office.js. Please use a web search to find the answer and then add the content to your slide manually.");
 }
 ```
 
-To handle requests for adding a hyperlink to specific text without overwriting existing text, find the shape with the matching text and apply the hyperlink.
+To handle requests for explaining a concept, provide a clear explanation and suggest potential workarounds or PowerPoint-specific caveats.
 ```javascript
-if (prompt.includes("add a hyperlink to the text") && prompt.includes("that links to")) {
-  const slideIndex = 0;
-  const slide = await getSlideByIndex(slideIndex);
-  const textToLink = prompt.match(/add a hyperlink to the text '(.+)'/)[1];
-  const link = prompt.match(/that links to (.+)/)[1];
-  slide.shapes.load("items/textFrame/textRange");
-  await context.sync();
-  const shape = slide.shapes.items.find(s => s.textFrame && s.textFrame.text.includes(textToLink));
-  if (shape) {
-    const textRange = shape.textFrame.getTextRange();
-    const foundText = textRange.text.includes(textToLink);
-    if (foundText) {
-      textRange.hyperlink.address = link;
-    } else {
-      console.log("Text not found.");
-    }
-    await context.sync();
-  }
+if (prompt.includes("what is the")) {
+  const concept = prompt.match(/what is the (.+)/)[1];
+  console.log(`The ${concept} is a concept that can be explained as follows: ...`);
+  console.log("Please note that this explanation is general and may not be specific to PowerPoint.");
 }
 ```
 
-To handle requests for deleting a slide, use the slide.delete method and check if the slide exists.
+To handle requests for deleting a specific slide, use the slide.delete method and check if the slide exists.
 ```javascript
 if (prompt.includes("delete the")) {
-  const slideNumber = prompt.match(/delete the (\d+)/)[1];
+  const slideNumber = prompt.match(/delete the (\d+) slide/)[1];
   const slideIndex = slideNumber - 1;
   try {
     const slide = await getSlideByIndex(slideIndex);
@@ -54,7 +41,14 @@ if (prompt.includes("delete the")) {
 }
 ```
 
-To handle requests for creating a single-slide presentation with a title slide and a default font size, use the addSlide helper function and set the font size for the title shape.
+To handle requests for changing the title font size on a specific slide, use the shape.textFrame.textRange.font.size property.
 ```javascript
-if (prompt.includes("create a single-slide presentation")) {
-  await addSlide("title", "Hello
+if (prompt.includes("make the title on the")) {
+  const slideNumber = prompt.match(/make the title on the (\d+) slide/)[1];
+  const fontSize = prompt.match(/(\d+)pt/)[1];
+  const slideIndex = slideNumber - 1;
+  const slide = await getSlideByIndex(slideIndex);
+  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
+  await context.sync();
+  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
+  if (title)
