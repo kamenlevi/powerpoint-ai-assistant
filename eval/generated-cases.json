@@ -2366,5 +2366,44 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-003",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Add a text box to the slide with the text 'Hello World' and align it to the center",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-004",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Change the alignment of the text in the title shape to the left",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-smartart-001",
+    "level": 1,
+    "category": "SmartArt",
+    "prompt": "Add a basic cycle SmartArt to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
   }
 ]

@@ -1,52 +1,53 @@
-To handle requests for web searches, provide an explanation and suggest a workaround, including potential alternatives within PowerPoint Office.js capabilities.
+To handle requests for web searches, provide an explanation and suggest a workaround, including potential alternatives within PowerPoint Office.js capabilities for specific data like stock prices or weather.
 ```javascript
-if (prompt.includes("today's") || prompt.includes("current")) {
+if (prompt.includes("stock price") || prompt.includes("weather")) {
   console.log("This information is not available in PowerPoint Office.js. Please use a web search or other tools to find the answer. Alternatively, you can add a text box with a placeholder and update it manually.");
 }
 ```
 
-To handle requests for deleting a slide, use the slide.delete method and check if the slide exists.
+To handle requests for deleting a specific slide by its number, use the slide.delete method and check if the slide exists.
 ```javascript
-if (prompt.includes("delete the") && prompt.includes("slide")) {
-  const slideIndex = prompt.match(/delete the (\d+) slide/)[1] - 1;
-  const slide = await getSlideByIndex(slideIndex);
-  if (slide) {
-    slide.delete();
-    await context.sync();
-  } else {
-    console.log("Slide not found.");
+if (prompt.includes("delete slide")) {
+  const slideNumber = prompt.match(/delete slide (\d+)/)[1];
+  const slideIndex = slideNumber - 1;
+  try {
+    const slide = await getSlideByIndex(slideIndex);
+    if (slide) {
+      slide.delete();
+      await context.sync();
+    } else {
+      console.log("Slide not found.");
+    }
+  } catch (e) {
+    console.log("Error deleting slide.");
   }
 }
 ```
 
-To handle requests for adding a footer, use the addTextBox helper function.
-```javascript
-if (prompt.includes("add a footer")) {
-  const slideIndex = 0;
-  const slide = await getSlideByIndex(slideIndex);
-  const footerText = prompt.match(/add a footer with the text '(.+)'/)[1];
-  await addTextBox(slide, footerText, { left: 100, top: 500, width: 300, height: 50 });
-}
-```
-
-To handle requests for adding a text box at a specific position, use the addTextBox helper function.
-```javascript
-if (prompt.includes("add a text box at the")) {
-  const slideIndex = 0;
-  const slide = await getSlideByIndex(slideIndex);
-  const text = prompt.match(/add a text box with the text '(.+)'/)[1];
-  const position = prompt.match(/at the (.+)/)[1];
-  let left, top;
-  if (position === "center") {
-    left = 250;
-    top = 200;
-  }
-  await addTextBox(slide, text, { left, top, width: 300, height: 50 });
-}
-```
-
-To handle requests for adding a hyperlink to specific text, use the shape.textFrame.textRange.hyperlink property and find the shape with the matching text.
+To handle requests for adding a hyperlink to specific text without overwriting existing text, find the shape with the matching text and apply the hyperlink.
 ```javascript
 if (prompt.includes("add a hyperlink to the text") && prompt.includes("that links to")) {
   const slideIndex = 0;
-  const slide =
+  const slide = await getSlideByIndex(slideIndex);
+  const textToLink = prompt.match(/add a hyperlink to the text '(.+)'/)[1];
+  const link = prompt.match(/that links to (.+)/)[1];
+  slide.shapes.load("items/textFrame");
+  await context.sync();
+  const shape = slide.shapes.items.find(s => s.textFrame && s.textFrame.text.includes(textToLink));
+  if (shape) {
+    const textRange = shape.textFrame.getTextRange();
+    textRange.hyperlink.address = link;
+    await context.sync();
+  } else {
+    console.log("Text not found.");
+  }
+}
+```
+
+To handle requests for adding a footer to a new slide, use the addTextBox helper function with the correct positioning.
+```javascript
+if (prompt.includes("add a footer to a new slide")) {
+  await addSlide("blank", "", "", "");
+  const slideIndex = (await listSlides()).length - 1;
+  const slide = await getSlideByIndex(slideIndex);
+  const footerText = prompt.match(/add a footer with the text
