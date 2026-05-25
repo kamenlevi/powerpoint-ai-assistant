@@ -1,14 +1,44 @@
-To handle requests for web searches, provide an explanation and suggest a workaround, including potential alternatives within PowerPoint Office.js capabilities for specific data like stock prices or weather.
+To handle requests for web searches, provide an explanation and suggest a workaround.
 ```javascript
-if (prompt.includes("stock price") || prompt.includes("weather")) {
-  console.log("This information is not available in PowerPoint Office.js. Please use a web search or other tools to find the answer. Alternatively, you can add a text box with a placeholder and update it manually.");
+if (prompt.includes("current weather")) {
+  console.log("This information is not available in PowerPoint Office.js. Please use a web search to find the answer.");
 }
 ```
 
-To handle requests for deleting a specific slide by its number, use the slide.delete method and check if the slide exists.
+To handle requests for editing animations, offer to recreate the slide with the desired animation.
 ```javascript
-if (prompt.includes("delete slide")) {
-  const slideNumber = prompt.match(/delete slide (\d+)/)[1];
+if (prompt.includes("edit the existing fade animation")) {
+  console.log("Editing animations is not supported. Consider recreating the slide with the desired animation.");
+}
+```
+
+To handle requests for adding a hyperlink to specific text without overwriting existing text, find the shape with the matching text and apply the hyperlink.
+```javascript
+if (prompt.includes("add a hyperlink to the text") && prompt.includes("that links to")) {
+  const slideIndex = 0;
+  const slide = await getSlideByIndex(slideIndex);
+  const textToLink = prompt.match(/add a hyperlink to the text '(.+)'/)[1];
+  const link = prompt.match(/that links to (.+)/)[1];
+  slide.shapes.load("items/textFrame/textRange");
+  await context.sync();
+  const shape = slide.shapes.items.find(s => s.textFrame && s.textFrame.text.includes(textToLink));
+  if (shape) {
+    const textRange = shape.textFrame.getTextRange();
+    const foundText = textRange.text.includes(textToLink);
+    if (foundText) {
+      textRange.hyperlink.address = link;
+    } else {
+      console.log("Text not found.");
+    }
+    await context.sync();
+  }
+}
+```
+
+To handle requests for deleting a slide, use the slide.delete method and check if the slide exists.
+```javascript
+if (prompt.includes("delete the")) {
+  const slideNumber = prompt.match(/delete the (\d+)/)[1];
   const slideIndex = slideNumber - 1;
   try {
     const slide = await getSlideByIndex(slideIndex);
@@ -24,30 +54,7 @@ if (prompt.includes("delete slide")) {
 }
 ```
 
-To handle requests for adding a hyperlink to specific text without overwriting existing text, find the shape with the matching text and apply the hyperlink.
+To handle requests for creating a single-slide presentation with a title slide and a default font size, use the addSlide helper function and set the font size for the title shape.
 ```javascript
-if (prompt.includes("add a hyperlink to the text") && prompt.includes("that links to")) {
-  const slideIndex = 0;
-  const slide = await getSlideByIndex(slideIndex);
-  const textToLink = prompt.match(/add a hyperlink to the text '(.+)'/)[1];
-  const link = prompt.match(/that links to (.+)/)[1];
-  slide.shapes.load("items/textFrame");
-  await context.sync();
-  const shape = slide.shapes.items.find(s => s.textFrame && s.textFrame.text.includes(textToLink));
-  if (shape) {
-    const textRange = shape.textFrame.getTextRange();
-    textRange.hyperlink.address = link;
-    await context.sync();
-  } else {
-    console.log("Text not found.");
-  }
-}
-```
-
-To handle requests for adding a footer to a new slide, use the addTextBox helper function with the correct positioning.
-```javascript
-if (prompt.includes("add a footer to a new slide")) {
-  await addSlide("blank", "", "", "");
-  const slideIndex = (await listSlides()).length - 1;
-  const slide = await getSlideByIndex(slideIndex);
-  const footerText = prompt.match(/add a footer with the text
+if (prompt.includes("create a single-slide presentation")) {
+  await addSlide("title", "Hello

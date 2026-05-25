@@ -2405,5 +2405,94 @@
       "slide.shapes"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-017",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "add a text box with the text 'Hello' at the center of slide 1",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a sample slide\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shape-position-easy-018",
+    "level": 1,
+    "category": "shape-position",
+    "prompt": "move the title shape on slide 1 to the top of the slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Sample Title\" | BODY=\"This is a sample body\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "findShapeByName",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-017",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a default image to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-018",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put a picture on the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Test Slide\" | BODY=\"Add an image here\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-table-add-easy-003",
+    "level": 1,
+    "category": "table-add",
+    "prompt": "Add a table with 1 row and 1 column to the first slide of a new presentation",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "getSlideByIndex",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-table-add-easy-004",
+    "level": 1,
+    "category": "table-add",
+    "prompt": "Insert a table with 1 row and 2 columns on the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Table Test\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getCurrentSlide",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-shadow-effect-001",
+    "level": 1,
+    "category": "shadow-effect",
+    "prompt": "Add a shadow effect to the title text on the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"\nSlide 2 (id=257): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange",
+      "shape.lineFormat.color"
+    ],
+    "forbiddenPatterns": []
   }
 ]
