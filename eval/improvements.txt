@@ -1,57 +1,42 @@
-To handle requests for adding a slide with web search information, suggest a workaround using addTextBox.
+To handle requests for adding a slide with a specific font, use the shape.textFrame.textRange.font.name property.
 ```javascript
-if (prompt.includes("add a slide showing the current")) {
-  const topic = prompt.match(/add a slide showing the current (.+)/)[1];
-  console.log("This information is not available in PowerPoint Office.js. Please use a web search to find the answer and then add the content to your slide manually.");
-  console.log("You can use the addTextBox function to add the content to your slide.");
-}
-```
-
-To handle requests for deleting a specific slide, check if the slide exists and use the slide.delete method.
-```javascript
-if (prompt.includes("delete the")) {
-  const slideNumber = prompt.match(/delete the (\d+) slide/)[1];
-  const slideIndex = slideNumber - 1;
-  try {
-    const slide = await getSlideByIndex(slideIndex);
-    if (slide) {
-      slide.delete();
-      await context.sync();
-    } else {
-      console.log("Slide not found.");
-    }
-  } catch (e) {
-    console.log("Error deleting slide.");
-  }
-}
-```
-
-To handle requests for adding a hyperlink to specific text, use the shape.textFrame.textRange.hyperlink.address property and check if the text exists.
-```javascript
-if (prompt.includes("add a hyperlink to the text")) {
-  const text = prompt.match(/add a hyperlink to the text (.+) that links to/)[1];
-  const link = prompt.match(/that links to (.+)/)[1];
-  const slide = await getSlideByIndex(0);
-  slide.shapes.load("items/textFrame/hyperlink");
+if (prompt.includes("make the body text on the")) {
+  const font = prompt.match(/make the body text on the (.+) slide use (.+) font/)[2];
+  const slideNumber = prompt.match(/make the body text on the (.+) slide/)[1];
+  const slideIndex = slideNumber === "first" ? 0 : parseInt(slideNumber) - 1;
+  const slide = await getSlideByIndex(slideIndex);
+  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
   await context.sync();
   const body = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
   if (body) {
-    const textRange = body.textFrame.textRange;
-    const hyperlinkText = textRange.text;
-    if (hyperlinkText.includes(text)) {
-      textRange.hyperlink.address = link;
-      await context.sync();
-    } else {
-      console.log("Text not found.");
-    }
-  } else {
-    console.log("Body shape not found.");
+    body.textFrame.textRange.font.name = font;
   }
+  await context.sync();
 }
 ```
 
-To handle requests for setting the background color of a slide, use the slide.background.fill.setSolidColor method.
+To handle requests for changing the font size of a specific title, use the shape.textFrame.textRange.font.size property.
 ```javascript
-if (prompt.includes("set the background color of the")) {
-  const slideNumber = prompt.match(/set the background color of the (\d+) slide/)[1];
-  const color =
+if (prompt.includes("change the font size of the title on")) {
+  const size = prompt.match(/change the font size of the title on (.+) to (.+)/)[2];
+  const slideNumber = prompt.match(/change the font size of the title on (.+) to/)[1];
+  const slideIndex = slideNumber === "slide 1" ? 0 : parseInt(slideNumber.replace("slide ", "")) - 1;
+  const slide = await getSlideByIndex(slideIndex);
+  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
+  await context.sync();
+  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
+  if (title) {
+    title.textFrame.textRange.font.size = parseInt(size);
+  }
+  await context.sync();
+}
+```
+
+To handle requests for adding a table to a specific slide, use the slide.shapes.addTable method.
+```javascript
+if (prompt.includes("add a table to the")) {
+  const rows = prompt.match(/add a table with (\d+) rows/)[1];
+  const cols = prompt.match(/and (\d+) columns/)[1];
+  const slideNumber = prompt.match(/add a table to the (.+) slide/)[1];
+  const slideIndex = slideNumber === "first" ? 0 : parseInt(slideNumber.replace("slide ", "")) - 1;
+  const slide
