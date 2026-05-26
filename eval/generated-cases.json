@@ -2703,5 +2703,84 @@
       "shape.textFrame.textRange"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-005",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Add a text box to the slide with the text 'Test' and align it to the left",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-006",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Change the alignment of the text in a new text box to the center",
+    "workbook": "Slide 1 (id=256): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-slide-number-easy-003",
+    "level": 1,
+    "category": "slide-number",
+    "prompt": "Add a slide number to a new slide with a title",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "getSlideByIndex",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-slide-number-easy-004",
+    "level": 1,
+    "category": "slide-number",
+    "prompt": "Insert a slide number on the first slide of a presentation with one slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-SmartArt-easy-001",
+    "level": 1,
+    "category": "SmartArt",
+    "prompt": "Add a basic SmartArt shape to the first slide with the title 'Introduction'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-SmartArt-easy-002",
+    "level": 1,
+    "category": "SmartArt",
+    "prompt": "Insert a new slide with a SmartArt graphic and set its title to 'Overview'",
+    "workbook": "Slide 1 (id=256): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "PowerPoint.run",
+      "presentation.slides"
+    ],
+    "forbiddenPatterns": []
   }
 ]
