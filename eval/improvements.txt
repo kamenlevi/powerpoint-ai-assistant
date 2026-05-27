@@ -1,42 +1,50 @@
-To handle requests for adding a slide with a specific font, use the shape.textFrame.textRange.font.name property.
+To handle requests for changing the text color of a specific title, use the shape.textFrame.textRange.font.color property.
 ```javascript
-if (prompt.includes("make the body text on the")) {
-  const font = prompt.match(/make the body text on the (.+) slide use (.+) font/)[2];
-  const slideNumber = prompt.match(/make the body text on the (.+) slide/)[1];
-  const slideIndex = slideNumber === "first" ? 0 : parseInt(slideNumber) - 1;
-  const slide = await getSlideByIndex(slideIndex);
-  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
-  await context.sync();
-  const body = slide.shapes.items.find(s => s.placeholderFormat.type === "body");
-  if (body) {
-    body.textFrame.textRange.font.name = font;
-  }
-  await context.sync();
-}
-```
-
-To handle requests for changing the font size of a specific title, use the shape.textFrame.textRange.font.size property.
-```javascript
-if (prompt.includes("change the font size of the title on")) {
-  const size = prompt.match(/change the font size of the title on (.+) to (.+)/)[2];
-  const slideNumber = prompt.match(/change the font size of the title on (.+) to/)[1];
-  const slideIndex = slideNumber === "slide 1" ? 0 : parseInt(slideNumber.replace("slide ", "")) - 1;
+if (prompt.includes("make the title of slide")) {
+  const color = prompt.match(/make the title of slide (.+) (#.+)$/)[2];
+  const slideNumber = prompt.match(/make the title of slide (.+) (#.+)$/)[1];
+  const slideIndex = slideNumber === "1"? 0 : parseInt(slideNumber) - 1;
   const slide = await getSlideByIndex(slideIndex);
   slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
   await context.sync();
   const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
   if (title) {
-    title.textFrame.textRange.font.size = parseInt(size);
+    title.textFrame.textRange.font.color = color;
   }
   await context.sync();
 }
 ```
 
-To handle requests for adding a table to a specific slide, use the slide.shapes.addTable method.
+To handle requests for replacing text across the deck, use the presentation.slides.load method and iterate over each slide and shape.
 ```javascript
-if (prompt.includes("add a table to the")) {
-  const rows = prompt.match(/add a table with (\d+) rows/)[1];
-  const cols = prompt.match(/and (\d+) columns/)[1];
-  const slideNumber = prompt.match(/add a table to the (.+) slide/)[1];
-  const slideIndex = slideNumber === "first" ? 0 : parseInt(slideNumber.replace("slide ", "")) - 1;
-  const slide
+if (prompt.includes("replace all instances of")) {
+  const oldText = prompt.match(/replace all instances of (.+) with/)[1];
+  const newText = prompt.match(/replace all instances of.+ with (.+)/)[1];
+  presentation.slides.load("items/shapes/items/textFrame/textRange/text");
+  await context.sync();
+  for (const slide of presentation.slides.items) {
+    for (const shape of slide.shapes.items) {
+      if (shape.textFrame) {
+        shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(new RegExp(oldText, 'g'), newText);
+      }
+    }
+  }
+  await context.sync();
+}
+```
+
+To handle requests for designing a theme, use the applyTheme helper function.
+```javascript
+if (prompt.includes("design a")) {
+  const theme = prompt.match(/design a (.+) theme/)[1];
+  await applyTheme(theme);
+}
+```
+
+To handle requests for adding a slide with a specific hyperlink, use the addSlide helper function and the shape.textFrame.textRange.hyperlink.address property.
+```javascript
+if (prompt.includes("Create a new slide with the text")) {
+  const text = prompt.match(/Create a new slide with the text (.+) and add a hyperlink/)[1];
+  const url = prompt.match(/and add a hyperlink to (.+)/)[1];
+  await addSlide("title-content", text, url);
+  const slide = await getSlideByIndex
