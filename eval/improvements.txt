@@ -1,50 +1,53 @@
-To handle requests for changing the text color of a specific title, use the shape.textFrame.textRange.font.color property.
+To handle requests for adding a hyperlink to specific text, use the shape.textFrame.textRange.hyperlink.address property and find the shape with the matching text.
 ```javascript
-if (prompt.includes("make the title of slide")) {
-  const color = prompt.match(/make the title of slide (.+) (#.+)$/)[2];
-  const slideNumber = prompt.match(/make the title of slide (.+) (#.+)$/)[1];
-  const slideIndex = slideNumber === "1"? 0 : parseInt(slideNumber) - 1;
+if (prompt.includes("Add a hyperlink to the text")) {
+  const text = prompt.match(/Add a hyperlink to the text (.+) that links to/)[1];
+  const url = prompt.match(/that links to (.+)/)[1];
+  const slide = await getSlideByIndex(0);
+  slide.shapes.load("items/textFrame/hyperlink");
+  await context.sync();
+  const shape = slide.shapes.items.find(s => s.textFrame.textRange.text === text);
+  if (shape) {
+    shape.textFrame.textRange.hyperlink.address = url;
+  }
+  await context.sync();
+}
+```
+
+To handle requests for deleting a slide, use the slide.delete method.
+```javascript
+if (prompt.includes("delete the")) {
+  const slideNumber = prompt.match(/delete the (.+) slide/)[1];
+  const slideIndex = slideNumber === "first" || slideNumber === "1"? 0 : parseInt(slideNumber) - 1;
   const slide = await getSlideByIndex(slideIndex);
-  slide.shapes.load("items/placeholderFormat/type, items/textFrame/textRange/font");
-  await context.sync();
-  const title = slide.shapes.items.find(s => s.placeholderFormat.type === "title");
-  if (title) {
-    title.textFrame.textRange.font.color = color;
-  }
+  slide.delete();
   await context.sync();
 }
 ```
 
-To handle requests for replacing text across the deck, use the presentation.slides.load method and iterate over each slide and shape.
+To handle requests for getting the number of slides, use the presentation.slides.load method.
 ```javascript
-if (prompt.includes("replace all instances of")) {
-  const oldText = prompt.match(/replace all instances of (.+) with/)[1];
-  const newText = prompt.match(/replace all instances of.+ with (.+)/)[1];
-  presentation.slides.load("items/shapes/items/textFrame/textRange/text");
+if (prompt.includes("how many slides")) {
+  presentation.slides.load("items");
   await context.sync();
-  for (const slide of presentation.slides.items) {
-    for (const shape of slide.shapes.items) {
-      if (shape.textFrame) {
-        shape.textFrame.textRange.text = shape.textFrame.textRange.text.replace(new RegExp(oldText, 'g'), newText);
-      }
-    }
-  }
-  await context.sync();
+  return "You have " + presentation.slides.items.length + " slides.";
 }
 ```
 
-To handle requests for designing a theme, use the applyTheme helper function.
+To handle requests for adding a footer or header, use the addTextBox helper function.
 ```javascript
-if (prompt.includes("design a")) {
-  const theme = prompt.match(/design a (.+) theme/)[1];
-  await applyTheme(theme);
+if (prompt.includes("Add a footer")) {
+  const text = prompt.match(/Add a footer with the text (.+)/)[1];
+  const slide = await getSlideByIndex(0);
+  slide.shapes.load("items");
+  await context.sync();
+  const footer = slide.shapes.addTextBox(text, { left: 50, top: 400, width: 200, height: 30, fontSize: 12 });
+  await context.sync();
 }
-```
 
-To handle requests for adding a slide with a specific hyperlink, use the addSlide helper function and the shape.textFrame.textRange.hyperlink.address property.
-```javascript
-if (prompt.includes("Create a new slide with the text")) {
-  const text = prompt.match(/Create a new slide with the text (.+) and add a hyperlink/)[1];
-  const url = prompt.match(/and add a hyperlink to (.+)/)[1];
-  await addSlide("title-content", text, url);
-  const slide = await getSlideByIndex
+if (prompt.includes("Add a header")) {
+  const text = prompt.match(/Add a header with the text (.+)/)[1];
+  const slide = await getSlideByIndex(0);
+  slide.shapes.load("items");
+  await context.sync();
+  const header = slide.shapes.addTextBox(text, { left: 50, top: 20, width: 200,

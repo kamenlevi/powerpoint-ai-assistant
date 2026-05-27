@@ -3102,5 +3102,183 @@
       "getSlideByIndex"
     ],
     "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-015",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "change the text color of the title on the first slide to black",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.color"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-recolor-easy-016",
+    "level": 1,
+    "category": "recolor",
+    "prompt": "set the background color of the first slide to a light gray",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.fill.setSolidColor"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-019",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "add a picture to the first slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-image-insert-easy-020",
+    "level": 1,
+    "category": "image-insert",
+    "prompt": "put an image on the current slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to the presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "insertImage"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-question-handling-easy-005",
+    "level": 1,
+    "category": "question-handling",
+    "prompt": "what is the index of the current slide?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getCurrentSlide"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-question-handling-easy-006",
+    "level": 1,
+    "category": "question-handling",
+    "prompt": "how many slides are there in my presentation?",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "listSlides"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-007",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Add a new slide with a title and align the title text to the left",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-alignment-easy-008",
+    "level": 1,
+    "category": "alignment",
+    "prompt": "Create a new text box on the current slide and center its text",
+    "workbook": "Slide 1 (id=256): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addTextBox",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-font-pairing-easy-001",
+    "level": 1,
+    "category": "font-pairing",
+    "prompt": "Change the font of the title on the first slide to Times New Roman.",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"This is a test\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.name"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-font-pairing-easy-002",
+    "level": 1,
+    "category": "font-pairing",
+    "prompt": "Change the font of the body text on the first slide to Courier New.",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"This is a sample text\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "shape.textFrame.textRange.font.name"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-slide-number-easy-005",
+    "level": 1,
+    "category": "slide-number",
+    "prompt": "Add a slide number to a new empty slide",
+    "workbook": "Slide 1 (id=256): TITLE=\"\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "getSlideByIndex",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-slide-number-easy-006",
+    "level": 1,
+    "category": "slide-number",
+    "prompt": "Insert a slide number on the only slide in a new presentation",
+    "workbook": "Slide 1 (id=256): TITLE=\"Hello World\" | BODY=\"\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "slide.shapes",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-SmartArt-easy-003",
+    "level": 1,
+    "category": "SmartArt",
+    "prompt": "Add a new slide with a title 'Hello World' and then add a basic SmartArt shape to it",
+    "workbook": "Slide 1 (id=256): TITLE=\"Introduction\" | BODY=\"Welcome to our presentation\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "addSlide",
+      "getSlideByIndex",
+      "slide.shapes"
+    ],
+    "forbiddenPatterns": []
+  },
+  {
+    "id": "gen-L1-SmartArt-easy-004",
+    "level": 1,
+    "category": "SmartArt",
+    "prompt": "Insert a basic SmartArt shape to the first slide and set its text to 'Getting Started'",
+    "workbook": "Slide 1 (id=256): TITLE=\"Welcome\" | BODY=\"Let's begin\" | NOTES=\"\"",
+    "mustHaveCode": true,
+    "requiredPatterns": [
+      "getSlideByIndex",
+      "slide.shapes",
+      "shape.textFrame.textRange"
+    ],
+    "forbiddenPatterns": []
   }
 ]
