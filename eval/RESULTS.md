@@ -1,351 +1,499 @@
 # PowerPoint AI — Eval Results
-**Last run:** 2026-05-27 12:07:08  
-**Overall: 89.6/100**  
-**Model:** meta-llama/llama-3.3-70b-instruct
+**Last run:** 2026-06-01 03:17:51  
+**Overall: 86.0/100**  
+**Model:** meta-llama/llama-3.1-8b-instruct
 
 ## Scores by category
 
 | Category | Score | Trend | Cases |
 |---|---|---|---|
-| slide-add ✓ | 100.0/100 | — | 3 |
-| slide-delete ✓ | 100.0/100 | — | 2 |
-| text-format ✓ | 97.6/100 | — | 13 |
-| text-edit ✓ | 95.9/100 | — | 14 |
-| theme-apply ✓ | 100.0/100 | — | 2 |
-| recolor | 94.8/100 | — | 16 |
-| notes-write ✓ | 97.5/100 | — | 4 |
-| shape-position | 92.3/100 | — | 22 |
-| image-insert | 93.3/100 | — | 20 |
-| web-search-needed | 92.4/100 | — | 25 |
-| question-handling | 81.2/100 | — | 6 |
-| animation ✓ | 100.0/100 | — | 1 |
-| transition ✓ | 100.0/100 | — | 1 |
-| slide-reorder ✓ | 100.0/100 | — | 1 |
-| refusal | 91.3/100 | — | 21 |
-| deck-generate | 86.1/100 | — | 21 |
+| slide-add | 91.7/100 | — | 3 |
+| slide-delete | 67.0/100 | — | 2 |
+| text-format | 93.5/100 | — | 13 |
+| text-edit | 92.5/100 | — | 14 |
+| theme-apply ✓ | 95.0/100 | — | 2 |
+| recolor | 94.9/100 | — | 18 |
+| notes-write ✓ | 95.5/100 | — | 4 |
+| shape-position | 94.0/100 | — | 22 |
+| image-insert | 82.0/100 | — | 22 |
+| web-search-needed | 80.2/100 | — | 25 |
+| question-handling | 91.9/100 | — | 8 |
+| animation | 65.0/100 | — | 1 |
+| transition | 65.0/100 | — | 1 |
+| slide-reorder | 85.0/100 | — | 1 |
+| refusal | 85.6/100 | — | 21 |
+| deck-generate | 82.8/100 | — | 21 |
 | edge-cases ✓ | 95.0/100 | — | 21 |
-| hyperlink | 79.0/100 | — | 21 |
-| footer | 85.6/100 | — | 17 |
-| table-add | 82.4/100 | — | 7 |
-| alignment | 93.1/100 | — | 7 |
-| font-pairing | 90.0/100 | — | 1 |
-| image-grid ✓ | 95.0/100 | — | 1 |
-| gradient-fill | 81.3/100 | — | 9 |
-| slide-number | 88.4/100 | — | 5 |
-| chart-add | 74.2/100 | — | 5 |
-| header-footer | 62.9/100 | — | 7 |
-| SmartArt | 86.0/100 | — | 3 |
-| shadow-effect ✓ | 97.0/100 | — | 1 |
-| agenda-slide ✓ | 100.0/100 | — | 1 |
+| hyperlink | 84.0/100 | — | 21 |
+| footer | 92.1/100 | — | 17 |
+| table-add | 33.6/100 | — | 7 |
+| alignment ✓ | 95.0/100 | — | 9 |
+| font-pairing | 92.7/100 | — | 3 |
+| image-grid | 74.0/100 | — | 1 |
+| gradient-fill | 91.3/100 | — | 9 |
+| slide-number | 78.1/100 | — | 7 |
+| chart-add | 71.0/100 | — | 5 |
+| header-footer | 93.9/100 | — | 7 |
+| SmartArt | 21.7/100 | — | 3 |
+| shadow-effect | 91.0/100 | — | 1 |
+| agenda-slide | 77.0/100 | — | 1 |
 
 ## All test cases
 
 | ID | Score | Pass | Reason |
 |---|---|---|---|
-| L1-slide-add-001 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSlide helper with the correct method signature to add a new slide with the specified title and bullets, demonstrating a flawless approach. |
-| L1-slide-add-002 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct addSlide helper with the "title" layout and the specified title, making it a complete, correct, and well-structured solution. |
-| L1-slide-add-003 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSlide helper with the correct layout and title, ensuring API correctness, completeness, and a working approach without any flaws. |
-| L1-slide-delete-001 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected helper getSlideByIndex and the native API slide.delete to delete the specified slide, demonstrating a correct and efficient approach. |
-| L1-slide-delete-002 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected helper getSlideByIndex to retrieve the last slide and then deleting it, demonstrating a complete, correct, and efficient approach. |
-| L1-text-format-001 | 100 ✅ | ✓ | The code perfectly addresses the request, using correct APIs, proper load and sync order, and best practices, making it a complete, working, and well-structured solution. |
-| L1-text-format-002 | 80 | ✓ | The code correctly uses PowerPoint Office.js APIs and helpers, but loses points for not fully addressing the request as it only changes font and size for shapes with a text frame, potentially missing some body text, and for not using best practices in terms of error handling and potential performance optimizations. |
-| L1-text-format-003 | 97 ✅ | ✓ | The code is nearly perfect, but loses a few points on approach for not considering potential edge cases or errors that might occur during execution, such as the slide not having a title shape, but it does use the correct APIs and helpers. |
-| L1-text-edit-001 | 95 ✅ | ✓ | The code is mostly correct and uses the available helpers and native APIs properly, but loses points for not using the injected helpers to simplify the code, such as using `findShapeByName` instead of manually finding the title shape. |
-| L1-text-edit-002 | 75 | ✓ | The code is mostly correct but loses points for not using the injected helpers to handle notes and shapes, and for not checking if a shape or notes page has a textFrame before trying to access it, which could lead to runtime errors. |
-| L1-theme-apply-001 | 100 ✅ | ✓ | The code perfectly applies the corporate-blue theme using the provided applyTheme helper function, with no flaws or areas for improvement in terms of API correctness, completeness, execution, or approach. |
-| L1-theme-apply-002 | 100 ✅ | ✓ | The code perfectly applies the midnight theme to the entire deck using the provided applyTheme helper, with no flaws or areas for improvement in terms of API correctness, completeness, execution, or approach. |
-| L1-recolor-001 | 90 | ✓ | The code correctly uses the recolorDeck helper and has no syntax errors, but loses points for completeness because it introduces an unnecessary secondary color and text color that were not specified in the user's request. |
-| L1-recolor-002 | 90 | ✗ | The code correctly applies a calm and trustworthy theme to the deck using the provided helper function, but it does not fully address the request as it only applies a theme without considering other aspects of a calm and trustworthy design. |
-| L1-notes-write-001 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSpeakerNote helper to add speaker notes to the specified slide, with no flaws in API correctness, completeness, execution, or approach. |
-| L1-notes-write-002 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSpeakerNote helper to add a speaker note to the current slide, demonstrating a complete, correct, and well-structured solution. |
-| L1-shape-position-001 | 100 ✅ | ✓ | The code perfectly addresses the request, using the correct APIs and helpers, and is well-structured and free of errors, demonstrating a thorough understanding of the PowerPoint Office.js APIs and the injected helpers. |
-| L1-shape-position-002 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it does not fully address the request to add the watermark at the "top" of every slide, as the position is hardcoded and may not be at the top for slides with different layouts or sizes. |
-| L1-image-insert-001 | 90 | ✓ | The code correctly uses the insertImage helper and addresses the request, but loses points for completeness as it doesn't explicitly ensure the image is inserted on the right side of the slide, and for approach as it uses absolute positioning instead of a more flexible or relative positioning method. |
-| L1-image-insert-002 | 90 | ✓ | The code correctly uses the insertImage helper and has no syntax errors, but it does not fully address the request as it does not handle potential errors or edge cases, and it could be improved by using more robust positioning and sizing for the image. |
-| L1-web-search-needed-001 | 67 | ✓ | The response correctly identifies the need for a web search to obtain the current Apple stock price, but lacks a clear explanation of how this information can be used to create a slide in PowerPoint using the provided Office JavaScript API functions. |
-| L1-web-search-needed-002 | 67 | ✓ | The response correctly identifies the need for a web search to get the current weather, but lacks a clear explanation of how this information can be used to add a slide in PowerPoint using the provided API functions, such as addSlide and addTextBox. |
-| L1-web-search-needed-003 | 73 | ✗ | The response accurately and clearly explains the Pythagorean theorem, directly addressing the user's question without padding, but does not offer any workarounds or suggestions relevant to PowerPoint or Office.js. |
-| L1-question-handling-001 | 100 ✅ | ✓ | The code perfectly addresses the user's request by using the correct PowerPoint Office.js API to load and count the slides, and it follows best practices by using the native API and proper async/await syntax. |
-| L1-question-handling-002 | 97 ✅ | ✓ | The code is nearly flawless, but loses a few points on approach for not considering potential edge cases, such as an empty slide or a slide with no title shape, although it does handle the case where no title shape is found. |
-| L1-animation-001 | 100 ✅ | ✓ | The code perfectly addresses the request, using the correct API and helper functions, and is free of any errors or flaws, making it a complete and well-structured solution. |
-| L1-transition-001 | 100 ✅ | ✓ | The code perfectly addresses the request, using the correct API and helper functions, and is free of any errors or flaws, making it a complete and well-structured solution. |
-| L1-move-001 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected moveSlide helper with correct indices to reorder the slides, demonstrating a flawless approach with no identifiable issues. |
-| L1-refusal-002 | 83 | ✓ | The response accurately identifies the limitation of PowerPoint Office.js, provides a clear explanation, and offers a relevant workaround, but loses points for not exploring alternative solutions or providing more detailed information about the built-in "File" > "Save As" > "PDF" option. |
-| L1-refusal-005 | 80 | ✓ | The AI response accurately explains the limitation of editing animations on existing slides and offers a workaround by recreating the slide, but loses points for not perfectly addressing the user's request to edit the "fade" animation specifically and not providing a more detailed explanation of the recreation process. |
-| L1-refusal-004 | 80 | ✓ | The response accurately identifies the limitation of PowerPoint Office.js in creating charts, provides a clear explanation, and offers a relevant workaround using the insertImage function, but loses points for not fully exploring alternative solutions or providing more detailed information about the workaround. |
-| L1-deck-generate-001 | 90 | ✓ | The code correctly uses the injected helpers to create a 6-slide pitch deck, but loses points for completeness as it doesn't fully address potential requests for customization or additional features, and for approach as it doesn't utilize the available helpers for theming or potential image insertion. |
-| L1-edge-case-001 | 75 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for approach due to not handling the error in a more informative way and not checking if the slide index is valid before attempting to delete it, which could be improved by using the listSlides helper to verify the slide's existence. |
-| gen-L1-hyperlink-001 | 92 | ✗ | The code is mostly correct and complete, but loses points for not handling potential errors that may occur during the execution of the `getSlideByIndex` or `context.sync` methods, and for not using a try-catch block to handle the case where the shape with the text "Learn More" is not found, although it does throw an error in this case. |
-| gen-L1-text-format-easy-001 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a flawless solution to update the title font size on the first slide. |
-| gen-L1-text-format-easy-002 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-text-edit-easy-001 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs and helpers, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-text-edit-easy-002 | 97 ✅ | ✗ | The code is nearly flawless, using correct APIs and addressing the request fully, but loses a few points on approach for not considering potential edge cases or errors beyond the absence of a title shape. |
-| gen-L1-recolor-easy-001 | 95 ✅ | ✗ | The code is mostly correct, but loses points on approach for manually recoloring the title shape instead of using the recolorDeck helper or a more comprehensive theming approach. |
-| gen-L1-recolor-easy-002 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct and existing APIs, and follows best practices, with no flaws or areas for improvement. |
-| gen-L1-image-insert-easy-001 | 90 | ✓ | The code correctly uses the insertImage helper and has no syntax errors, but loses points for completeness as it doesn't check if the image insertion was successful or handle potential errors, and for approach as it hardcodes the image position and size instead of using more flexible or adaptive methods. |
-| gen-L1-image-insert-easy-002 | 90 | ✗ | The code correctly uses the injected helper functions and native APIs, but loses points for completeness because it doesn't fully address the request by not checking if the image insertion was successful and not handling potential errors, and for approach because it uses a hardcoded position and size for the image. |
-| gen-L1-web-search-needed-easy-001 | 90 | ✓ | The code correctly uses the addSlide helper to add a new slide with the definition of artificial intelligence, but loses points for completeness as it does not consider the deck context or add any additional relevant content, and also for approach as it does not utilize any best practices for formatting or styling the added content. |
-| gen-L1-web-search-needed-easy-002 | 92 | ✗ | The code correctly uses the addSlide helper to create a new slide with the requested information, but loses points for completeness as it does not consider the existing deck context or provide any additional formatting or theming. |
-| gen-L1-refusal-easy-001 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSlide helper to add a new slide with a title, demonstrating correct API usage, completeness, and best practices. |
-| gen-L1-refusal-easy-002 | 97 ✅ | ✗ | The code is nearly flawless, but loses a few points on approach for not considering potential edge cases or optimizations, such as handling multiple title shapes or using more robust error handling. |
-| gen-L1-edge-cases-easy-001 | 100 ✅ | ✓ | The code perfectly uses the injected helper getSlideByIndex and native API slide.delete to delete the first slide, making it a complete, correct, and well-structured solution. |
-| gen-L1-edge-cases-easy-002 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct API to delete the only slide in the deck, with no flaws in correctness, completeness, execution, or approach. |
-| gen-L1-shape-position-easy-001 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't perfectly center the text box on the slide, and for approach as it manually specifies the position and size of the text box instead of using a more flexible or dynamic method. |
-| gen-L1-shape-position-easy-002 | 95 ✅ | ✗ | The code is almost perfect, but it does not use the findShapeByName helper, instead manually finding the title shape, which is a minor deviation from best practices. |
-| gen-L1-text-format-easy-003 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-text-format-easy-004 | 95 ✅ | ✗ | The code is mostly correct and efficient, but loses points for approach because it manually loads and syncs properties instead of relying on the helpers to handle these details, although it does use the correct native APIs and helpers. |
-| gen-L1-text-edit-easy-003 | 95 ✅ | ✗ | The code is mostly correct, but it manually loads and updates the slide's title shape instead of using a helper function, which is the only flaw in its approach. |
-| gen-L1-text-edit-easy-004 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete, working, and well-structured solution. |
-| gen-L1-recolor-easy-003 | 97 ✅ | ✗ | The code is nearly perfect, but loses a few points on approach for not handling potential errors that might occur during the execution of the PowerPoint Office.js APIs, such as checking if the title shape actually has a textFrame or textRange before trying to access its font properties. |
-| gen-L1-recolor-easy-004 | 95 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and would execute without errors, but loses points for not using the available helpers to potentially simplify the code, although in this case, the native API is the most straightforward approach. |
-| gen-L1-web-search-needed-easy-003 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSlide helper to create a new slide with the definition of cloud computing, demonstrating a complete, correct, and well-structured approach. |
-| gen-L1-web-search-needed-easy-004 | 92 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't fully address potential additional requests, such as adding images or more detailed information about Earth, and for approach, as it doesn't consider using other available helpers to enhance the slide. |
-| gen-L1-refusal-easy-003 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-refusal-easy-004 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete, working, and well-structured solution. |
-| gen-L1-deck-generate-easy-001 | 92 | ✓ | The code correctly uses the provided helpers to create a new presentation, but loses points for completeness as it doesn't fully address the user's request to create a title slide and a slide with a single text box, instead adding a text box to the first slide which is already titled "Introduction" in the deck context. |
-| gen-L1-deck-generate-easy-002 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't account for the existing slide in the deck context and instead creates a new slide. |
-| gen-L1-edge-cases-easy-003 | 25 ⚠️ | ✗ | The code fails to address the user's request to delete the second slide because it incorrectly assumes there is only one slide in the deck, and it does not utilize the available PowerPoint Office.js APIs or injected helpers to perform the deletion. |
-| gen-L1-edge-cases-easy-004 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected helper getSlideByIndex to retrieve the last slide and then deleting it, demonstrating a complete, correct, and well-structured approach. |
-| gen-L1-hyperlink-easy-001 | 0 ⚠️ | ✓ | A:  |
-| gen-L1-hyperlink-easy-002 | 80 | ✗ | The code correctly uses the Office.js APIs and injected helpers, but loses points for completeness as it doesn't fully address the request by not separating the hyperlink text from the regular text, and for approach as it manually sets the hyperlink instead of using a more robust method. |
-| gen-L1-notes-write-easy-001 | 100 ✅ | ✓ | The code perfectly addresses the request, using the correct and provided helper function addSpeakerNote, and is free of any flaws or potential runtime errors. |
-| gen-L1-notes-write-easy-002 | 90 | ✗ | The code correctly uses the injected helper function addSpeakerNote, but loses points for completeness because it uses -1 as the slide index, which refers to the current slide, whereas the request specifically asks for the first slide, which should be referenced by its actual index or retrieved using the getSlideByIndex helper. |
-| gen-L1-image-insert-easy-003 | 90 | ✓ | The code correctly uses the injected helper functions and native APIs, but loses points for completeness as it doesn't handle potential errors or edge cases, and for approach as it uses a specific position for the image instead of letting the helper function decide the optimal position. |
-| gen-L1-image-insert-easy-004 | 95 ✅ | ✗ | The code correctly uses the injected insertImage helper to add an image to the current slide, but loses points for completeness as it doesn't handle potential errors or provide any feedback if the image insertion fails. |
-| gen-L1-shape-position-easy-003 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness because it doesn't precisely position the text box at the top left of the slide as requested, instead using hardcoded coordinates. |
-| gen-L1-shape-position-easy-004 | 97 ✅ | ✗ | The code is nearly perfect, using the correct APIs and helpers, but loses a few points on approach for not considering potential edge cases, such as the title shape being null or the slide index being out of range, although the provided code does check for the title shape's existence. |
-| gen-L1-footer-001 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, fully addresses the request, and would mostly work, but lacks error handling and does not perfectly follow best practices, such as not checking if the slide index is valid before adding a text box. |
-| gen-L1-web-search-needed-easy-005 | 100 ✅ | ✗ | The code perfectly addresses the request, uses the correct API helpers, and is free of any syntax or runtime errors, demonstrating a flawless approach to adding a new slide with the definition of machine learning. |
-| gen-L1-web-search-needed-easy-006 | 92 | ✗ | The code correctly uses the addSlide helper to create a new slide with the requested information, but loses points for completeness as it does not consider the existing deck context or provide any additional information about New York beyond a brief description. |
-| gen-L1-refusal-easy-005 | 100 ✅ | ✓ | The code perfectly addresses the request, uses the correct API helpers, and is well-structured, making it a complete and correct solution that would work as expected in PowerPoint. |
-| gen-L1-refusal-easy-006 | 97 ✅ | ✗ | The code is nearly perfect, using the correct APIs and helpers, but loses a few points on approach for not considering potential edge cases, such as a slide with multiple title shapes, although the provided deck context suggests this is not an issue in this specific case. |
-| gen-L1-deck-generate-easy-003 | 85 | ✓ | The code correctly uses the provided APIs and helpers, but loses points for not fully addressing the request by not handling the existing slide and only setting the font size for the new slide, and for not using the most efficient approach by loading and syncing the presentation and slide objects multiple times. |
-| gen-L1-deck-generate-easy-004 | 90 | ✗ | The code correctly uses the Office.js API and injected helpers, but loses points for completeness as it doesn't remove or modify the existing slide, and for approach as it manually sets the background color instead of using a theme or recolorDeck helper. |
-| gen-L1-edge-cases-easy-005 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected helper getSlideByIndex and the native API slide.delete to delete the only slide in the presentation, demonstrating a correct and efficient approach. |
-| gen-L1-edge-cases-easy-006 | 100 ✅ | ✓ | The code perfectly addresses the request, using the correct API and helper functions, and is well-structured and free of errors, demonstrating a thorough understanding of the PowerPoint Office.js APIs and the injected helpers. |
-| gen-L1-hyperlink-easy-003 | 73 | ✗ | The code mostly addresses the request but has some flaws, such as not checking if the text "Home" already exists in the body shape before overwriting it, and not handling potential errors that may occur during the execution of the code, which affects its completeness, correctness, and approach. |
-| gen-L1-hyperlink-easy-004 | 85 | ✗ | The code correctly uses the provided helpers and native APIs, but loses points for completeness and approach as it doesn't fully address the request of adding a hyperlink to the text "Link" and instead adds the URL to the body text frame, and also for not using the most efficient approach to add a hyperlink to the text. |
-| gen-L1-recolor-easy-005 | 97 ✅ | ✗ | The code is nearly perfect, but loses a few points on approach for not considering potential edge cases or optimizations, such as handling multiple title shapes or checking if the title shape already has the desired font color. |
-| gen-L1-recolor-easy-006 | 100 ✅ | ✗ | The code perfectly addresses the request, using the correct API and best practices, with no flaws or areas for improvement in terms of API correctness, completeness, execution, or approach. |
-| gen-L1-image-insert-easy-005 | 95 ✅ | ✓ | The code correctly uses the injected helper function insertImage to add a default image to the current slide, but loses points for completeness as it does not handle potential errors or edge cases, such as checking if the current slide exists or if the image insertion is successful. |
-| gen-L1-image-insert-easy-006 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected insertImage helper with correct parameters, ensuring API correctness, completeness, and a working approach without any flaws. |
-| gen-L1-text-edit-easy-005 | 97 ✅ | ✗ | The code is nearly perfect, but loses a few points on approach for not considering potential edge cases or errors that might occur when finding the title shape, and for not using a more robust method to handle potential failures. |
-| gen-L1-text-edit-easy-006 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete, working, and well-structured solution. |
-| gen-L1-shape-position-easy-005 | 90 | ✓ | The code correctly uses the addTextBox helper and native PowerPoint APIs, but loses points for completeness as it doesn't guarantee the text box is exactly centered on the slide, and for approach as it manually specifies the position and size of the text box instead of using a more flexible or relative positioning method. |
-| gen-L1-shape-position-easy-006 | 97 ✅ | ✗ | The code is nearly perfect, but loses a few points on approach for not considering potential edge cases, such as the title shape being null or the slide index being out of range, although it does check if the title shape exists. |
-| gen-L1-table-add-001 | 90 | ✗ | The code correctly uses the PowerPoint Office.js API to add a table to the current slide, but loses points for completeness as it doesn't fully address the request by not handling potential errors or edge cases, and for approach as it manually sets the table's position and size instead of using a more flexible or helper-based method. |
-| gen-L1-text-format-easy-005 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, with no flaws or areas for improvement in terms of API correctness, completeness, execution, or approach. |
-| gen-L1-text-format-easy-006 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-web-search-needed-easy-007 | 100 ✅ | ✗ | The code perfectly addresses the request by using the provided helper functions, specifically the addSlide helper, to add a new slide with the definition of the internet, demonstrating a complete, correct, and well-approached solution. |
-| gen-L1-web-search-needed-easy-008 | 92 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it only provides basic information about Japan and does not fully address the request for a comprehensive slide about the country. |
-| gen-L1-question-handling-easy-001 | 95 ✅ | ✓ | The code is almost perfect, but loses points on approach for not handling potential errors that might occur during the execution of the PowerPoint Office.js APIs, and for not using a more concise way to return the title, but overall it correctly uses the provided helpers and APIs to achieve the desired result. |
-| gen-L1-question-handling-easy-002 | 0 ⚠️ | ✗ | A:  |
-| gen-L1-refusal-easy-007 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSlide helper with the correct layout and title, ensuring API correctness, completeness, and a working approach without any flaws. |
-| gen-L1-refusal-easy-008 | 95 ✅ | ✗ | The code is mostly correct and uses the available APIs and helpers, but loses points on approach for manually updating the title shape instead of potentially using a helper function if available, although in this case, no such helper is provided. |
-| gen-L1-deck-generate-easy-005 | 90 | ✗ | The code correctly uses the provided helpers and native APIs, but loses points for completeness as it doesn't explicitly check if a slide with the title already exists before adding a new one, and for approach as it manually sets the font size instead of potentially using a theme or style. |
-| gen-L1-deck-generate-easy-006 | 90 | ✗ | The code correctly uses the provided APIs and helpers, but it does not fully address the request as it adds a new slide instead of modifying the existing one, and it does not handle potential errors or edge cases. |
-| gen-L1-edge-cases-easy-007 | 100 ✅ | ✗ | The code perfectly addresses the request by using the correct API to delete the only slide in the presentation, and it does so in a complete, working, and well-approached manner. |
-| gen-L1-edge-cases-easy-008 | 100 ✅ | ✓ | The code perfectly addresses the request, using the correct API and helper functions, and is well-structured to execute without runtime errors, demonstrating a thorough understanding of the available helpers and best practices. |
-| gen-L1-hyperlink-easy-005 | 72 | ✗ | The code mostly uses correct APIs and would work, but it doesn't fully address the request as it overwrites the existing text instead of finding and hyperlinking the specific text "Example", and it doesn't follow best practices by manually handling text ranges and hyperlinks. |
-| gen-L1-hyperlink-easy-006 | 87 | ✗ | The code correctly uses the provided helpers and native APIs, but loses points for not fully addressing the request as it doesn't handle cases where the new slide doesn't have a text frame or the text frame doesn't have a text range, and also for not using the most efficient approach by directly using the `addTextBox` helper to add the text with a hyperlink. |
-| gen-L1-footer-easy-001 | 90 | ✗ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for completeness as it doesn't explicitly position the footer at the bottom of the slide, which might not be the desired location. |
-| gen-L1-footer-easy-002 | 95 ✅ | ✗ | The code is mostly correct and effective, but loses points on approach for not considering potential edge cases, such as slide height or width being too small to accommodate the footer, and for not using a more flexible or dynamic method to position the footer. |
-| gen-L1-recolor-easy-007 | 95 ✅ | ✗ | The code is nearly perfect, but loses points on approach for not considering potential edge cases, such as the title shape being null or the slide index being out of range, and for not using a more robust way to find the title shape, but overall it correctly uses the PowerPoint Office.js APIs and the injected helpers to change the title text color to green. |
-| gen-L1-recolor-easy-008 | 75 | ✗ | The code correctly uses the PowerPoint Office.js API and injected helpers, but it does not fully address the request as it only sets the background fill color of the slide, not the actual background color, and it does not use the best practices for setting the background color, instead of using the injected helpers. |
-| gen-L1-image-insert-easy-007 | 90 | ✓ | The code correctly uses the injected helper functions and would execute without runtime errors, but it does not fully address the request as it adds an image with specific dimensions and position, rather than simply adding a default image to the first slide. |
-| gen-L1-image-insert-easy-008 | 90 | ✓ | The code correctly uses the injected helper functions and native APIs, but loses points for completeness as it doesn't fully address potential issues like image size or position overlap with existing slide content, and for approach as it uses a specific image category and position without considering user preferences or slide layout. |
-| gen-L1-shape-position-easy-007 | 90 | ✓ | The code correctly uses the addTextBox helper and has no syntax errors, but it does not fully address the request as it adds the text box at a fixed position (50,50) instead of the top of the slide. |
-| gen-L1-shape-position-easy-008 | 97 ✅ | ✗ | The code is nearly perfect, but loses a few points on approach because it manually adjusts the title shape's position instead of considering a more flexible or helper-based solution, although this is a minor quibble since the task is so specific. |
-| gen-L1-web-search-needed-easy-009 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected addSlide helper to create a new slide with the definition of a computer, demonstrating correct API usage, completeness, and best practices. |
-| gen-L1-web-search-needed-easy-010 | 90 | ✗ | The code correctly uses the addSlide helper to create a new slide with the requested information, but loses points for completeness as it doesn't fully address potential additional details about the sun that could be included, and for approach as it doesn't consider using other helpers like insertImage to add more engaging content. |
-| gen-L1-refusal-easy-009 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addTextBox helper with the correct method signature and proper await, demonstrating a flawless approach to adding a new text box to the first slide. |
-| gen-L1-refusal-easy-010 | 95 ✅ | ✗ | The code is almost perfect, but loses points on approach because it manually loads and syncs properties instead of relying on the helpers to handle these details, although it does use the correct native APIs and helpers. |
-| gen-L1-deck-generate-easy-007 | 90 | ✗ | The code correctly uses the addSlide helper and has no syntax errors, but it does not fully address the request as it does not explicitly set the default font size, which is part of the user's request. |
-| gen-L1-deck-generate-easy-008 | 90 | ✗ | The code correctly uses the Office.js API and injected helpers, but loses points for completeness as it doesn't remove or modify the existing slide, and for approach as it manually sets the background color instead of using a theme or recolorDeck helper. |
-| gen-L1-edge-cases-easy-009 | 100 ✅ | ✓ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and effective solution. |
-| gen-L1-edge-cases-easy-010 | 100 ✅ | ✓ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and efficient solution to delete the first slide in a presentation. |
-| gen-L1-hyperlink-easy-007 | 92 | ✗ | The code is mostly correct, but it does not handle potential errors that may occur during the execution of the `context.sync()` method, which could lead to runtime errors, and it also does not check if the shape has a `hyperlink` property before trying to set its `address` property. |
-| gen-L1-hyperlink-easy-008 | 90 | ✗ | The code correctly uses the addSlide helper and native APIs, but loses points for completeness as it does not fully address the request of adding a hyperlink, instead adding a markdown link that may not be rendered as a clickable hyperlink in PowerPoint. |
-| gen-L1-footer-easy-003 | 0 ⚠️ | ✗ | The code attempts to add a footer to a new slide using the `addSlide` helper with a `footer` option, but this option is not a valid parameter for the `addSlide` helper, resulting in a complete failure to address the request. |
-| gen-L1-footer-easy-004 | 95 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and would execute without errors, but loses points for not considering potential variations in slide size and footer positioning. |
-| gen-L1-alignment-001 | 92 | ✗ | The code is mostly correct, but it has an unnecessary `await context.sync()` at the end of the loop, which can cause performance issues and is not necessary after setting the paragraph format alignment. |
-| gen-L1-text-edit-easy-007 | 100 ✅ | ✗ | The code perfectly addresses the request, using the correct APIs and helpers, and is well-structured to execute without runtime errors, demonstrating a thorough understanding of the available helpers and best practices. |
-| gen-L1-text-edit-easy-008 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-image-insert-easy-009 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it adds the image at a specific position instead of making it a default image that fits the slide. |
-| gen-L1-image-insert-easy-010 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected insertImage helper with correct parameters, ensuring a complete and working solution that follows best practices. |
-| gen-L1-shape-position-easy-009 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness because it doesn't guarantee the text box is exactly centered on the slide, and for approach because it manually specifies the position and size of the text box instead of using a more flexible or relative positioning method. |
-| gen-L1-shape-position-easy-010 | 92 | ✗ | The code is mostly correct, but it uses presentation.slides.getItemAt(0) to get the slide width and height, which could be improved by using the slide object already loaded, and also does not handle potential errors that might occur during the execution of the context.sync() method. |
-| gen-L1-recolor-easy-009 | 97 ✅ | ✗ | The code is nearly flawless, using correct APIs and best practices, but loses a few points on approach for not considering potential edge cases or error handling beyond the absence of a title shape. |
-| gen-L1-recolor-easy-010 | 100 ✅ | ✗ | The code perfectly addresses the request, using the correct native PowerPoint Office.js API to set the background color of the first slide to white, and follows best practices without any flaws. |
-| gen-L1-web-search-needed-easy-011 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected addSlide helper to create a new slide with the definition of a browser, demonstrating correct API usage, completeness, and best practices. |
-| gen-L1-web-search-needed-easy-012 | 92 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't fully address potential additional information about Google that could be included, and for approach as it doesn't utilize any theming or speaker notes helpers that could enhance the slide. |
-| gen-L1-refusal-easy-011 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, with no flaws or areas for improvement in terms of API correctness, completeness, execution, or approach. |
-| gen-L1-refusal-easy-012 | 0 ⚠️ | ✗ | A:  |
-| gen-L1-deck-generate-easy-009 | 90 | ✗ | The code correctly uses the addSlide helper to create a new title slide, but loses points for completeness as it doesn't explicitly set a default font, which was part of the user's request. |
-| gen-L1-deck-generate-easy-010 | 0 ⚠️ | ✗ | A:  |
-| gen-L1-edge-cases-easy-011 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct API, specifically the getSlideByIndex and slide.delete methods, and properly awaits the context.sync call, demonstrating a complete, working, and well-approached solution. |
-| gen-L1-edge-cases-easy-012 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct API to delete the first slide, and it does so in a complete, working, and well-structured manner. |
-| gen-L1-hyperlink-easy-009 | 80 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but it only partially addresses the request by replacing the entire text of the body shape with "Website" instead of finding and hyperlinking the existing text "Website". |
-| gen-L1-hyperlink-easy-010 | 90 | ✗ | The code correctly uses the addSlide helper and native APIs, but loses points for completeness as it doesn't actually add a hyperlink to the text, instead including the URL as plain text in the slide body. |
-| gen-L1-footer-easy-005 | 90 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for completeness as it doesn't explicitly position the footer at the bottom of the slide, which might not be the desired outcome. |
-| gen-L1-footer-easy-006 | 90 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for completeness as it doesn't explicitly position the footer at the bottom of the slide, and for approach as it manually sets the position and size of the text box instead of using a more flexible or dynamic method. |
-| gen-L1-image-insert-easy-011 | 90 | ✓ | The code correctly uses the insertImage helper and has no syntax errors, but loses points for completeness as it doesn't account for potential errors or variations in the user's request, such as specifying a different image category or position. |
-| gen-L1-image-insert-easy-012 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected insertImage helper with correct parameters and proper await on the helper call, ensuring a complete and working solution that follows best practices. |
-| gen-L1-font-pairing-001 | 90 | ✓ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, fully addresses the request, and would mostly work, but loses points for not handling potential errors and not using the most efficient approach by directly accessing the textFrame without checking if the shape has one. |
-| gen-L1-shape-position-easy-011 | 90 | ✓ | The code correctly uses the addTextBox helper and native APIs, but loses points for completeness as it doesn't guarantee the text box is added at the bottom of the slide, and for approach as it manually specifies the position instead of using a more flexible method. |
-| gen-L1-shape-position-easy-012 | 90 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for completeness as it does not consider the original top position of the title shape and simply sets it to 0, which may not be the exact top of the slide. |
-| gen-L1-image-grid-001 | 95 ✅ | ✓ | The code perfectly addresses the request, uses correct APIs and helpers, and is free of runtime errors, but loses points for not considering potential edge cases, such as slide or shape limits, and not using more dynamic or flexible approaches to positioning and sizing the images. |
-| gen-L1-web-search-needed-easy-013 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSlide helper to create a new slide with the definition of a website, demonstrating a flawless approach with no identifiable issues. |
-| gen-L1-web-search-needed-easy-014 | 92 | ✗ | The code correctly uses the addSlide helper to create a new slide with the requested information, but loses points for completeness as it doesn't fully address potential additional aspects of the history of the internet. |
-| gen-L1-deck-generate-easy-011 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it adds a new title slide instead of modifying the existing one and for approach as it manually sets the font size instead of using a more flexible or theme-based approach. |
-| gen-L1-deck-generate-easy-012 | 90 | ✗ | The code is mostly correct but loses points for not fully addressing the request, as it creates a new slide instead of modifying the existing one, and does not use the best approach by directly modifying the slide's background instead of using a helper function if available. |
-| gen-L1-edge-cases-easy-013 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct API, specifically the injected helper is not used but the native slide.delete() method is used, and the code is complete, would work without runtime errors, and follows best practices. |
-| gen-L1-edge-cases-easy-014 | 100 ✅ | ✓ | The code perfectly addresses the request, uses correct and existing APIs, and follows best practices, making it a complete and functional solution. |
-| gen-L1-hyperlink-easy-011 | 75 | ✗ | The code mostly addresses the request but has some flaws, such as not checking if the text "Link" already exists in the body shape before overwriting it, and not using the injected helpers to simplify the code, resulting in a loss of points in completeness and approach dimensions. |
-| gen-L1-hyperlink-easy-012 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, fully addresses the request, and mostly follows best practices, but may not work as expected due to the assumption that the text box is always the second shape on the new slide. |
-| gen-L1-footer-easy-007 | 90 | ✓ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for completeness as it doesn't specifically add a footer, instead adding a text box at a fixed position, which may not be at the bottom of the slide. |
-| gen-L1-footer-easy-008 | 90 | ✓ | The code correctly uses the addTextBox helper to insert a footer, but loses points for completeness as it doesn't guarantee the text box will be at the bottom of the slide, and for approach as it manually sets the position of the text box instead of using a more flexible or dynamic method. |
-| gen-L1-table-add-easy-001 | 95 ✅ | ✗ | The code is mostly correct and uses the available APIs and helpers, but loses points for approach due to not using any error handling or checking if the current slide is valid before adding a table to it. |
-| gen-L1-table-add-easy-002 | 95 ✅ | ✓ | The code perfectly addresses the request, uses correct APIs, and would execute without errors, but loses points for approach due to manually specifying table position and size instead of potentially using a more flexible or helper-based method. |
-| gen-L1-gradient-fill-001 | 92 | ✗ | The code is mostly correct, but it loses points for not handling potential errors that may occur during the execution of the `context.sync()` calls, and for not using the most optimal approach by directly accessing the `fill` property without checking if it's already loaded. |
-| gen-L1-image-insert-easy-013 | 90 | ✓ | The code correctly uses the insertImage helper and handles async operations properly, but loses points for completeness as it doesn't account for potential errors or variations in the user's request, such as specifying a particular image or handling cases where the first slide doesn't exist. |
-| gen-L1-image-insert-easy-014 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected insertImage helper to add an image to the current slide, with correct method signature and proper await on the helper call, demonstrating a flawless approach. |
-| gen-L1-refusal-easy-013 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addSlide helper with the correct method signature to add a new slide with the title "Hello", demonstrating a flawless approach. |
-| gen-L1-refusal-easy-014 | 95 ✅ | ✗ | The code is mostly correct and uses the available helpers and native APIs properly, but loses points for approach due to manual handling of shape properties instead of potentially using higher-level helpers, although in this specific case, the native API is the most straightforward choice. |
-| gen-L1-alignment-easy-001 | 100 ✅ | ✗ | The code perfectly addresses the request, uses the correct API and helper functions, and is well-structured, making it a complete and effective solution. |
-| gen-L1-alignment-easy-002 | 95 ✅ | ✗ | The code is almost perfect, but it could be improved by using more descriptive variable names and potentially handling errors more robustly, although the main logic is sound and uses the correct APIs and helpers. |
-| gen-L1-slide-number-001 | 80 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for not fully addressing the request by adding slide numbers at a fixed position on every slide, and for not using the best practices by manually adding a text box instead of utilizing the addTextBox helper. |
-| gen-L1-recolor-easy-011 | 95 ✅ | ✗ | The code is nearly perfect, but loses points on approach for not considering potential future requests that might require more complex title text color changes, and for not using a more robust method to find the title shape, such as using the `findShapeByName` helper. |
-| gen-L1-recolor-easy-012 | 100 ✅ | ✗ | The code perfectly addresses the request, using the correct API and best practices, with no flaws or areas for improvement in terms of API correctness, completeness, execution, or approach. |
-| gen-L1-shape-position-easy-013 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't perfectly center the text box on the slide, and for approach as it manually specifies the position and size of the text box instead of using a more dynamic method. |
-| gen-L1-shape-position-easy-014 | 95 ✅ | ✗ | The code is mostly correct, but loses points on approach for not handling potential null or undefined values when accessing the title shape's left property, and for not using a try-catch block to handle any potential errors that may occur during execution. |
-| gen-L1-chart-add-001 | 70 | ✗ | The code uses the correct API and would work without runtime errors, but it only partially addresses the request by inserting an image of a chart instead of creating a real chart, and does not utilize the provided data or title. |
-| gen-L1-web-search-needed-easy-015 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected addSlide helper to create a new slide with the definition of a presentation, demonstrating correct API usage, completeness, and best practices. |
-| gen-L1-web-search-needed-easy-016 | 92 | ✗ | The code correctly uses the addSlide helper to create a new slide with the requested information, but loses points for completeness as it does not fully address potential additional requests, such as adding images or more detailed information about London. |
-| gen-L1-deck-generate-easy-013 | 90 | ✗ | The code correctly uses the addSlide helper and would execute without errors, but it does not fully address the request as it does not apply the default theme to the new slide. |
-| gen-L1-deck-generate-easy-014 | 97 ✅ | ✓ | The code perfectly addresses the request, uses correct APIs and best practices, but loses a few points for not handling potential errors and not using the most efficient way to get the new slide index. |
-| gen-L1-edge-cases-easy-015 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct native PowerPoint API to delete the slide, and it does so in a complete, working, and best-practice manner. |
-| gen-L1-edge-cases-easy-016 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct API to delete the first slide, and it does so in a complete, error-free, and best-practice manner. |
-| gen-L1-hyperlink-easy-013 | 65 | ✗ | The code partially addresses the request but fails to handle cases where the text "Link" already exists on the slide, and it also overwrites any existing text in the text shape, instead of adding a new hyperlink to the specific text "Link". |
-| gen-L1-hyperlink-easy-014 | 80 | ✗ | The code mostly addresses the request but loses points for not using the addTextBox helper to add the text "Click Here" and instead relies on the title of the slide, and also for not handling potential errors or edge cases, such as the slide not being found or the shape not having a hyperlink property. |
-| gen-L1-footer-easy-009 | 90 | ✓ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for completeness as it doesn't fully address the request of adding a footer, which typically implies a specific position and formatting, and for approach, as it manually sets the position and size of the text box instead of using a more flexible or helper-based method. |
-| gen-L1-footer-easy-010 | 90 | ✗ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for completeness as it doesn't explicitly position the footer at the bottom of the slide, relying on hardcoded top and height values. |
-| gen-L1-gradient-fill-easy-001 | 95 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and would work without runtime errors, but loses points for not considering potential best practices for shape positioning and sizing. |
-| gen-L1-gradient-fill-easy-002 | 88 | ✗ | The code correctly applies a gradient fill to the first shape on the first slide, but loses points for completeness as it does not handle potential errors or edge cases, and for approach as it manually sets the gradient fill instead of using a more robust theming or styling method. |
-| gen-L1-header-footer-001 | 75 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for not using the addTextBox helper and instead manually setting the text box properties, and also for not considering the footer's position and size on different slides. |
-| gen-L1-question-handling-easy-003 | 100 ✅ | ✓ | The code perfectly addresses the request, uses correct APIs and helpers, and follows best practices, making it a complete and efficient solution. |
-| gen-L1-question-handling-easy-004 | 95 ✅ | ✗ | The code is almost perfect, but it doesn't use the listSlides helper, which is the most straightforward way to get the number of slides, instead relying on the native PowerPoint API. |
-| gen-L1-slide-number-easy-001 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't dynamically determine the slide number and instead hardcodes "Slide 1", and for approach as it manually sets the text box properties instead of potentially using a more flexible or reusable method. |
-| gen-L1-slide-number-easy-002 | 92 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't handle potential edge cases, such as checking if the new slide is successfully added before trying to add a text box to it, and for approach as it manually sets the text box properties instead of using the provided options. |
-| gen-L1-text-edit-easy-009 | 95 ✅ | ✗ | The code is mostly correct, but loses points on approach for not considering potential edge cases, such as the slide not having a title shape, and not using a try-catch block for error handling, although it does use the correct APIs and helpers. |
-| gen-L1-text-edit-easy-010 | 97 ✅ | ✗ | The code is nearly flawless, using correct APIs and best practices, but loses a few points on approach for not handling potential errors that might occur during the execution of the PowerPoint Office.js APIs. |
-| gen-L1-shape-position-easy-015 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't truly center the text box on the slide, instead using hardcoded coordinates. |
-| gen-L1-shape-position-easy-016 | 95 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and is free of runtime errors, but loses points for not considering potential edge cases, such as the title shape already being at the top left, and not using a more robust method to find the title shape. |
-| gen-L1-image-insert-easy-015 | 90 | ✓ | The code correctly uses the insertImage helper and handles async operations properly, but loses points for completeness as it doesn't account for potential errors or variations in the user's request, such as specifying a particular image or handling cases where the first slide doesn't exist. |
-| gen-L1-image-insert-easy-016 | 95 ✅ | ✓ | The code correctly uses the injected helper functions, fully addresses the request, and would execute without runtime errors, but loses points for completeness because it doesn't handle potential errors or provide feedback if the image insertion fails. |
-| gen-L1-refusal-easy-015 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct and existing PowerPoint Office.js APIs and injected helpers, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-refusal-easy-016 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected addTextBox helper with the correct slide index and text, ensuring a complete and working solution that follows best practices. |
-| gen-L1-chart-add-easy-001 | 78 | ✗ | The code partially addresses the request by inserting an image and a text box, but loses points for not directly creating a chart and for not using the provided data to generate the chart image. |
-| gen-L1-chart-add-easy-002 | 70 | ✗ | The code uses the correct API and would work without runtime errors, but it only partially addresses the request by inserting an image of a chart instead of creating a real chart, and does not utilize the provided title and data points. |
-| gen-L1-recolor-easy-013 | 95 ✅ | ✗ | The code is almost perfect, but loses points on approach for not handling potential errors that might occur during the execution of the PowerPoint Office.js APIs, and for not checking if the title shape has a textFrame before trying to access its textRange. |
-| gen-L1-recolor-easy-014 | 95 ✅ | ✗ | The code is almost perfect, but it uses the native API to set the background color instead of using a helper function or considering the potential need to handle different types of fills, which is the only reason for the slight deduction in the approach dimension. |
-| gen-L1-web-search-needed-easy-017 | 100 ✅ | ✗ | The code perfectly addresses the request by using the injected addSlide helper to create a new slide with the definition of a search engine, demonstrating correct API usage, completeness, and best practices. |
-| gen-L1-web-search-needed-easy-018 | 90 | ✗ | The code correctly uses the addSlide helper to create a new slide with the requested information, but loses points for completeness as it doesn't fully address potential additional details about Microsoft that could be included, and for approach as it doesn't consider using other helpers like insertImage for potential image additions. |
-| gen-L1-deck-generate-easy-015 | 95 ✅ | ✗ | The code perfectly uses the injected helpers and native APIs, but loses points in completeness because it doesn't check if a title slide with the same title already exists, as indicated in the deck context. |
-| gen-L1-deck-generate-easy-016 | 90 | ✓ | The code correctly uses the addSlide API and would execute without errors, but it does not fully address the request as it does not check if a slide with the title "Default Slide" already exists, and it does not utilize best practices for handling potential duplicates or existing slides. |
-| gen-L1-edge-cases-easy-017 | 95 ✅ | ✗ | The code is mostly correct, but it does not use the injected helpers and instead relies on native APIs, which, although valid, do not demonstrate the best approach in this specific environment where helpers are provided. |
-| gen-L1-edge-cases-easy-018 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct API, specifically the getSlideByIndex and delete methods, and properly awaits the context sync, demonstrating a flawless approach. |
-| gen-L1-hyperlink-easy-015 | 80 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but it only partially addresses the request by setting the text of the textRange to "Link" instead of finding the existing text "Link" and adding a hyperlink to it, and it does not follow best practices by manually loading and syncing the shapes instead of using a more efficient approach. |
-| gen-L1-hyperlink-easy-016 | 92 | ✗ | The code is mostly correct, but it assumes the text box is always the second shape on the slide, which may not be the case, and it does not handle potential errors that may occur during the execution of the code. |
-| gen-L1-footer-easy-011 | 95 ✅ | ✓ | The code is mostly correct and follows best practices, but loses points for not using the injected helpers to position the text box, instead manually setting its coordinates, which could be considered re-implementing a helper. |
-| gen-L1-footer-easy-012 | 90 | ✓ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for completeness as it doesn't guarantee the footer will be at the bottom of the slide, and for approach as it manually sets the position of the footer instead of using a more flexible or dynamic method. |
-| gen-L1-gradient-fill-easy-003 | 97 ✅ | ✗ | The code is nearly flawless, using correct APIs, fully addressing the request, and being executable without runtime errors, but loses a few points for not considering potential best practices or optimizations in its approach. |
-| gen-L1-gradient-fill-easy-004 | 92 | ✓ | The code is mostly correct, but it assumes the first shape is the only shape and applies the gradient fill to it without checking if it's the correct shape, and also doesn't handle potential errors that might occur during the execution. |
-| gen-L1-header-footer-easy-001 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't explicitly check if the added text box is actually a header, and for approach as it manually specifies the position and style of the text box instead of using a more flexible or standardized method. |
-| gen-L1-header-footer-easy-002 | 95 ✅ | ✗ | The code is mostly correct and effective, but loses points on approach for not using a more flexible or dynamic method to position the footer, instead using hardcoded coordinates. |
-| gen-L1-alignment-easy-003 | 80 | ✓ | The code is mostly correct but loses points for not using the injected helper functions consistently, specifically for adding a text box, and for redundant property assignments. |
-| gen-L1-alignment-easy-004 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, with no identifiable flaws or areas for improvement. |
-| gen-L1-smartart-001 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness and approach because it only provides a workaround for adding a SmartArt diagram by inserting an image, rather than directly addressing the request. |
-| gen-L1-shape-position-easy-017 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but does not fully address the request as it adds the text box at a fixed position (250, 150) instead of centering it on the slide. |
-| gen-L1-shape-position-easy-018 | 90 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for completeness as it does not consider the original top position of the title shape and simply sets it to 0, which may not be the exact top of the slide. |
-| gen-L1-image-insert-easy-017 | 95 ✅ | ✓ | The code correctly uses the injected insertImage helper and properly awaits the context sync, but loses points for completeness as it doesn't handle potential errors or provide feedback if the image insertion fails. |
-| gen-L1-image-insert-easy-018 | 95 ✅ | ✓ | The code correctly uses the injected helper function insertImage to add a picture to the first slide, but loses points for completeness as it doesn't fully address potential aspects of the request, such as handling errors or checking if the slide exists. |
-| gen-L1-table-add-easy-003 | 47 ⚠️ | ✓ | The code fails to address the user's request to add a table to the first slide of the existing presentation, instead creating a new slide with a table, and also does not utilize the available helpers effectively. |
-| gen-L1-table-add-easy-004 | 90 | ✓ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for not fully addressing the request, such as not handling potential errors or providing more flexibility in table placement, and not using best practices for table insertion. |
-| gen-L1-shadow-effect-001 | 97 ✅ | ✗ | The code is nearly perfect, but loses a few points on approach because it manually sets the shadow effect on the title text instead of potentially using a more comprehensive theming or styling approach, although this is a minor quibble. |
-| gen-L1-text-format-easy-007 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-text-format-easy-008 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, making it a complete and well-structured solution. |
-| gen-L1-web-search-needed-easy-019 | 100 ✅ | ✗ | The code perfectly addresses the request, uses the correct API helper, and follows best practices, with no identifiable flaws or areas for improvement. |
-| gen-L1-web-search-needed-easy-020 | 92 | ✗ | The code correctly uses the addSlide helper to create a new slide with the requested information, but loses points for completeness as it does not fully address potential additional requests, such as adding more details or images about PowerPoint. |
-| gen-L1-deck-generate-easy-017 | 90 | ✗ | The code correctly uses the addSlide helper to create a new slide with the specified title, but it does not check if a slide with the same title already exists, which might not fully address the request to create a "single-slide presentation" if such a slide already exists. |
-| gen-L1-deck-generate-easy-018 | 90 | ✗ | The code correctly uses the addSlide helper to create a new slide with a title and default text box, but loses points for completeness as it doesn't fully address the request of generating a 1-slide presentation, potentially implying the need to remove or modify the existing slide. |
-| gen-L1-edge-cases-easy-019 | 100 ✅ | ✓ | The code perfectly addresses the request by using the injected helper getSlideByIndex and the native API slide.delete() to delete the first slide, demonstrating a complete, correct, and well-structured approach. |
-| gen-L1-edge-cases-easy-020 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct API to delete the only slide in the presentation, with no flaws in API correctness, completeness, execution, or approach. |
-| gen-L1-hyperlink-easy-017 | 92 | ✗ | The code is mostly correct, but it does not handle potential errors that may occur during the execution of the `context.sync()` method, and it does not check if the shape's textFrame or textRange properties are null before accessing them, which could lead to runtime errors. |
-| gen-L1-hyperlink-easy-018 | 92 | ✗ | The code is mostly correct, but it assumes the newly added slide is always at index 1, which might not be the case if there are existing slides, and it does not handle potential errors that might occur during the execution of the code. |
-| gen-L1-footer-easy-013 | 90 | ✗ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for completeness as it doesn't specifically position the footer at the bottom of the slide, and for approach as it manually sets the position and size of the footer instead of using a more flexible or helper-based method. |
-| gen-L1-footer-easy-014 | 90 | ✓ | The code correctly uses the PowerPoint Office.js API and injected helpers, but loses points for completeness as it doesn't explicitly position the footer at the bottom of the slide, and for approach as it manually sets font properties instead of potentially using a theme or style. |
-| gen-L1-gradient-fill-easy-005 | 0 ⚠️ | ✗ | A:  |
-| gen-L1-gradient-fill-easy-006 | 90 | ✗ | The code correctly applies a gradient fill to the title shape on the slide, but loses points for completeness as it assumes the title shape is the first shape on the slide without verifying, and for approach as it manually sets the gradient fill instead of using a more robust method. |
-| gen-L1-header-footer-easy-003 | 90 | ✗ | The code correctly uses the addSlide helper to create a new slide with a title, but loses points for completeness because it doesn't explicitly add a header with the text 'Hello' as requested, instead relying on the title of the new slide. |
-| gen-L1-header-footer-easy-004 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't fully address the request by not specifying the footer's position or ensuring it's added to the slide's footer area, and for approach as it manually sets the text box's position instead of using a more flexible or helper-based method. |
-| gen-L1-alignment-easy-005 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for not fully addressing the request to align the text box to the left, as the provided options do not include a specific alignment property. |
-| gen-L1-alignment-easy-006 | 95 ✅ | ✗ | The code is mostly correct and follows best practices, but loses points for not using the most efficient approach to get the newly added text box, instead relying on getting the last item in the shapes collection. |
-| gen-L1-slide-number-easy-003 | 90 | ✗ | The code correctly uses the addSlide helper and executes without runtime errors, but it only partially addresses the request by adding a static "1" as the slide number instead of dynamically getting the actual slide number. |
-| gen-L1-slide-number-easy-004 | 90 | ✗ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for completeness as it does not dynamically determine the slide number and instead hardcodes "Slide 1", and for approach as it manually sets the position and size of the text box instead of using a more flexible or helper-based method. |
-| gen-L1-SmartArt-easy-001 | 78 | ✗ | The code uses the correct insertImage helper but loses points for not fully addressing the request, as it doesn't add a SmartArt shape but rather a placeholder image, and doesn't perfectly follow best practices for image insertion positioning. |
-| gen-L1-SmartArt-easy-002 | 90 | ✗ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't fully address the request of inserting a SmartArt graphic, instead using an image of a SmartArt graphic as a workaround. |
-| gen-L1-shape-position-easy-019 | 90 | ✗ | The code correctly uses the addTextBox helper and native APIs, but loses points for completeness as it doesn't explicitly position the text box at the top of the slide, and for approach as the positioning could be more flexible or relative to the slide's existing content. |
-| gen-L1-shape-position-easy-020 | 92 | ✗ | The code is mostly correct, but it uses `presentation.slides.items[0].width` and `presentation.slides.items[0].height` to calculate the center position, which may not be the correct slide dimensions, instead of using the `slide` object's width and height properties that were already loaded. |
-| gen-L1-refusal-easy-017 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct addSlide helper with the required title parameter, ensuring API correctness, completeness, and a working approach without any flaws. |
-| gen-L1-refusal-easy-018 | 95 ✅ | ✗ | The code is almost perfect, but loses points on approach because it manually updates the title shape instead of using a higher-level helper function, if available, although in this case, no such helper is provided. |
-| gen-L1-table-add-easy-005 | 65 | ✗ | The code incorrectly adds a new title slide instead of modifying the existing one and fails to utilize the best practices by not checking if the current slide already has a table or other shapes that might interfere with the new table. |
-| gen-L1-table-add-easy-006 | 95 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and would execute without errors, but loses points for not considering potential best practices or alternative approaches, such as error handling or using more specific table insertion options. |
-| gen-L1-chart-add-easy-003 | 70 | ✗ | The code partially addresses the request by inserting a generic chart image, but fails to fully meet the requirements by not creating a specific chart with the provided data, and also lacks a title for the chart. |
-| gen-L1-chart-add-easy-004 | 83 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for not fully addressing the request, as it does not actually create a chart with the specified data point, and instead inserts an image of a chart. |
-| gen-L1-agenda-slide-001 | 100 ✅ | ✗ | The code perfectly addresses the request, uses the correct API helpers, and is free of any errors, making it a complete and well-structured solution. |
-| gen-L1-text-format-easy-009 | 97 ✅ | ✗ | The code is nearly perfect, but loses a few points on approach because it manually loads and syncs the slide shapes instead of relying on the helpers to handle these details, although it still uses the correct APIs and helpers where necessary. |
-| gen-L1-text-format-easy-010 | 100 ✅ | ✗ | The code perfectly addresses the request, uses correct APIs, and follows best practices, with no flaws or areas for improvement in terms of API correctness, completeness, execution, or approach. |
-| gen-L1-text-edit-easy-011 | 97 ✅ | ✗ | The code is nearly perfect, using the correct APIs and helpers, but loses a few points on approach for not considering potential edge cases, such as a slide with no title shape, where a more robust solution might use the findShapeByName helper or add a new title shape if one doesn't exist. |
-| gen-L1-text-edit-easy-012 | 95 ✅ | ✗ | The code is mostly correct and effective, but loses points on approach for not using a more direct method to access the slide, such as the getSlideByIndex helper, and for not handling potential errors or edge cases. |
-| gen-L1-web-search-needed-easy-021 | 100 ✅ | ✓ | The code perfectly addresses the request by using the correct addSlide helper with the required parameters, resulting in a complete, error-free, and well-structured solution. |
-| gen-L1-web-search-needed-easy-022 | 97 ✅ | ✗ | The code perfectly uses the provided helpers to create a new slide with the requested information about Rome, with no flaws in API correctness, completeness, execution, or approach, although it could be considered slightly incomplete for not including more details about Rome. |
-| gen-L1-deck-generate-easy-019 | 90 | ✓ | The code correctly uses the addSlide helper to create a new slide with a title, but it does not check if a slide with the same title already exists, which might not fully address the user's request to create a "single-slide presentation" if a slide already exists. |
-| gen-L1-deck-generate-easy-020 | 90 | ✗ | The code correctly uses the addSlide helper to create a new slide with a title and a text box, but it does not fully address the request as it does not check if a slide with the title "Hello" already exists, and it does not use the addTextBox helper to add a default text box, instead passing the text as the body argument to addSlide. |
-| gen-L1-hyperlink-easy-019 | 65 | ✗ | The code attempts to add a hyperlink to the first slide but fails to fully address the request as it overwrites the existing text in the shape instead of finding the specific text "Example" and adding a hyperlink to it. |
-| gen-L1-hyperlink-easy-020 | 87 | ✗ | The code correctly uses the provided helpers and native APIs, but loses points for not fully addressing the request, as it adds the hyperlink to the body shape instead of the title shape, and for not using the most efficient approach, such as directly setting the hyperlink on the text range of the title shape. |
-| gen-L1-footer-easy-015 | 90 | ✓ | The code correctly uses the injected helpers and native APIs, but loses points for completeness as it doesn't fully address the request of adding a footer, which typically involves positioning the text at the bottom of the slide, and for approach, as it manually sets the position and size of the text box instead of using a more flexible or helper-based method. |
-| gen-L1-footer-easy-016 | 90 | ✓ | The code correctly uses the PowerPoint Office.js APIs and injected helpers, but loses points for completeness as it doesn't explicitly position the footer at the bottom of the slide, and for approach as it manually sets font properties instead of potentially using a theme or style. |
-| gen-L1-gradient-fill-easy-007 | 95 ✅ | ✗ | The code is nearly flawless, but loses points for approach because it manually sets the rectangle's fill properties instead of potentially using a helper or theme-based approach, although this is not strictly necessary for the requested task. |
-| gen-L1-gradient-fill-easy-008 | 83 | ✗ | The code mostly addresses the request but loses points for not fully meeting the requirements, such as not checking if the new slide already has a shape before adding a new one, and not using the best practices for error handling and shape management. |
-| gen-L1-header-footer-easy-005 | 0 ⚠️ | ✓ | A:  |
-| gen-L1-header-footer-easy-006 | 0 ⚠️ | ✗ | The code attempts to add a footer to a new slide using the `addSlide` helper with an options object containing a `footer` property, which is not a valid option for the `addSlide` helper, indicating a significant flaw in API correctness. |
+| L1-slide-add-001 | 95 ✅ | ✓ | The code uses the correct helper functions and follows best practices, but could be improved by specifying the layout for the new slide. |
+| L1-slide-add-002 | 85 | ✓ | A: 22
+The code uses the injected helper `addSlide` correctly, but it does not address the request fully, as it does not  |
+| L1-slide-add-003 | 95 ✅ | ✓ | The code uses the correct helper function to add a new slide, but does not address the "section divider" aspect, which might imply additional formatting or design elements. |
+| L1-slide-delete-001 | 45 ⚠️ | ✓ | The code does not fully address the request as it does not delete the slide with index 3, but rather the slide with index 2. |
+| L1-slide-delete-002 | 89 | ✓ | A: 22
+The code uses the injected helper `getSlideByIndex` and `context.sync`, but it does not use the injected helper `l |
+| L1-text-format-001 | 94 | ✓ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the findShapeByName method. |
+| L1-text-format-002 | 88 | ✓ | A: 22
+The code uses real PowerPoint Office.js APIs, but it doesn't handle potential errors when accessing the textFrame  |
+| L1-text-format-003 | 91 | ✓ | The code uses the correct injected helpers and PowerPoint APIs, but it doesn't use the `addSlide` helper to update the existing slide, and it doesn't check if the title shape exists before trying to access it, which could lead to runtime errors. |
+| L1-text-edit-001 | 94 | ✓ | The code uses the correct injected helpers and PowerPoint Office.js APIs, but could benefit from more robust error handling and a more efficient approach to updating the slide title. |
+| L1-text-edit-002 | 67 | ✓ | A: 20
+The code uses the correct PowerPoint Office.js APIs, but it does not address the request fully, as it only replace |
+| L1-theme-apply-001 | 95 ✅ | ✓ | The code uses the correct injected helper for theming, but could be improved by checking if the theme was applied successfully, and it does not address the request fully as it does not apply the theme to the entire deck. |
+| L1-theme-apply-002 | 95 ✅ | ✓ | The code uses the correct helper function to apply the theme, but does not address the "everywhere" part of the request, implying it only applies to the current slide. |
+| L1-recolor-001 | 95 ✅ | ✓ | The code uses the correct injected helper for recoloring the deck, but it could be improved by using the provided theme palettes from BUILT_IN_THEMES to ensure consistency with PowerPoint's built-in themes. |
+| L1-recolor-002 | 95 ✅ | ✗ | The code uses the correct helper function to apply the theme, but does not address the request for a "calm, trustworthy theme" in terms of design or customization, it simply applies a pre-existing theme. |
+| L1-notes-write-001 | 96 ✅ | ✓ | The code uses the correct injected helper for adding speaker notes, but could benefit from more robust error handling and checking for the existence of the slide before adding notes. |
+| L1-notes-write-002 | 96 ✅ | ✓ | The code uses the correct injected helper for adding a speaker note, but could benefit from a more robust approach to handling errors and edge cases. |
+| L1-shape-position-001 | 94 | ✓ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the case where the title shape is not found. |
+| L1-shape-position-002 | 94 | ✓ | The code uses the correct injected helpers and PowerPoint Office.js APIs, but could benefit from a more robust approach to handling potential errors and edge cases. |
+| L1-image-insert-001 | 83 | ✓ | A: 22
+The code uses the correct `insertImage` helper, but incorrectly specifies the slide index as 1 instead of 2.
+
+B: 1 |
+| L1-image-insert-002 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion and does not attempt to re-implement it manually, but could be improved by considering the potential need to adjust the image size or position based on the slide's layout. |
+| L1-web-search-needed-001 | 47 ⚠️ | ✗ | The response fails to acknowledge that PowerPoint Office.js can access web data, leading to an incorrect and incomplete answer. |
+| L1-web-search-needed-002 | 5 ⚠️ | ✗ | The response fails to engage with the request and instead provides a generic refusal without providing any useful information. |
+| L1-web-search-needed-003 | 72 | ✓ | The response is a refusal to generate code, but it does not correctly identify the reason for the refusal, and does not offer any workarounds or suggestions. |
+| L1-question-handling-001 | 89 | ✓ | A: 22
+The code uses the injected helper `listSlides` which is not necessary, and the native API `presentation.slides.loa |
+| L1-question-handling-002 | 94 | ✓ | The code uses the correct injected helpers and PowerPoint Office.js APIs, but could be improved by using more robust error handling and avoiding manual string concatenation for the return value. |
+| L1-animation-001 | 65 | ✓ | A: 22
+The code uses the correct injected helper `addSlide` to add a new slide with the specified title and animation, bu |
+| L1-transition-001 | 65 | ✓ | A: 22
+The code uses the injected helper function addSlide correctly, but does not address the request fully, as it does  |
+| L1-move-001 | 85 | ✓ | The code uses the correct moveSlide helper, but it incorrectly indexes the slide positions, and it doesn't address the request's intent of moving slide 3 to position 1, instead moving slide 2 to position 0. |
+| L1-refusal-002 | 67 | ✓ | The response fails to provide a complete solution to the user's request, instead offering a vague workaround that doesn't fully address the issue. |
+| L1-refusal-005 | 22 ⚠️ | ✓ | A: 0
+The response is factually incorrect and incomplete, as it fails to address the user's request to edit the existing  |
+| L1-refusal-004 | 59 ⚠️ | ✗ | The response could be more concise and clear in its explanation, and could provide a more direct and actionable workaround. |
+| L1-deck-generate-001 | 77 | ✓ | A: 22
+The code uses the injected helper `addSlide` correctly, but it's a very basic implementation and doesn't address t |
+| L1-edge-case-001 | 97 ✅ | ✓ | The code uses the correct injected helpers and follows best practices, making it a well-structured and effective solution. |
+| gen-L1-hyperlink-001 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could benefit from more robust error handling and a more efficient approach to modifying the text shape. |
+| gen-L1-text-format-easy-001 | 96 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, executes correctly, and uses best practices, but could be slightly improved by adding error handling for the `find` method. |
+| gen-L1-text-format-easy-002 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could improve by using more precise font name formatting and considering potential edge cases for the body shape. |
+| gen-L1-text-edit-easy-001 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could benefit from a more robust error handling mechanism. |
+| gen-L1-text-edit-easy-002 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and handling potential errors in the findShapeByName method. |
+| gen-L1-recolor-easy-001 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by using more robust error handling and avoiding manual recoloring of the title shape. |
+| gen-L1-recolor-easy-002 | 95 ✅ | ✗ | The code uses the correct injected helper to get the slide and then applies the background color change, but it could benefit from using the context.sync() call more explicitly to ensure proper execution order. |
+| gen-L1-image-insert-easy-001 | 89 | ✓ | A: 22
+The code uses the correct `insertImage` helper function, but does not check if the image is already inserted befor |
+| gen-L1-image-insert-easy-002 | 85 | ✗ | A: 22
+The code uses the correct injected helper function insertImage, but does not address the request fully, as it does |
+| gen-L1-web-search-needed-easy-001 | 95 ✅ | ✓ | The code uses the correct helpers for adding a new slide and setting its properties, but could benefit from more robust error handling and a more explicit check for the current slide index. |
+| gen-L1-web-search-needed-easy-002 | 77 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not inc |
+| gen-L1-refusal-easy-001 | 95 ✅ | ✓ | The code uses the correct helper function to add a new slide, but does not follow best practices by not specifying any options for the slide, such as a transition or animation. |
+| gen-L1-refusal-easy-002 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to changing the title text color. |
+| gen-L1-edge-cases-easy-001 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-edge-cases-easy-002 | 95 ✅ | ✓ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing the unnecessary `await context.sync()` call after `slide.delete()`. |
+| gen-L1-shape-position-easy-001 | 94 | ✓ | The code uses the correct injected helper functions and follows best practices, but does not address any potential runtime errors or edge cases. |
+| gen-L1-shape-position-easy-002 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could benefit from a more robust error handling mechanism. |
+| gen-L1-text-format-easy-003 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-text-format-easy-004 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from a more robust error handling mechanism, such as checking if the font name is actually changed before throwing an error. |
+| gen-L1-text-edit-easy-003 | 94 | ✗ | The code correctly uses the injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and following best practices for error handling. |
+| gen-L1-text-edit-easy-004 | 95 ✅ | ✗ | The code uses the correct injected helpers and PowerPoint Office.js APIs, but could benefit from more robust error handling and a more explicit check for the existence of the body shape before attempting to modify its font. |
+| gen-L1-recolor-easy-003 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-recolor-easy-004 | 95 ✅ | ✗ | The code uses the correct injected helper to get the slide and then sets the background color correctly, but it could benefit from using the injected helper for context.sync() instead of await context.sync(). |
+| gen-L1-web-search-needed-easy-003 | 95 ✅ | ✓ | The code uses the correct helper functions for adding a new slide and setting its transition, but could benefit from more robust error handling and a more explicit check for the current slide index. |
+| gen-L1-web-search-needed-easy-004 | 95 ✅ | ✗ | The code uses the correct helpers and follows best practices, but could be improved by adding a title to the new slide and using a more descriptive variable name instead of "Adding a new slide about Earth". |
+| gen-L1-refusal-easy-003 | 96 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, executes correctly, and uses best practices, but could be slightly improved by adding error handling for the findShapeByName method. |
+| gen-L1-refusal-easy-004 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the findShapeByName method. |
+| gen-L1-deck-generate-easy-001 | 72 | ✗ | A: 22
+The code uses the injected helpers correctly, but it doesn't address the request fully, as it doesn't create a sin |
+| gen-L1-deck-generate-easy-002 | 95 ✅ | ✗ | The code uses the correct helper functions and follows best practices, but does not address the request of creating a presentation with a default theme, which is a minor oversight. |
+| gen-L1-edge-cases-easy-003 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by adding a check for the slide index before deleting it. |
+| gen-L1-edge-cases-easy-004 | 94 | ✗ | The code correctly uses the injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using the moveSlide helper instead of pop() and delete() on the slides collection. |
+| gen-L1-hyperlink-easy-001 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by using the injected helpers for theme management and hyperlink formatting. |
+| gen-L1-hyperlink-easy-002 | 82 | ✓ | The code mostly addresses the request, but it incorrectly uses addTextBox to add a hyperlink, and it doesn't properly handle the hyperlink's URL. |
+| gen-L1-notes-write-easy-001 | 95 ✅ | ✓ | The code uses the correct injected helper for adding a speaker note, but could benefit from more robust error handling and checking for the current slide before adding the note. |
+| gen-L1-notes-write-easy-002 | 95 ✅ | ✗ | The code uses the correct injected helper for adding a speaker note, but could benefit from more robust error handling and checking for the existence of the slide before adding a note. |
+| gen-L1-image-insert-easy-003 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion, but could be improved by considering the position of the image within the slide's layout. |
+| gen-L1-image-insert-easy-004 | 91 | ✗ | A: 22
+The code uses the correct `insertImage` helper, but does not check if the image is already inserted before inserti |
+| gen-L1-shape-position-easy-003 | 95 ✅ | ✓ | The code uses the correct injected helper for adding a text box and positions it correctly, but does not follow best practices by not using the addSlide helper for adding a new slide, which is not necessary in this case. |
+| gen-L1-shape-position-easy-004 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the findShapeByName method. |
+| gen-L1-footer-001 | 89 | ✗ | A: 22
+The code uses the injected helper `addTextBox` correctly, but it doesn't use the `addSlide` helper to add the foot |
+| gen-L1-web-search-needed-easy-005 | 95 ✅ | ✗ | The code uses the correct helpers and follows best practices, but could be improved by adding a check to ensure the new slide is added after the current slide. |
+| gen-L1-web-search-needed-easy-006 | 85 | ✗ | A: 22
+The code uses the correct addSlide helper, but does not address the request fully, as it does not add any notes to |
+| gen-L1-refusal-easy-005 | 95 ✅ | ✓ | The code uses the injected helpers correctly and follows best practices, but does not take advantage of the optional parameters of the addTextBox helper to set the font size and color, which could be done more concisely. |
+| gen-L1-refusal-easy-006 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-deck-generate-easy-003 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not set |
+| gen-L1-deck-generate-easy-004 | 94 | ✗ | The code uses the correct helpers for adding a new slide and setting its background color, but could be improved by using the applyTheme helper for theming instead of manual color setting. |
+| gen-L1-edge-cases-easy-005 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing the unnecessary `await context.sync()` call after `presentation.slides.items[0].delete()`. |
+| gen-L1-edge-cases-easy-006 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding a check to ensure the slide is not null before deleting it. |
+| gen-L1-hyperlink-easy-003 | 94 | ✗ | The code uses the correct injected helpers and native APIs, addresses the request fully, executes correctly, and uses best practices, but could be slightly improved with more robust error handling. |
+| gen-L1-hyperlink-easy-004 | 95 ✅ | ✗ | The code uses the correct helper functions and follows best practices, but could be improved by using more descriptive variable names and considering potential edge cases. |
+| gen-L1-recolor-easy-005 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more robust error handling and following best practices for PowerPoint API usage. |
+| gen-L1-recolor-easy-006 | 95 ✅ | ✗ | The code uses the correct injected helper to get the first slide and sets its background color correctly, but could benefit from using the injected helpers for error handling and synchronization. |
+| gen-L1-image-insert-easy-005 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion, but could be improved by considering the position of the image in relation to the existing slide content. |
+| gen-L1-image-insert-easy-006 | 95 ✅ | ✗ | The code uses the correct helper function for image insertion, but does not check if the image is already present on the slide before inserting it, which might lead to unexpected behavior. |
+| gen-L1-text-edit-easy-005 | 94 | ✗ | The code correctly changes the title of the slide, but could benefit from using the injected helpers for theme management and slide navigation. |
+| gen-L1-text-edit-easy-006 | 96 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-shape-position-easy-005 | 95 ✅ | ✓ | The code uses the injected helpers correctly and follows best practices, but does not take advantage of the optional parameters of the addTextBox helper to simplify the code. |
+| gen-L1-shape-position-easy-006 | 94 | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and considering potential edge cases. |
+| gen-L1-table-add-001 | 29 ⚠️ | ✗ | The code uses a brute-force approach to add individual text boxes instead of using a more efficient |
+| gen-L1-text-format-easy-005 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and adding error handling for the case where the title shape is not found. |
+| gen-L1-text-format-easy-006 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could improve by checking for the existence of the body shape before attempting to access its text frame. |
+| gen-L1-web-search-needed-easy-007 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully by not adding any n |
+| gen-L1-web-search-needed-easy-008 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-question-handling-easy-001 | 94 | ✓ | The code uses the correct injected helpers and native APIs, but could be improved by using more precise error handling and avoiding unnecessary variable assignments. |
+| gen-L1-question-handling-easy-002 | 89 | ✗ | A: 22
+The code uses the correct PowerPoint Office.js API, presentation.slides.load, and the injected helper, context.syn |
+| gen-L1-refusal-easy-007 | 89 | ✓ | A: 22
+The code uses the injected helper `addSlide` correctly, but it's a very basic implementation that doesn't address  |
+| gen-L1-refusal-easy-008 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using the applyTheme helper for theming instead of manual textFrame.textRange.font.color changes. |
+| gen-L1-deck-generate-easy-005 | 95 ✅ | ✗ | The code uses the correct helper functions and follows best practices, but does not address the request of setting a default font size of 18 for the entire presentation, instead only setting it for the new title slide. |
+| gen-L1-deck-generate-easy-006 | 95 ✅ | ✗ | The code uses the correct helper functions and follows best practices, but could be improved by adding a check for the current slide index before calling addSlide. |
+| gen-L1-edge-cases-easy-007 | 95 ✅ | ✓ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-edge-cases-easy-008 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-hyperlink-easy-005 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could benefit from a more robust error handling mechanism. |
+| gen-L1-hyperlink-easy-006 | 71 | ✓ | A: 18
+The code uses the injected helper `addSlide` correctly, but incorrectly uses `addTextBox` to add a hyperlink, whic |
+| gen-L1-footer-easy-001 | 89 | ✗ | A: 22
+The code uses the injected helper `addTextBox` correctly, but it does not use the `addSlide` helper to add a foote |
+| gen-L1-footer-easy-002 | 94 | ✗ | The code correctly uses the injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using the applyTheme helper for theming instead of manual per-shape recoloring. |
+| gen-L1-recolor-easy-007 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to changing the title text color. |
+| gen-L1-recolor-easy-008 | 95 ✅ | ✗ | The code uses the correct PowerPoint Office.js APIs and helpers, fully addresses the request, and would execute without runtime errors, but could be improved by using the applyTheme helper for theming instead of manual color setting. |
+| gen-L1-image-insert-easy-007 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion, but could be improved by considering the default image's size and position more carefully, and by adding a check to ensure the image is inserted on the first slide. |
+| gen-L1-image-insert-easy-008 | 89 | ✓ | A: 22
+The code uses the correct injected helper `insertImage` and its parameters, but does not check if the image was in |
+| gen-L1-shape-position-easy-007 | 94 | ✓ | The code uses the correct injected helpers and PowerPoint APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more precise positioning and avoiding unnecessary `context.sync()` calls. |
+| gen-L1-shape-position-easy-008 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could benefit from more robust error handling and a more explicit check for the title shape's existence before attempting to modify it. |
+| gen-L1-web-search-needed-easy-009 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-web-search-needed-easy-010 | 95 ✅ | ✗ | The code uses the correct helpers for adding a new slide and applying a transition, but could benefit from using the addSpeakerNote helper to add speaker notes, which are currently empty. |
+| gen-L1-refusal-easy-009 | 95 ✅ | ✓ | The code uses the correct injected helper for adding a text box, but could benefit from more robust error handling and validation of input parameters. |
+| gen-L1-refusal-easy-010 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-deck-generate-easy-007 | 47 ⚠️ | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request for a default font size,  |
+| gen-L1-deck-generate-easy-008 | 89 | ✗ | A: 22
+The code uses the injected helpers correctly, but it doesn't use the PowerPoint.run method, which is required to e |
+| gen-L1-edge-cases-easy-009 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-edge-cases-easy-010 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-hyperlink-easy-007 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could be improved with more robust error handling and a more efficient approach to finding the text shape. |
+| gen-L1-hyperlink-easy-008 | 71 | ✓ | A: 18
+The code uses the injected helpers correctly, but it incorrectly uses the addTextBox method to add a hyperlink, wh |
+| gen-L1-footer-easy-003 | 95 ✅ | ✗ | The code uses the correct helper function to add a new slide with a footer, but does not address the request to add the footer to an existing slide, and does not use the best practice of using the addTextBox helper to add the footer text. |
+| gen-L1-footer-easy-004 | 89 | ✗ | A: 22
+The code uses the injected helper `addTextBox` correctly, but it doesn't use the `addSlide` helper to add a footer |
+| gen-L1-alignment-001 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and handling potential errors in the findShapeByName method. |
+| gen-L1-text-edit-easy-007 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to updating the title shape. |
+| gen-L1-text-edit-easy-008 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to underlining the title. |
+| gen-L1-image-insert-easy-009 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion and follows best practices, but could be improved by adding error handling for potential issues like slide index out of range. |
+| gen-L1-image-insert-easy-010 | 91 | ✗ | A: 22
+The code uses the correct `insertImage` helper, but does not check if the image is already inserted before inserti |
+| gen-L1-shape-position-easy-009 | 94 | ✓ | The code uses the correct injected helpers and PowerPoint Office.js APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and considering potential edge cases. |
+| gen-L1-shape-position-easy-010 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could benefit from a more robust error handling mechanism. |
+| gen-L1-recolor-easy-009 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and considering potential edge cases. |
+| gen-L1-recolor-easy-010 | 95 ✅ | ✗ | The code uses the correct injected helper to get the first slide and sets its background color correctly, but it could benefit from using the `context.sync()` call after the `await` expression to ensure proper execution order. |
+| gen-L1-web-search-needed-easy-011 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-web-search-needed-easy-012 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but it does not address the request fully, as it does not  |
+| gen-L1-refusal-easy-011 | 92 | ✗ | A: 23
+The code uses real PowerPoint Office.js APIs and the injected helpers correctly, but it does not handle the case w |
+| gen-L1-refusal-easy-012 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more explicit check for the title shape before attempting to unbold it. |
+| gen-L1-deck-generate-easy-009 | 100 ✅ | ✗ | The code is a perfect implementation of the user request, using the correct injected helpers and following best practices. |
+| gen-L1-deck-generate-easy-010 | 95 ✅ | ✗ | The code uses the correct helper functions and follows best practices, but it could be improved by adding a default shape to the slide, which is currently missing. |
+| gen-L1-edge-cases-easy-011 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing the unnecessary `await context.sync()` call after `s.delete()`. |
+| gen-L1-edge-cases-easy-012 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-hyperlink-easy-009 | 94 | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using the `insertHyperlink` method directly on the `textFrame.textRange` instead of creating a new hyperlink object. |
+| gen-L1-hyperlink-easy-010 | 71 | ✓ | A: 18
+The code uses the injected helper `addSlide` correctly, but incorrectly uses `addTextBox` with a URL string instea |
+| gen-L1-footer-easy-005 | 94 | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could benefit from a more robust approach to handling potential errors and edge cases. |
+| gen-L1-footer-easy-006 | 94 | ✗ | The code uses the correct injected helpers and PowerPoint APIs, but could benefit from more robust error handling and a more efficient approach to adding the footer. |
+| gen-L1-image-insert-easy-011 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion, but could be improved by adding error handling for potential issues like image loading or slide index out of range. |
+| gen-L1-image-insert-easy-012 | 0 ⚠️ | ✗ | The AI response does not generate any code, instead asking for user input, and does not use any of the injected helpers or native APIs. |
+| gen-L1-font-pairing-001 | 89 | ✗ | A: 22
+The code uses the correct PowerPoint Office.js APIs, but it does not handle the case where the title or body shape |
+| gen-L1-shape-position-easy-011 | 94 | ✓ | The code uses the correct injected helpers and PowerPoint Office.js APIs, but could benefit from more robust error handling and a more efficient approach to adding the text box. |
+| gen-L1-shape-position-easy-012 | 94 | ✗ | The code is mostly correct and complete, but it could benefit from a more robust error handling mechanism, and it uses native PowerPoint APIs directly instead of relying on the injected helpers where possible. |
+| gen-L1-image-grid-001 | 74 | ✓ | A: 22
+The code uses the correct injected helpers and native PowerPoint APIs, but incorrectly uses the `insertImage` help |
+| gen-L1-web-search-needed-easy-013 | 65 | ✓ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-web-search-needed-easy-014 | 77 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-deck-generate-easy-011 | 65 | ✗ | A: 22
+The code uses the correct injected helper `addSlide` and provides the required options, but it does not address th |
+| gen-L1-deck-generate-easy-012 | 89 | ✗ | A: 22
+The code uses the correct PowerPoint Office.js API, slide.background.fill.setSolidColor, but does not use the inje |
+| gen-L1-edge-cases-easy-013 | 95 ✅ | ✓ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing the unnecessary `await context.sync()` call after `slide.delete()`. |
+| gen-L1-edge-cases-easy-014 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-hyperlink-easy-011 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the `find` method and using more descriptive variable names. |
+| gen-L1-hyperlink-easy-012 | 75 | ✗ | A: 22
+The code uses the injected helpers correctly, but incorrectly assumes the existence of a "body" shape on the new s |
+| gen-L1-footer-easy-007 | 94 | ✓ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to adding the footer text. |
+| gen-L1-footer-easy-008 | 94 | ✓ | The code uses the correct injected helpers and PowerPoint APIs, but could benefit from more robust error handling and a more efficient approach to adding the footer text. |
+| gen-L1-table-add-easy-001 | 25 ⚠️ | ✗ | A: 0
+The code uses the injected helpers correctly, but it does not add a table as requested.
+
+B: 0
+The code does not add |
+| gen-L1-table-add-easy-002 | 25 ⚠️ | ✗ | The code fails to address the request of adding a table with 2 rows and 1 column to the first slide, instead adding multiple empty text boxes. |
+| gen-L1-gradient-fill-001 | 91 | ✗ | The code correctly addresses the request, but could be improved by using the injected helpers for theming and potentially reordering slides, and also by adding error handling for the case where the title shape is not found. |
+| gen-L1-image-insert-easy-013 | 85 | ✓ | A: 22
+The code uses the correct injected helper function insertImage, but does not address the request fully, as it does |
+| gen-L1-image-insert-easy-014 | 0 ⚠️ | ✗ | The AI response does not generate any code, and instead asks for user input, failing to address the request and not utilizing the available helpers. |
+| gen-L1-refusal-easy-013 | 65 | ✓ | A: 22
+The code uses the injected helper function addSlide correctly, but does not address the request fully.
+
+B: 0
+The c |
+| gen-L1-refusal-easy-014 | 94 | ✗ | The code correctly changes the title of the first slide, but could benefit from using the injected helpers for theme management and slide navigation. |
+| gen-L1-alignment-easy-001 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding error handling for the await context.sync() call. |
+| gen-L1-alignment-easy-002 | 95 ✅ | ✗ | The code uses the correct PowerPoint Office.js APIs and helpers, fully addresses the request, and would execute without runtime errors, but could be improved by using the injected helpers more consistently and avoiding manual theme recoloring. |
+| gen-L1-slide-number-001 | 91 | ✗ | A: 22
+The code uses the injected helper `addTextBox` correctly, but it does not use the native PowerPoint API to load th |
+| gen-L1-recolor-easy-011 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to changing the title text color. |
+| gen-L1-recolor-easy-012 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding a check for the slide's existence before setting its background color. |
+| gen-L1-shape-position-easy-013 | 95 ✅ | ✓ | The code uses the correct injected helper for adding a text box, but could be improved by using more precise positioning (e.g., using slide.shapes.addTextBox's optional position parameter instead of hardcoding left/top values). |
+| gen-L1-shape-position-easy-014 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-chart-add-001 | 85 | ✗ | The code correctly addresses the request, but lacks proper error handling and uses a helper function to insert an image, which is correct, but the approach could be improved by using the available helpers more efficiently. |
+| gen-L1-web-search-needed-easy-015 | 95 ✅ | ✗ | The code uses the correct injected helper for adding a new slide, but could benefit from specifying animation and transition options to enhance the slide's appearance. |
+| gen-L1-web-search-needed-easy-016 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-deck-generate-easy-013 | 65 | ✓ | A: 22
+The code uses the correct injected helpers and native PowerPoint APIs, but it does not address the request fully,  |
+| gen-L1-deck-generate-easy-014 | 95 ✅ | ✓ | The code uses the correct helpers for adding a new slide and text box, but could improve by using the moveSlide helper for reordering slides, which is not necessary in this case but still a missed opportunity. |
+| gen-L1-edge-cases-easy-015 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing unnecessary `await context.sync()` calls. |
+| gen-L1-edge-cases-easy-016 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing the unnecessary `await context.sync()` call after `firstSlide.delete()`. |
+| gen-L1-hyperlink-easy-013 | 85 | ✗ | The code correctly addresses the request, but its approach is suboptimal as it manually updates the text range instead of using the injected helpers, and it doesn't handle potential errors when finding the text range. |
+| gen-L1-hyperlink-easy-014 | 85 | ✗ | A: 20
+The code uses real PowerPoint Office.js APIs and the injected helpers, but it incorrectly uses `shape.textFrame.te |
+| gen-L1-footer-easy-009 | 94 | ✓ | The code uses the correct injected helpers and follows best practices, but could be improved by adding error handling for the await context.sync() calls. |
+| gen-L1-footer-easy-010 | 94 | ✗ | The code uses the correct injected helpers and PowerPoint Office.js APIs, but it doesn't address the request fully as it doesn't insert the footer at the bottom of the slide, and it doesn't handle potential errors that might occur during execution. |
+| gen-L1-gradient-fill-easy-001 | 65 | ✗ | A: 22
+The code uses real PowerPoint Office.js APIs and the injected helpers, but it does not address the request of addi |
+| gen-L1-gradient-fill-easy-002 | 94 | ✗ | The code correctly applies a gradient fill to the first shape on the first slide, but could benefit from using the injected helpers for theme management and slide navigation. |
+| gen-L1-header-footer-001 | 89 | ✗ | A: 22
+The code uses the injected helper function addTextBox correctly, but it does not use the native PowerPoint API to  |
+| gen-L1-question-handling-easy-003 | 94 | ✓ | The code uses the correct injected helpers and native APIs, fully addresses the request, executes correctly, and uses best practices, but could be improved by adding error handling for the case where the title is not found. |
+| gen-L1-question-handling-easy-004 | 89 | ✗ | A: 22
+The code uses the correct PowerPoint Office.js API, presentation.slides.load, and the injected helper, context.syn |
+| gen-L1-slide-number-easy-001 | 89 | ✗ | A: 22
+The code uses the injected helper `addTextBox` correctly, but does not use any native PowerPoint Office.js APIs.
+
+ |
+| gen-L1-slide-number-easy-002 | 65 | ✗ | A: 22
+The code uses the correct injected helper `addSlide` to add a new slide, but it does not address the request to ad |
+| gen-L1-text-edit-easy-009 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and considering potential edge cases. |
+| gen-L1-text-edit-easy-010 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to updating the title shape. |
+| gen-L1-shape-position-easy-015 | 95 ✅ | ✓ | The code uses the injected helper functions correctly and follows best practices, but it could be improved by adding some error handling and checking for potential issues like shape overlap or invalid slide indices. |
+| gen-L1-shape-position-easy-016 | 94 | ✗ | The code is mostly correct and complete, but it doesn't use the injected helpers for moving the slide, and it doesn't check for potential errors in the shape loading and syncing process. |
+| gen-L1-image-insert-easy-015 | 85 | ✓ | A: 22
+The code uses the correct `insertImage` helper, but does not address the request fully, as it does not specify the |
+| gen-L1-image-insert-easy-016 | 91 | ✓ | A: 22
+The code uses the correct `insertImage` helper, but does not check if the image is already on the slide before ins |
+| gen-L1-refusal-easy-015 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-refusal-easy-016 | 95 ✅ | ✓ | The code uses the correct injected helper for adding a text box, but could be improved by using the addTextBox helper with more robust options, such as specifying the text frame properties. |
+| gen-L1-chart-add-easy-001 | 95 ✅ | ✗ | The code uses the correct helper function for inserting an image, but it could be improved by adding a title to the chart image, which is not explicitly mentioned in the request. |
+| gen-L1-chart-add-easy-002 | 85 | ✗ | The code uses the correct helper function for image insertion, but it doesn't address the request for a chart, and it doesn't use the best approach for inserting an image, as it doesn't check if the asset pack is available before proceeding. |
+| gen-L1-recolor-easy-013 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to changing the title text color. |
+| gen-L1-recolor-easy-014 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by adding a check for the slide object before setting its background color. |
+| gen-L1-web-search-needed-easy-017 | 95 ✅ | ✗ | The code uses the correct helpers and follows best practices, but could benefit from more robust error handling and potentially using the injected helpers more efficiently. |
+| gen-L1-web-search-needed-easy-018 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but it does not address the request fully, as it does not  |
+| gen-L1-deck-generate-easy-015 | 95 ✅ | ✗ | The code uses the correct helper functions and follows best practices, but could be improved by adding a check for the current slide index before calling addSlide. |
+| gen-L1-deck-generate-easy-016 | 65 | ✓ | A: 22
+The code uses the correct addSlide helper, but does not address the request fully, as it does not create a 1-slide |
+| gen-L1-edge-cases-easy-017 | 95 ✅ | ✓ | The code uses the correct injected helpers and native APIs, and would execute without runtime errors, but could be improved by using the moveSlide helper instead of slide.delete() to delete the slide. |
+| gen-L1-edge-cases-easy-018 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more explicit check for the presentation's slide count before attempting to delete the first slide. |
+| gen-L1-hyperlink-easy-015 | 89 | ✗ | A: 22
+The code uses the injected helpers correctly, but it does not use the PowerPoint namespace, which is a minor overs |
+| gen-L1-hyperlink-easy-016 | 67 | ✓ | A: 18
+The code uses the injected helper `addSlide` correctly, but incorrectly uses `addTextBox` to add a hyperlink, whic |
+| gen-L1-footer-easy-011 | 94 | ✓ | The code uses the correct injected helpers and native APIs, but could benefit from a more robust approach to handling potential errors and edge cases. |
+| gen-L1-footer-easy-012 | 89 | ✓ | A: 22
+The code uses the injected helper `addTextBox` correctly, but it does not use the `addSlide` helper to add a new s |
+| gen-L1-gradient-fill-easy-003 | 94 | ✗ | The code correctly uses the injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using the applyTheme helper for theming instead of manual gradient fill. |
+| gen-L1-gradient-fill-easy-004 | 98 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but does not use the best practice of applying a theme to the entire deck instead of manually setting the fill color for each shape. |
+| gen-L1-header-footer-easy-001 | 95 ✅ | ✗ | The code uses the correct injected helper for adding a text box, but could benefit from more robust error handling and checking for potential PowerPoint exceptions. |
+| gen-L1-header-footer-easy-002 | 94 | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from more robust error handling and a more efficient approach to adding the footer text. |
+| gen-L1-alignment-easy-003 | 95 ✅ | ✗ | The code uses the correct injected helper for adding a text box and aligns it to the center, but does not follow best practices by not using the addSlide helper for new slides, which is not applicable in this case, but it does use the correct helper for adding a text box. |
+| gen-L1-alignment-easy-004 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and considering potential edge cases. |
+| gen-L1-smartart-001 | 65 | ✗ | A: 22
+The code uses the correct injected helper, insertImage, to add an image of a cycle SmartArt, but it does not addre |
+| gen-L1-shape-position-easy-017 | 95 ✅ | ✓ | The code uses the injected helpers correctly and follows best practices, but it could be improved by adding error handling for the addTextBox call. |
+| gen-L1-shape-position-easy-018 | 94 | ✗ | The code uses the correct injected helpers and PowerPoint APIs, but could be improved by using more robust error handling and checking for potential null values. |
+| gen-L1-image-insert-easy-017 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion and follows best practices, but could be improved by adding a more descriptive error message in case the image insertion fails. |
+| gen-L1-image-insert-easy-018 | 65 | ✓ | A: 22
+The code uses the correct injected helper function insertImage, but does not address the request fully as it does  |
+| gen-L1-table-add-easy-003 | 0 ⚠️ | ✗ | The code does not address the request at all, instead it repeatedly adds blank slides with the same options. |
+| gen-L1-table-add-easy-004 | 26 ⚠️ | ✗ | The code fails to address the request of inserting a table with 1 row and 2 columns on the current slide, instead inserting multiple text boxes. |
+| gen-L1-shadow-effect-001 | 91 | ✗ | The code correctly addresses the request, but could be improved by using the injected helpers for theme management and shadow effects, and by adding error handling for potential issues with the title shape. |
+| gen-L1-text-format-easy-007 | 94 | ✗ | A: 23
+The code uses real PowerPoint Office.js APIs and the injected helpers correctly, but it does not handle potential  |
+| gen-L1-text-format-easy-008 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding error handling for the case where the body shape is not found. |
+| gen-L1-web-search-needed-easy-019 | 65 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not fully address the request.
+
+B: 0
+The code doe |
+| gen-L1-web-search-needed-easy-020 | 85 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-deck-generate-easy-017 | 72 | ✗ | A: 22
+The code uses the correct injected helper `addSlide` to create a new slide, but it does not address the request fu |
+| gen-L1-deck-generate-easy-018 | 65 | ✗ | A: 22
+The code uses the injected helper function addSlide, which is valid in this environment, but it does not fully add |
+| gen-L1-edge-cases-easy-019 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding a check for the presentation's slide count before attempting to delete the first slide. |
+| gen-L1-edge-cases-easy-020 | 95 ✅ | ✓ | The code uses the correct injected helpers and follows best practices, but could be slightly improved by removing the unnecessary `await context.sync()` call after `slide.delete()`. |
+| gen-L1-hyperlink-easy-017 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the findShapeByName method. |
+| gen-L1-hyperlink-easy-018 | 70 | ✓ | A: 18
+The code uses the injected helpers correctly, but it incorrectly uses the `addTextBox` method to add a hyperlink,  |
+| gen-L1-footer-easy-013 | 94 | ✗ | The code uses the correct injected helpers and PowerPoint APIs, but could benefit from more robust error handling and a more efficient approach to adding the footer. |
+| gen-L1-footer-easy-014 | 89 | ✓ | A: 22
+The code uses the injected helper `addTextBox` correctly, but it does not use the `addSlide` helper to add a new s |
+| gen-L1-gradient-fill-easy-005 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the `addShape` call. |
+| gen-L1-gradient-fill-easy-006 | 98 ✅ | ✗ | The code uses the correct injected helpers and native APIs, but could benefit from a more robust error handling mechanism, such as checking the result of `context.sync()` for errors. |
+| gen-L1-header-footer-easy-003 | 95 ✅ | ✗ | The code uses the correct helper function to add a new slide with a header, but does not follow best practices by not using the addTextBox helper to add the header text. |
+| gen-L1-header-footer-easy-004 | 94 | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could benefit from using the applyTheme helper for theming instead of manual per-shape recoloring. |
+| gen-L1-alignment-easy-005 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could benefit from more robust error handling and potentially more efficient use of the addTextBox helper. |
+| gen-L1-alignment-easy-006 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding a check to ensure the text box is successfully added before centering its text. |
+| gen-L1-slide-number-easy-003 | 65 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request to add a slide number to  |
+| gen-L1-slide-number-easy-004 | 95 ✅ | ✗ | The code uses the correct injected helper functions and follows best practices, but could be improved by adding a check to ensure the slide index is valid before adding the text box. |
+| gen-L1-SmartArt-easy-001 | 0 ⚠️ | ✗ | The AI response did not generate any code, and instead provided a generic message indicating it cannot create a SmartArt shape in PowerPoint, without attempting to use the available helpers or APIs. |
+| gen-L1-SmartArt-easy-002 | 0 ⚠️ | ✗ | The AI response did not generate any code, and instead provided a generic error message, failing to address the request and demonstrating no understanding of the Office.js API. |
+| gen-L1-shape-position-easy-019 | 89 | ✗ | A: 22
+The code uses the injected helper function addTextBox, which is valid in this environment, but does not use any re |
+| gen-L1-shape-position-easy-020 | 94 | ✗ | The code correctly addresses the request, executes without runtime errors, and uses the available helpers, but could be improved by adding error handling for the findShapeByName method. |
+| gen-L1-refusal-easy-017 | 77 | ✓ | A: 22
+The code uses the injected helper `addSlide` correctly, but it does not address the request fully as it does not s |
+| gen-L1-refusal-easy-018 | 94 | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, executes correctly, and follows best practices, but could be slightly improved with more robust error handling. |
+| gen-L1-table-add-easy-005 | 85 | ✓ | The code correctly addresses the request, but its approach is suboptimal as it manually creates a table by adding a text box and then modifying its text range, rather than using the native PowerPoint API to add a table directly. |
+| gen-L1-table-add-easy-006 | 45 ⚠️ | ✗ | The code partially addresses the request by inserting text boxes but fails to insert a table, and it uses the addTextBox helper correctly but does not leverage the available helpers for inserting a table. |
+| gen-L1-chart-add-easy-003 | 45 ⚠️ | ✗ | The code does not fully address the request as it only inserts an image of a chart, but does not create a chart on the slide, and uses the correct approach and helpers. |
+| gen-L1-chart-add-easy-004 | 45 ⚠️ | ✗ | A: 20
+The code uses the correct injected helper function insertImage, but it doesn't address the request of inserting a  |
+| gen-L1-agenda-slide-001 | 77 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but it does not fully address the request as it does not c |
+| gen-L1-text-format-easy-009 | 91 | ✗ | A: 22
+The code uses real PowerPoint Office.js APIs and the injected helpers correctly, but it does not handle potential  |
+| gen-L1-text-format-easy-010 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding error handling for the case where the body shape is not found. |
+| gen-L1-text-edit-easy-011 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding error handling for the case where the title shape is not found. |
+| gen-L1-text-edit-easy-012 | 94 | ✗ | The code is mostly correct and complete, but it could benefit from better error handling and using the injected helpers more consistently. |
+| gen-L1-web-search-needed-easy-021 | 95 ✅ | ✓ | The code uses the correct helper functions and follows best practices, but could be improved by adding a title to the new slide and using a more descriptive variable name instead of "CODE_JS". |
+| gen-L1-web-search-needed-easy-022 | 72 | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request fully, as it does not add |
+| gen-L1-deck-generate-easy-019 | 95 ✅ | ✓ | The code uses the correct helper function to add a new slide, but does not address the request for a single-slide presentation with a title 'Introduction' as the deck context already has a slide with that title. |
+| gen-L1-deck-generate-easy-020 | 89 | ✗ | A: 22
+The code uses the correct injected helper `addSlide` to create a new slide, but it's missing the `options` object  |
+| gen-L1-hyperlink-easy-019 | 85 | ✗ | The code correctly addresses the request, but its approach is suboptimal as it manually manipulates the text range instead of using the injected helpers, and it does not check for errors when calling context.sync(). |
+| gen-L1-hyperlink-easy-020 | 67 | ✗ | A: 20
+The code uses the injected helpers correctly, but it manually updates the text and font properties of the shape, w |
+| gen-L1-footer-easy-015 | 91 | ✓ | A: 22
+The code uses the injected helpers correctly, but it doesn't handle any potential errors that might occur when loa |
+| gen-L1-footer-easy-016 | 89 | ✓ | A: 22
+The code uses the injected helper `addTextBox` correctly, but it does not use the `addSlide` helper to add a new s |
+| gen-L1-gradient-fill-easy-007 | 94 | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, executes correctly, and uses best practices, but could be improved by adding a check for the shape's existence before setting its fill. |
+| gen-L1-gradient-fill-easy-008 | 94 | ✓ | The code is mostly correct and complete, but it could benefit from using the injected helpers more consistently, especially for loading shapes and applying the gradient fill. |
+| gen-L1-header-footer-easy-005 | 95 ✅ | ✗ | The code uses the correct helper function to add a new slide with the desired title, but does not address the request to add a header with the text 'Sample' to the first slide. |
+| gen-L1-header-footer-easy-006 | 95 ✅ | ✗ | The code uses the correct helper function addSlide to add a new slide with a footer, but does not address the original request of adding a footer to an existing slide. |
+| gen-L1-recolor-easy-015 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using more descriptive variable names and considering potential edge cases. |
+| gen-L1-recolor-easy-016 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using the applyTheme helper for theming instead of manual color setting. |
+| gen-L1-image-insert-easy-019 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion and follows best practices, but could be improved by adding error handling for the insertImage call. |
+| gen-L1-image-insert-easy-020 | 95 ✅ | ✓ | The code uses the correct helper function for image insertion and follows best practices, but could be improved by adding error handling for potential issues like image insertion failure. |
+| gen-L1-question-handling-easy-005 | 91 | ✗ | A: 22
+The code uses the injected helper getCurrentSlide() to get the current slide index, which is correct.
+
+B: 25
+The c |
+| gen-L1-question-handling-easy-006 | 95 ✅ | ✗ | The code uses the correct injected helpers and follows best practices, but could be improved by adding a check for an empty slide collection before trying to access its length. |
+| gen-L1-alignment-easy-007 | 95 ✅ | ✗ | The code uses the correct addSlide helper to add a new slide with the desired title alignment, and does not attempt to re-implement PowerPoint's functionality. |
+| gen-L1-alignment-easy-008 | 95 ✅ | ✗ | The code uses the correct injected helper for adding a text box and centers its text, but could benefit from more robust error handling and a more explicit check for the current slide. |
+| gen-L1-font-pairing-easy-001 | 94 | ✗ | A: 23
+The code uses real PowerPoint Office.js APIs and the injected helpers, but it does not handle the case where the t |
+| gen-L1-font-pairing-easy-002 | 95 ✅ | ✗ | The code uses the correct injected helpers and native APIs, fully addresses the request, and would execute without runtime errors, but could be improved by using the applyTheme helper for theming instead of manual font changes. |
+| gen-L1-slide-number-easy-005 | 95 ✅ | ✗ | The code uses the correct helper function to add a new slide with the desired animation, but does not add a slide number, which is the main request. |
+| gen-L1-slide-number-easy-006 | 47 ⚠️ | ✗ | A: 22
+The code uses the injected helper `addSlide` correctly, but it doesn't actually insert a slide number, it creates  |
 
 ## ⚠️ Needs attention
 
-**[gen-L1-edge-cases-easy-003]** score=25 — The code fails to address the user's request to delete the second slide because it incorrectly assumes there is only one slide in the deck, and it does not utilize the available PowerPoint Office.js APIs or injected helpers to perform the deletion.
-- missing patterns: `slide.delete()`
+**[L1-slide-delete-001]** score=45 — The code does not fully address the request as it does not delete the slide with index 3, but rather the slide with index 2.
 
-**[gen-L1-hyperlink-easy-001]** score=0 — A: 
+**[L1-web-search-needed-001]** score=47 — The response fails to acknowledge that PowerPoint Office.js can access web data, leading to an incorrect and incomplete answer.
+- missing patterns: `NEEDS_WEB_SEARCH`
 
-**[gen-L1-question-handling-easy-002]** score=0 — A: 
-- missing patterns: `listSlides`
+**[L1-web-search-needed-002]** score=5 — The response fails to engage with the request and instead provides a generic refusal without providing any useful information.
+- missing patterns: `NEEDS_WEB_SEARCH`
 
-**[gen-L1-footer-easy-003]** score=0 — The code attempts to add a footer to a new slide using the `addSlide` helper with a `footer` option, but this option is not a valid parameter for the `addSlide` helper, resulting in a complete failure to address the request.
-- missing patterns: `addTextBox`, `shape.textFrame.textRange`
+**[L1-refusal-005]** score=22 — A: 0
+The response is factually incorrect and incomplete, as it fails to address the user's request to edit the existing 
 
-**[gen-L1-refusal-easy-012]** score=0 — A: 
-- missing patterns: `shape.textFrame.textRange.font.bold`
+**[L1-refusal-004]** score=59 — The response could be more concise and clear in its explanation, and could provide a more direct and actionable workaround.
+- missing patterns: `doesn't expose`
 
-**[gen-L1-deck-generate-easy-010]** score=0 — A: 
-- missing patterns: `addTextBox`, `shape.textFrame.textRange`
+**[gen-L1-table-add-001]** score=29 — The code uses a brute-force approach to add individual text boxes instead of using a more efficient
+- missing patterns: `addSlide`, `shape.textFrame.textRange`, `PowerPoint.run`, `context.sync`
 
-**[gen-L1-table-add-easy-003]** score=47 — The code fails to address the user's request to add a table to the first slide of the existing presentation, instead creating a new slide with a table, and also does not utilize the available helpers effectively.
+**[gen-L1-deck-generate-easy-007]** score=47 — A: 22
+The code uses the injected helper `addSlide` correctly, but does not address the request for a default font size, 
+- missing patterns: `shape.textFrame.textRange.font.size`
 
-**[gen-L1-gradient-fill-easy-005]** score=0 — A: 
-- missing patterns: `shape.fill.setSolidColor`
+**[gen-L1-image-insert-easy-012]** score=0 — The AI response does not generate any code, instead asking for user input, and does not use any of the injected helpers or native APIs.
+- missing patterns: `insertImage`, `getCurrentSlide`
 
-**[gen-L1-header-footer-easy-005]** score=0 — A: 
+**[gen-L1-table-add-easy-001]** score=25 — A: 0
+The code uses the injected helpers correctly, but it does not add a table as requested.
 
-**[gen-L1-header-footer-easy-006]** score=0 — The code attempts to add a footer to a new slide using the `addSlide` helper with an options object containing a `footer` property, which is not a valid option for the `addSlide` helper, indicating a significant flaw in API correctness.
-- missing patterns: `addTextBox`, `getSlideByIndex`
+B: 0
+The code does not add
+- missing patterns: `slide.shapes`
+
+**[gen-L1-table-add-easy-002]** score=25 — The code fails to address the request of adding a table with 2 rows and 1 column to the first slide, instead adding multiple empty text boxes.
+- missing patterns: `getSlideByIndex`, `slide.shapes`
+
+**[gen-L1-image-insert-easy-014]** score=0 — The AI response does not generate any code, and instead asks for user input, failing to address the request and not utilizing the available helpers.
+- missing patterns: `getCurrentSlide`
+
+**[gen-L1-table-add-easy-003]** score=0 — The code does not address the request at all, instead it repeatedly adds blank slides with the same options.
+- missing patterns: `getSlideByIndex`, `slide.shapes`
+
+**[gen-L1-table-add-easy-004]** score=26 — The code fails to address the request of inserting a table with 1 row and 2 columns on the current slide, instead inserting multiple text boxes.
+- missing patterns: `getCurrentSlide`, `slide.shapes`
+
+**[gen-L1-SmartArt-easy-001]** score=0 — The AI response did not generate any code, and instead provided a generic message indicating it cannot create a SmartArt shape in PowerPoint, without attempting to use the available helpers or APIs.
+- missing patterns: `addSlide`, `slide.shapes`
+
+**[gen-L1-SmartArt-easy-002]** score=0 — The AI response did not generate any code, and instead provided a generic error message, failing to address the request and demonstrating no understanding of the Office.js API.
+- missing patterns: `PowerPoint.run`, `presentation.slides`
+
+**[gen-L1-table-add-easy-006]** score=45 — The code partially addresses the request by inserting text boxes but fails to insert a table, and it uses the addTextBox helper correctly but does not leverage the available helpers for inserting a table.
+- missing patterns: `getSlideByIndex`, `slide.shapes`, `PowerPoint.run`
+
+**[gen-L1-chart-add-easy-003]** score=45 — The code does not fully address the request as it only inserts an image of a chart, but does not create a chart on the slide, and uses the correct approach and helpers.
+- missing patterns: `PowerPoint.run`, `slide.shapes`
+
+**[gen-L1-chart-add-easy-004]** score=45 — A: 20
+The code uses the correct injected helper function insertImage, but it doesn't address the request of inserting a 
+- missing patterns: `getSlideByIndex`, `slide.shapes`
+
+**[gen-L1-slide-number-easy-006]** score=47 — A: 22
+The code uses the injected helper `addSlide` correctly, but it doesn't actually insert a slide number, it creates 
+- missing patterns: `getSlideByIndex`, `slide.shapes`, `shape.textFrame.textRange`
