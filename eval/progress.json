@@ -2,17 +2,17 @@
   "slide-add": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 1,
-    "lastScore": 67.3,
-    "lastRun": "2026-06-15T03-47-22",
+    "runsAtLevel": 2,
+    "lastScore": 83.3,
+    "lastRun": "2026-06-22T03-49-21",
     "note": "Reset 2026-05-15: was promoted to level 2 by old eval logic before the hallucination blacklist + promotion gate landed. The generated level-2 cases referenced fake APIs and have been removed."
   },
   "slide-delete": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 3,
-    "lastScore": 58.5,
-    "lastRun": "2026-06-15T03-47-22",
+    "runsAtLevel": 4,
+    "lastScore": 81,
+    "lastRun": "2026-06-22T03-49-21",
     "note": "Reset 2026-05-15: see slide-add note."
   },
   "text-format": {
