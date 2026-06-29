@@ -3,16 +3,16 @@
     "level": 1,
     "masteredAt": null,
     "runsAtLevel": 2,
-    "lastScore": 83.3,
-    "lastRun": "2026-06-22T03-49-21",
+    "lastScore": 95.3,
+    "lastRun": "2026-06-29T03-06-25",
     "note": "Reset 2026-05-15: was promoted to level 2 by old eval logic before the hallucination blacklist + promotion gate landed. The generated level-2 cases referenced fake APIs and have been removed."
   },
   "slide-delete": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 4,
-    "lastScore": 81,
-    "lastRun": "2026-06-22T03-49-21",
+    "runsAtLevel": 5,
+    "lastScore": 70,
+    "lastRun": "2026-06-29T03-06-25",
     "note": "Reset 2026-05-15: see slide-add note."
   },
   "text-format": {
