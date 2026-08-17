@@ -1,5 +1,5 @@
 # PowerPoint AI — Eval Results
-**Last run:** 2026-08-10 01:10:49  
+**Last run:** 2026-08-17 00:51:31  
 **Overall: 0.0/100**  
 **Model:** meta-llama/llama-3.1-8b-instruct
 
