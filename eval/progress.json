@@ -2,215 +2,215 @@
   "slide-add": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 22,
+    "runsAtLevel": 23,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11",
+    "lastRun": "2026-11-23T05-03-49",
     "note": "Reset 2026-05-15: was promoted to level 2 by old eval logic before the hallucination blacklist + promotion gate landed. The generated level-2 cases referenced fake APIs and have been removed."
   },
   "slide-delete": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 24,
+    "runsAtLevel": 25,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11",
+    "lastRun": "2026-11-23T05-03-49",
     "note": "Reset 2026-05-15: see slide-add note."
   },
   "text-format": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "text-edit": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "theme-apply": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11",
+    "lastRun": "2026-11-23T05-03-49",
     "note": "Reset 2026-05-15: was illegitimately promoted to level 2 by old logic despite scoring 12.5/100 in the first run."
   },
   "recolor": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "notes-write": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 19,
+    "runsAtLevel": 20,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "shape-position": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 19,
+    "runsAtLevel": 20,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "image-insert": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "web-search-needed": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "question-handling": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "animation": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11",
+    "lastRun": "2026-11-23T05-03-49",
     "note": "Reset 2026-05-15: was promoted to level 2 by old logic; generated cases required applyAnimation (not a real helper)."
   },
   "transition": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "slide-reorder": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 19,
+    "runsAtLevel": 20,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "refusal": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "deck-generate": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "edge-cases": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "hyperlink": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "footer": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "table-add": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 19,
+    "runsAtLevel": 20,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "alignment": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "font-pairing": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "image-grid": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 19,
+    "runsAtLevel": 20,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "gradient-fill": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "slide-number": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "chart-add": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 19,
+    "runsAtLevel": 20,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "header-footer": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 21,
+    "runsAtLevel": 22,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "SmartArt": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "shadow-effect": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   },
   "agenda-slide": {
     "level": 1,
     "masteredAt": null,
-    "runsAtLevel": 20,
+    "runsAtLevel": 21,
     "lastScore": 0,
-    "lastRun": "2026-11-16T04-10-11"
+    "lastRun": "2026-11-23T05-03-49"
   }
 }
